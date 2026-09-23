@@ -2,17 +2,23 @@
 "use client";
 
 import { useState } from "react";
-import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import { auth, db } from "@/lib/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export default function AuthForm() {
+  const router = useRouter();
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [fatherName, setFatherName] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,11 +32,38 @@ export default function AuthForm() {
 
     try {
       if (isLogin) {
+        // LOGIN MODE
         await signInWithEmailAndPassword(auth, email, password);
         setSuccess("Login successful! Redirecting...");
+        setTimeout(() => router.push("/"), 1500);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
-        setSuccess("Account created! Welcome to World of Concept 🎉");
+        // SIGNUP MODE - Validate mandatory fields
+        if (!mobile || mobile.length !== 10) {
+          setError("Please enter a valid 10-digit mobile number");
+          setLoading(false);
+          return;
+        }
+        if (!fatherName.trim()) {
+          setError("Father's name is required");
+          setLoading(false);
+          return;
+        }
+
+        // Create user in Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Save additional data to Firestore
+        await setDoc(doc(db, "students", user.uid), {
+          email: user.email,
+          mobile: mobile,
+          fatherName: fatherName,
+          createdAt: serverTimestamp(),
+          role: "student",
+        });
+
+        setSuccess("Account created successfully! Welcome to World of Concept 🎉");
+        setTimeout(() => router.push("/"), 1500);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -42,7 +75,6 @@ export default function AuthForm() {
       } else {
         setError("Something went wrong. Please try again.");
       }
-    } finally {
       setLoading(false);
     }
   };
@@ -53,8 +85,14 @@ export default function AuthForm() {
     setSuccess("");
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Check if user already exists in Firestore
+      // If new user, you can prompt for mobile/fatherName later
+      // For now, just redirect
       setSuccess("Google login successful! Redirecting...");
+      setTimeout(() => router.push("/"), 1500);
     } catch (err: unknown) {
       if (err instanceof Error) {
         const msg = err.message
@@ -65,7 +103,6 @@ export default function AuthForm() {
       } else {
         setError("Google login failed. Please try again.");
       }
-    } finally {
       setLoading(false);
     }
   };
@@ -74,6 +111,8 @@ export default function AuthForm() {
     setIsLogin(!isLogin);
     setError("");
     setSuccess("");
+    setMobile("");
+    setFatherName("");
   };
 
   return (
@@ -133,6 +172,42 @@ export default function AuthForm() {
           />
         </div>
 
+        {/* Mobile Number - Only in Signup */}
+        {!isLogin && (
+          <div className="space-y-1.5 animate-fade-in">
+            <label className="block text-sm font-semibold text-slate-700 ml-1">
+              Mobile Number <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              placeholder="10-digit mobile number"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              className="input-field"
+              required
+              pattern="[0-9]{10}"
+              title="Please enter a valid 10-digit mobile number"
+            />
+          </div>
+        )}
+
+        {/* Father's Name - Only in Signup */}
+        {!isLogin && (
+          <div className="space-y-1.5 animate-fade-in">
+            <label className="block text-sm font-semibold text-slate-700 ml-1">
+              Father&apos;s Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Enter father's full name"
+              value={fatherName}
+              onChange={(e) => setFatherName(e.target.value)}
+              className="input-field"
+              required
+            />
+          </div>
+        )}
+
         <div className="space-y-1.5">
           <label className="block text-sm font-semibold text-slate-700 ml-1">
             Password
@@ -144,6 +219,7 @@ export default function AuthForm() {
             onChange={(e) => setPassword(e.target.value)}
             className="input-field"
             required
+            minLength={6}
           />
         </div>
 
