@@ -1,39 +1,32 @@
 // app/api/payments/create-order/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import Razorpay from "razorpay";
-
-// Razorpay instance को initialize करें
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { amount, currency, receipt } = body;
 
-    // Razorpay Order Options
-    const options = {
-      amount: amount, // amount in smallest currency unit (paise)
-      currency: currency || "INR",
-      receipt: receipt || `receipt_order_${Date.now()}`,
-    };
+    // TEMPORARY BYPASS: Razorpay को call नहीं करेंगे, बस mock data return करेंगे
+    // जब असली Keys होंगी, तब इसे revert करेंगे
+    
+    console.log("🔧 MOCK MODE: Razorpay bypassed for testing");
+    console.log("Order details:", { amount, currency, receipt });
 
-    // Razorpay से order create करें
-    const order = await razorpay.orders.create(options);
+    // Mock Order ID generate करें
+    const mockOrderId = `mock_order_${Date.now()}`;
 
     return NextResponse.json({
       success: true,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      orderId: mockOrderId,
+      amount: amount,
+      currency: currency || "INR",
+      keyId: "mock_key_id_for_testing",
+      message: "This is a mock response. Razorpay is temporarily disabled.",
     });
   } catch (error: unknown) {
-    console.error("Razorpay Order Creation Error:", error);
+    console.error("Mock Order Creation Error:", error);
     
-    let errorMessage = "Failed to create order";
+    let errorMessage = "Failed to create mock order";
     if (error instanceof Error) {
       errorMessage = error.message;
     }

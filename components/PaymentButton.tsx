@@ -30,7 +30,7 @@ export default function PaymentButton({ courseId, courseTitle, amountInRupees }:
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: amountInRupees * 100, // रुपये को पैसे में बदलें (499 * 100 = 49900)
+          amount: amountInRupees * 100,
           currency: "INR",
           receipt: `receipt_${courseId}`,
         }),
@@ -44,13 +44,19 @@ export default function PaymentButton({ courseId, courseTitle, amountInRupees }:
         return;
       }
 
-      // 2. Razorpay Script को dynamically load करें (ताकि page load पर slow न हो)
+      // 🔧 MOCK MODE: Razorpay को call नहीं करेंगे, बस alert दिखाएंगे
+      if (data.message && data.message.includes("mock response")) {
+        alert(`🔧 MOCK PAYMENT SUCCESSFUL!\n\nOrder ID: ${data.orderId}\nAmount: ₹${amountInRupees}\n\nNote: Razorpay is temporarily disabled. Real payment will work after adding actual keys.`);
+        setLoading(false);
+        return;
+      }
+
+      // असली Razorpay Code (जब Keys होंगी तब काम आएगा)
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.async = true;
       
       script.onload = () => {
-        // 3. Razorpay Options सेट करें
         const options = {
           key: data.keyId,
           amount: data.amount,
@@ -60,7 +66,6 @@ export default function PaymentButton({ courseId, courseTitle, amountInRupees }:
           order_id: data.orderId,
           handler: function (response: Record<string, string>) {
             alert(`✅ Payment Successful!\nPayment ID: ${response.razorpay_payment_id}\nOrder ID: ${response.razorpay_order_id}`);
-            // यहाँ बाद में हम Firestore में payment save करेंगे
           },
           prefill: {
             name: "Student Name",
@@ -68,11 +73,10 @@ export default function PaymentButton({ courseId, courseTitle, amountInRupees }:
             contact: "9999999999",
           },
           theme: {
-            color: "#2563eb", // Tailwind blue-600
+            color: "#2563eb",
           },
         };
 
-        // 4. Razorpay Modal खोलें
         const rzp = new window.Razorpay(options);
         rzp.open();
       };
