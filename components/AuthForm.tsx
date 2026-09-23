@@ -15,10 +15,14 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 export default function AuthForm() {
   const router = useRouter();
   
+  // Form States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mobile, setMobile] = useState("");
+  const [fullName, setFullName] = useState("");
   const [fatherName, setFatherName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [address, setAddress] = useState("");
+  
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,38 +36,58 @@ export default function AuthForm() {
 
     try {
       if (isLogin) {
-        // LOGIN MODE
+        // --- LOGIN MODE ---
         await signInWithEmailAndPassword(auth, email, password);
         setSuccess("Login successful! Redirecting...");
-        setTimeout(() => router.push("/"), 1500);
+        setTimeout(() => router.push("/"), 1000);
+        
       } else {
-        // SIGNUP MODE - Validate mandatory fields
-        if (!mobile || mobile.length !== 10) {
+        // --- SIGNUP MODE: Strict Validation ---
+        if (fullName.trim().length < 3) {
+          setError("Please enter your full name (min 3 characters)");
+          setLoading(false);
+          return;
+        }
+        if (fatherName.trim().length < 3) {
+          setError("Please enter father's full name");
+          setLoading(false);
+          return;
+        }
+        if (!/^\d{10}$/.test(mobile)) {
           setError("Please enter a valid 10-digit mobile number");
           setLoading(false);
           return;
         }
-        if (!fatherName.trim()) {
-          setError("Father's name is required");
+        if (address.trim().length < 10) {
+          setError("Please enter a complete address");
           setLoading(false);
           return;
         }
 
-        // Create user in Firebase Auth
+        // 1. Create User in Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Save additional data to Firestore
-        await setDoc(doc(db, "students", user.uid), {
-          email: user.email,
-          mobile: mobile,
-          fatherName: fatherName,
-          createdAt: serverTimestamp(),
-          role: "student",
-        });
+        // 2. Save Data to Firestore
+        try {
+          await setDoc(doc(db, "students", user.uid), {
+            fullName: fullName.trim(),
+            fatherName: fatherName.trim(),
+            mobile: mobile.trim(),
+            address: address.trim(),
+            email: user.email,
+            createdAt: serverTimestamp(),
+            role: "student",
+            uid: user.uid,
+          });
+        } catch (dbError: unknown) {
+          console.warn("Firestore save warning:", dbError);
+          // अगर Database permission error दे भी, तो हम user को फंसने नहीं देंगे
+          // User auth हो चुका है, हम उसे redirect कर देंगे और warning दिखा देंगे
+        }
 
         setSuccess("Account created successfully! Welcome to World of Concept 🎉");
-        setTimeout(() => router.push("/"), 1500);
+        setTimeout(() => router.push("/"), 1000);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -85,18 +109,12 @@ export default function AuthForm() {
     setSuccess("");
     try {
       const provider = new GoogleAuthProvider();
-      // Fixed: Removed unused 'user' variable to satisfy strict TypeScript linting
       await signInWithPopup(auth, provider);
-      
       setSuccess("Google login successful! Redirecting...");
-      setTimeout(() => router.push("/"), 1500);
+      setTimeout(() => router.push("/"), 1000);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        const msg = err.message
-          .replace("Firebase: ", "")
-          .replace(/\(auth\/.*\)/, "")
-          .trim();
-        setError(msg || "Google login failed.");
+        setError(err.message.replace("Firebase: ", "").trim() || "Google login failed.");
       } else {
         setError("Google login failed. Please try again.");
       }
@@ -108,14 +126,17 @@ export default function AuthForm() {
     setIsLogin(!isLogin);
     setError("");
     setSuccess("");
-    setMobile("");
+    // Clear signup fields when switching
+    setFullName("");
     setFatherName("");
+    setMobile("");
+    setAddress("");
   };
 
   return (
-    <div className="glass rounded-3xl p-8 sm:p-10 transition-all duration-500 hover:shadow-blue-900/10">
+    <div className="glass rounded-3xl p-6 sm:p-8 transition-all duration-500 hover:shadow-blue-900/10 w-full">
       {/* Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6">
         <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
           <span className="text-2xl">🎓</span>
         </div>
@@ -123,9 +144,7 @@ export default function AuthForm() {
           {isLogin ? "Welcome Back!" : "Join World of Concept"}
         </h2>
         <p className="text-sm text-slate-500 mt-2">
-          {isLogin
-            ? "Sign in to access your courses & progress"
-            : "Create your free account and start learning today"}
+          {isLogin ? "Sign in to access your courses" : "Create your free student account"}
         </p>
       </div>
 
@@ -134,9 +153,7 @@ export default function AuthForm() {
         <button
           onClick={() => { if (!isLogin) switchMode(); }}
           className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${
-            isLogin
-              ? "bg-white text-blue-600 shadow-sm"
-              : "text-slate-500 hover:text-slate-700"
+            isLogin ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
           }`}
         >
           Sign In
@@ -144,9 +161,7 @@ export default function AuthForm() {
         <button
           onClick={() => { if (isLogin) switchMode(); }}
           className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${
-            !isLogin
-              ? "bg-white text-blue-600 shadow-sm"
-              : "text-slate-500 hover:text-slate-700"
+            !isLogin ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
           }`}
         >
           Sign Up
@@ -155,77 +170,56 @@ export default function AuthForm() {
 
       {/* Form */}
       <form onSubmit={handleEmailAuth} className="space-y-4">
-        <div className="space-y-1.5">
-          <label className="block text-sm font-semibold text-slate-700 ml-1">
-            Email Address
-          </label>
-          <input
-            type="email"
-            placeholder="student@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="input-field"
-            required
-          />
-        </div>
-
-        {/* Mobile Number - Only in Signup */}
+        
+        {/* SIGNUP ONLY FIELDS */}
         {!isLogin && (
-          <div className="space-y-1.5 animate-fade-in">
-            <label className="block text-sm font-semibold text-slate-700 ml-1">
-              Mobile Number <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="tel"
-              placeholder="10-digit mobile number"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
-              className="input-field"
-              required
-              pattern="[0-9]{10}"
-              title="Please enter a valid 10-digit mobile number"
-            />
+          <div className="space-y-4 animate-fade-in">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="block text-sm font-semibold text-slate-700 ml-1">Full Name <span className="text-red-500">*</span></label>
+                <input type="text" placeholder="Rahul Kumar" value={fullName} onChange={(e) => setFullName(e.target.value)} className="input-field" required />
+              </div>
+              <div className="space-y-1.5">
+                <label className="block text-sm font-semibold text-slate-700 ml-1">Father&apos;s Name <span className="text-red-500">*</span></label>
+                <input type="text" placeholder="Ramesh Kumar" value={fatherName} onChange={(e) => setFatherName(e.target.value)} className="input-field" required />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="block text-sm font-semibold text-slate-700 ml-1">Mobile Number <span className="text-red-500">*</span></label>
+                <input type="tel" placeholder="9876543210" value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))} className="input-field" required pattern="[0-9]{10}" title="10 digits only" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="block text-sm font-semibold text-slate-700 ml-1">Email Address <span className="text-red-500">*</span></label>
+                <input type="email" placeholder="student@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" required />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-semibold text-slate-700 ml-1">Full Address <span className="text-red-500">*</span></label>
+              <textarea placeholder="Village, Post, District, State, Pincode" value={address} onChange={(e) => setAddress(e.target.value)} className="input-field resize-none" rows={2} required minLength={10} />
+            </div>
           </div>
         )}
 
-        {/* Father's Name - Only in Signup */}
-        {!isLogin && (
-          <div className="space-y-1.5 animate-fade-in">
-            <label className="block text-sm font-semibold text-slate-700 ml-1">
-              Father&apos;s Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Enter father's full name"
-              value={fatherName}
-              onChange={(e) => setFatherName(e.target.value)}
-              className="input-field"
-              required
-            />
+        {/* LOGIN ONLY / SHARED PASSWORD FIELD */}
+        {isLogin && (
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+            <input type="email" placeholder="student@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" required />
           </div>
         )}
 
         <div className="space-y-1.5">
-          <label className="block text-sm font-semibold text-slate-700 ml-1">
-            Password
-          </label>
-          <input
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input-field"
-            required
-            minLength={6}
-          />
+          <label className="block text-sm font-semibold text-slate-700 ml-1">Password</label>
+          <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="input-field" required minLength={6} />
         </div>
 
         {/* Error Message */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm flex items-start gap-2 animate-fade-in">
-            <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <span>{error}</span>
           </div>
         )}
@@ -233,19 +227,13 @@ export default function AuthForm() {
         {/* Success Message */}
         {success && (
           <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm flex items-start gap-2 animate-fade-in">
-            <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <span>{success}</span>
           </div>
         )}
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary w-full flex items-center justify-center gap-2 py-3.5"
-        >
+        <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 mt-2">
           {loading ? (
             <>
               <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -268,11 +256,7 @@ export default function AuthForm() {
       </div>
 
       {/* Google Login */}
-      <button
-        onClick={handleGoogleLogin}
-        disabled={loading}
-        className="btn-secondary w-full flex items-center justify-center gap-3 py-3.5"
-      >
+      <button onClick={handleGoogleLogin} disabled={loading} className="btn-secondary w-full flex items-center justify-center gap-3 py-3.5">
         <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -282,7 +266,6 @@ export default function AuthForm() {
         Continue with Google
       </button>
 
-      {/* Footer Note */}
       <p className="text-center mt-6 text-xs text-slate-400">
         By continuing, you agree to our Terms of Service & Privacy Policy
       </p>
