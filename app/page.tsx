@@ -216,7 +216,7 @@ export default function Home() {
             <span className="font-extrabold text-lg text-slate-800">World of Concept</span>
           </div>
           <p className="text-sm text-slate-400">
-            © {currentYear} World of Concept. Crafted with ❤️ for Bihar's Students.
+            © {currentYear} World of Concept. Crafted with ❤️ for Bihar&apos;s Students.
           </p>
         </div>
       </footer>
