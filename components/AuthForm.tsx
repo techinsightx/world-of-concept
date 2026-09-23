@@ -85,12 +85,9 @@ export default function AuthForm() {
     setSuccess("");
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // Check if user already exists in Firestore
-      // If new user, you can prompt for mobile/fatherName later
-      // For now, just redirect
+      // Fixed: Removed unused 'user' variable to satisfy strict TypeScript linting
+      await signInWithPopup(auth, provider);
+      
       setSuccess("Google login successful! Redirecting...");
       setTimeout(() => router.push("/"), 1500);
     } catch (err: unknown) {
