@@ -25,17 +25,14 @@ export default function AuthForm() {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        alert("✅ Login successful!");
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-        alert("✅ Account created successfully!");
       }
     } catch (err: unknown) {
-      // Type-safe error handling (any की जगह unknown)
       if (err instanceof Error) {
-        setError(err.message);
+        setError(err.message.replace("Firebase:", "").trim());
       } else {
-        setError("An unknown error occurred during email authentication.");
+        setError("Authentication failed. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -48,11 +45,9 @@ export default function AuthForm() {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      alert("✅ Google login successful!");
     } catch (err: unknown) {
-      // Type-safe error handling (any की जगह unknown)
       if (err instanceof Error) {
-        setError(err.message);
+        setError(err.message.replace("Firebase:", "").trim());
       } else {
         setError("Google login failed.");
       }
@@ -62,38 +57,44 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-8 bg-white shadow-xl rounded-2xl border border-gray-100">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-        {isLogin ? "Login" : "Sign Up"} to World of Concept
-      </h2>
+    <div className="relative p-8 bg-white/70 backdrop-blur-xl border border-white/50 shadow-2xl rounded-3xl transition-all duration-500 hover:shadow-blue-900/10">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-slate-800">
+          {isLogin ? "Welcome Back!" : "Create Account"}
+        </h2>
+        <p className="text-sm text-slate-500 mt-2">
+          {isLogin ? "Enter your credentials to access your account" : "Start your learning journey with RK Sir"}
+        </p>
+      </div>
 
-      <form onSubmit={handleEmailAuth} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <form onSubmit={handleEmailAuth} className="space-y-5">
+        <div className="space-y-1">
+          <label className="block text-sm font-semibold text-slate-700 ml-1">Email Address</label>
           <input
             type="email"
             placeholder="student@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all duration-300 hover:bg-white"
             required
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <div className="space-y-1">
+          <label className="block text-sm font-semibold text-slate-700 ml-1">Password</label>
           <input
             type="password"
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all duration-300 hover:bg-white"
             required
           />
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm flex items-center gap-2 animate-[fadeIn_0.3s_ease-out]">
+            <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             {error}
           </div>
         )}
@@ -101,22 +102,32 @@ export default function AuthForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3.5 rounded-xl font-bold text-base hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg shadow-blue-500/25 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
         >
-          {loading ? "Processing..." : isLogin ? "Login" : "Sign Up"}
+          {loading ? (
+            <>
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            isLogin ? "Sign In" : "Create Account"
+          )}
         </button>
       </form>
 
-      <div className="my-6 flex items-center">
-        <div className="flex-1 border-t border-gray-300"></div>
-        <span className="px-4 text-sm text-gray-500">OR</span>
-        <div className="flex-1 border-t border-gray-300"></div>
+      <div className="my-6 flex items-center gap-4">
+        <div className="flex-1 h-px bg-slate-200"></div>
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">OR</span>
+        <div className="flex-1 h-px bg-slate-200"></div>
       </div>
 
       <button
         onClick={handleGoogleLogin}
         disabled={loading}
-        className="w-full bg-white border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2 disabled:bg-gray-100 disabled:cursor-not-allowed"
+        className="w-full bg-white border border-slate-200 text-slate-700 py-3.5 rounded-xl font-bold hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -127,13 +138,16 @@ export default function AuthForm() {
         Continue with Google
       </button>
 
-      <p className="text-center mt-6 text-sm text-gray-600">
+      <p className="text-center mt-6 text-sm text-slate-600">
         {isLogin ? "Don't have an account?" : "Already have an account?"}
         <button
-          onClick={() => setIsLogin(!isLogin)}
-          className="text-blue-600 font-bold ml-2 hover:text-blue-700"
+          onClick={() => {
+            setIsLogin(!isLogin);
+            setError(""); // Switch करते समय error clear करें
+          }}
+          className="text-blue-600 font-bold ml-1.5 hover:text-blue-700 hover:underline transition-all"
         >
-          {isLogin ? "Sign Up" : "Login"}
+          {isLogin ? "Sign Up" : "Log In"}
         </button>
       </p>
     </div>
