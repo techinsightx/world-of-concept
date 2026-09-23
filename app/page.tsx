@@ -42,7 +42,7 @@ export default function Home() {
           <div className="flex-1 text-center lg:text-left space-y-6 animate-fade-in-up">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 text-blue-700 rounded-full text-sm font-semibold shadow-sm">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              Admissions Open for 2025 Batch
+              Admissions Open for 2027 Batch
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
