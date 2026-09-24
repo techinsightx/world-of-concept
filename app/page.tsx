@@ -257,7 +257,7 @@ export default function Home() {
                   <span>📧</span> support@worldofconcept.in
                 </li>
                 <li className="flex items-center gap-2">
-                  <span>📞</span> +91 98XXX XXXXX
+                  <span>📞</span> +91 7979096954
                 </li>
                 <li className="flex items-center gap-2">
                   <span>📍</span> Alamnagar, Bihar, India
