@@ -1,27 +1,420 @@
+/* ============================================
+   WORLD OF CONCEPT - GLOBAL STYLES
+   Premium Educational Platform
+   ============================================ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================
+   1. BASE STYLES & TYPOGRAPHY
+   ============================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" 32;
+  }
+
+  /* Smooth focus states for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-white;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================
+   2. CUSTOM ANIMATIONS
+   ============================================ */
+
+/* Fade In Up - Main entrance animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+/* Fade In - Simple opacity animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide In from Left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide In from Right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale In - Pop effect */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Bounce In - Energetic entrance */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Float - Gentle floating effect */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Pulse Glow - For emphasis */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+  }
+}
+
+/* Shimmer - Loading effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Rotate - For loading spinners */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Gradient Shift - Dynamic backgrounds */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ============================================
+   3. ANIMATION UTILITY CLASSES
+   ============================================ */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Fade In Up Animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-up-delayed {
+    animation: fadeInUp 1s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-up-delayed-2 {
+    animation: fadeInUp 1s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  /* Fade In */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  /* Slide In Animations */
+  .animate-slide-in-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.8s ease-out forwards;
+  }
+
+  /* Scale In */
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+
+  /* Bounce In */
+  .animate-bounce-in {
+    animation: bounceIn 0.8s ease-out forwards;
+  }
+
+  /* Float Effect */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Pulse Glow */
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  /* Shimmer Loading */
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  /* Rotate */
+  .animate-rotate {
+    animation: rotate 1s linear infinite;
+  }
+
+  /* Gradient Shift */
+  .animate-gradient-shift {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  /* ============================================
+     GLASSMORPHISM UTILITIES
+     ============================================ */
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/50 shadow-2xl;
+  }
+
+  .glass-dark {
+    @apply bg-slate-900/70 backdrop-blur-xl border border-slate-700/50 shadow-2xl;
+  }
+
+  .glass-blue {
+    @apply bg-blue-500/10 backdrop-blur-xl border border-blue-500/20 shadow-xl;
+  }
+
+  /* ============================================
+     GRADIENT UTILITIES
+     ============================================ */
+  .gradient-primary {
+    @apply bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500;
+  }
+
+  .gradient-secondary {
+    @apply bg-gradient-to-r from-purple-600 via-pink-600 to-red-500;
+  }
+
+  .gradient-success {
+    @apply bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500;
+  }
+
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500;
+  }
+
+  /* ============================================
+     BUTTON STYLES
+     ============================================ */
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl
+           hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] active:scale-[0.98]
+           transition-all duration-300 shadow-lg shadow-blue-500/25
+           disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-xl
+           hover:bg-slate-50 hover:border-slate-300 hover:scale-[1.02] active:scale-[0.98]
+           transition-all duration-300 shadow-md
+           disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  .btn-ghost {
+    @apply px-6 py-3 bg-transparent text-slate-700 font-bold rounded-xl
+           hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98]
+           transition-all duration-300
+           disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  /* ============================================
+     INPUT STYLES
+     ============================================ */
+  .input-field {
+    @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl
+           focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500
+           outline-none transition-all duration-300 hover:bg-white;
+  }
+
+  .input-error {
+    @apply border-red-500 focus:ring-red-500/50 focus:border-red-500;
+  }
+
+  /* ============================================
+     CARD STYLES
+     ============================================ */
+  .card {
+    @apply p-6 bg-white rounded-2xl shadow-lg border border-slate-100
+           hover:shadow-xl hover:border-slate-200 transition-all duration-300;
+  }
+
+  .card-interactive {
+    @apply p-6 bg-white rounded-2xl shadow-lg border border-slate-100
+           hover:shadow-2xl hover:border-blue-200 hover:scale-[1.02]
+           transition-all duration-300 cursor-pointer;
+  }
+
+  /* ============================================
+     BADGE STYLES
+     ============================================ */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-primary {
+    @apply bg-blue-100 text-blue-700;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-700;
+  }
+
+  .badge-warning {
+    @apply bg-amber-100 text-amber-700;
+  }
+
+  .badge-error {
+    @apply bg-red-100 text-red-700;
+  }
+
+  /* ============================================
+     SCROLL ANIMATIONS (Intersection Observer के साथ use करें)
+     ============================================ */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+  }
+
+  .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   4. CUSTOM SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-400 rounded-full hover:bg-slate-500 transition-colors;
+}
+
+/* ============================================
+   5. SELECTION STYLES
+   ============================================ */
+::selection {
+  @apply bg-blue-500 text-white;
+}
+
+/* ============================================
+   6. LOADING STATES
+   ============================================ */
+.loading-skeleton {
+  @apply bg-slate-200 animate-shimmer rounded;
+}
+
+/* ============================================
+   7. RESPONSIVE UTILITIES
+   ============================================ */
+@media (max-width: 640px) {
+  .animate-fade-in-up,
+  .animate-fade-in-up-delayed {
+    animation-duration: 0.6s;
+  }
+}
+
+/* ============================================
+   8. DARK MODE SUPPORT (Optional - Future Use)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  /* Uncomment when implementing dark mode */
+  /*
+  body {
+    @apply bg-slate-900 text-slate-100;
+  }
+  */
+}
+
+/* ============================================
+   9. PRINT STYLES
+   ============================================ */
+@media print {
+  .no-print {
+    display: none !important;
   }
 }
