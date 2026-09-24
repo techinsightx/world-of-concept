@@ -11,7 +11,6 @@ export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen bg-slate-50 py-12 px-4 sm:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold mb-8 transition-colors">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -19,7 +18,6 @@ export default function PrivacyPolicyPage() {
           Back to Home
         </Link>
 
-        {/* Header */}
         <div className="glass rounded-3xl p-8 sm:p-12 mb-8 animate-fade-in-up">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
@@ -35,7 +33,6 @@ export default function PrivacyPolicyPage() {
           </p>
         </div>
 
-        {/* Content Sections */}
         <div className="space-y-6">
           <section className="card animate-fade-in-up">
             <h2 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -45,7 +42,7 @@ export default function PrivacyPolicyPage() {
             <ul className="space-y-2 text-slate-600 ml-6">
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-1">•</span>
-                <span><strong>Personal Information:</strong> Name, father's name, email, mobile number, and address when you create an account.</span>
+                <span><strong>Personal Information:</strong> Name, father&apos;s name, email, mobile number, and address when you create an account.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-600 mt-1">•</span>

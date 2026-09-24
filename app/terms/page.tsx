@@ -104,7 +104,7 @@ export default function TermsPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-600 mt-1">✗</span>
-                <span>Attempt to hack, disrupt, or compromise the platform's security</span>
+                <span>Attempt to hack, disrupt, or compromise the platform&apos;s security</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-600 mt-1">✗</span>

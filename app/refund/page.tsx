@@ -29,7 +29,7 @@ export default function RefundPolicyPage() {
             </div>
           </div>
           <p className="text-slate-600 leading-relaxed">
-            We want you to be completely satisfied with your learning experience. Here's our transparent refund policy.
+            We want you to be completely satisfied with your learning experience. Here&apos;s our transparent refund policy.
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export default function RefundPolicyPage() {
               <span className="text-green-600">✓</span> 7-Day Money-Back Guarantee
             </h2>
             <p className="text-slate-600 mb-3">
-              We offer a <strong>7-day money-back guarantee</strong> on all course purchases. If you're not satisfied with the course quality, you can request a full refund within 7 days of purchase.
+              We offer a <strong>7-day money-back guarantee</strong> on all course purchases. If you&apos;re not satisfied with the course quality, you can request a full refund within 7 days of purchase.
             </p>
             <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 mt-4">
               <p className="text-green-800 font-semibold text-sm">
@@ -81,7 +81,7 @@ export default function RefundPolicyPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-600 mt-1">✗</span>
-                <span>The course was purchased during a special promotion with "no refund" terms</span>
+                <span>The course was purchased during a special promotion with &quot;no refund&quot; terms</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-600 mt-1">✗</span>
