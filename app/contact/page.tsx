@@ -25,7 +25,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Contact Us</h1>
-              <p className="text-sm text-slate-500 mt-1">We're here to help you!</p>
+              <p className="text-sm text-slate-500 mt-1">We&apos;re here to help you!</p>
             </div>
           </div>
           <p className="text-slate-600 leading-relaxed">
@@ -59,8 +59,8 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">Phone Support</h3>
                 <p className="text-sm text-slate-500 mb-2">Mon-Sat, 9 AM - 6 PM</p>
-                <a href="tel:+919876543210" className="text-green-600 hover:underline font-semibold">
-                  +91 98XXX XXXXX
+                <a href="tel:+917979096954" className="text-green-600 hover:underline font-semibold">
+                  +91 7979096954
                 </a>
               </div>
             </div>
@@ -127,21 +127,21 @@ export default function ContactPage() {
           <div className="card animate-fade-in-up">
             <h3 className="text-lg font-bold text-slate-800 mb-2">How do I access my purchased course?</h3>
             <p className="text-slate-600">
-              After successful payment, you'll get instant access to your course. Simply login to your account and navigate to "My Courses" section.
+              After successful payment, you&apos;ll get instant access to your course. Simply login to your account and navigate to the &quot;My Courses&quot; section.
             </p>
           </div>
 
           <div className="card animate-fade-in-up">
             <h3 className="text-lg font-bold text-slate-800 mb-2">Can I download videos for offline viewing?</h3>
             <p className="text-slate-600">
-              Currently, videos can only be streamed online to protect our content. We're working on an offline viewing feature for the future.
+              Currently, videos can only be streamed online to protect our content. We&apos;re working on an offline viewing feature for the future.
             </p>
           </div>
 
           <div className="card animate-fade-in-up">
             <h3 className="text-lg font-bold text-slate-800 mb-2">What if I face technical issues?</h3>
             <p className="text-slate-600">
-              Contact our support team via email or WhatsApp with your issue details. We'll resolve it within 24 hours or provide a refund if needed.
+              Contact our support team via email or WhatsApp with your issue details. We&apos;ll resolve it within 24 hours or provide a refund if needed.
             </p>
           </div>
         </div>
