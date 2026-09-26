@@ -27,6 +27,22 @@ export default function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Password Strength Calculator
+  const getPasswordStrength = (pass: string) => {
+    let strength = 0;
+    if (pass.length >= 6) strength++;
+    if (pass.length >= 10) strength++;
+    if (/[A-Z]/.test(pass)) strength++;
+    if (/[0-9]/.test(pass)) strength++;
+    if (/[^A-Za-z0-9]/.test(pass)) strength++;
+    return strength;
+  };
+
+  const passwordStrength = getPasswordStrength(password);
+  const strengthLabels = ["", "Weak", "Fair", "Good", "Strong", "Very Strong"];
+  const strengthColors = ["", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-blue-500", "bg-green-500"];
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,9 +56,9 @@ export default function AuthForm() {
         await signInWithEmailAndPassword(auth, email, password);
         setSuccess("✅ Login successful! Redirecting to your dashboard...");
         
-        // Immediate redirect after 800ms
+        // Redirect to dashboard after 800ms
         setTimeout(() => {
-          router.push("/");
+          router.push("/dashboard");
         }, 800);
         
       } else {
@@ -64,6 +80,11 @@ export default function AuthForm() {
         }
         if (address.trim().length < 10) {
           setError("❌ Please enter your complete address (minimum 10 characters)");
+          setLoading(false);
+          return;
+        }
+        if (passwordStrength < 3) {
+          setError("❌ Password is too weak. Please use uppercase, numbers, and special characters");
           setLoading(false);
           return;
         }
@@ -92,9 +113,9 @@ export default function AuthForm() {
 
         setSuccess("🎉 Account created successfully! Welcome to World of Concept family!");
         
-        // Immediate redirect after 1 second
+        // Redirect to dashboard after 1 second
         setTimeout(() => {
-          router.push("/");
+          router.push("/dashboard");
         }, 1000);
       }
     } catch (err: unknown) {
@@ -111,6 +132,10 @@ export default function AuthForm() {
           setError("❌ Password should be at least 6 characters long.");
         } else if (msg.includes("invalid-email")) {
           setError("❌ Please enter a valid email address.");
+        } else if (msg.includes("wrong-password")) {
+          setError("❌ Incorrect password. Please try again.");
+        } else if (msg.includes("user-not-found")) {
+          setError("❌ No account found with this email. Please sign up.");
         } else {
           setError(`❌ ${msg || "Authentication failed. Please try again."}`);
         }
@@ -130,9 +155,9 @@ export default function AuthForm() {
       await signInWithPopup(auth, provider);
       setSuccess("✅ Google login successful! Redirecting...");
       
-      // Immediate redirect
+      // Redirect to dashboard
       setTimeout(() => {
-        router.push("/");
+        router.push("/dashboard");
       }, 800);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -153,6 +178,7 @@ export default function AuthForm() {
     setFatherName("");
     setMobile("");
     setAddress("");
+    setPassword("");
   };
 
   return (
@@ -167,7 +193,7 @@ export default function AuthForm() {
         </h2>
         <p className="text-sm text-slate-500">
           {isLogin 
-            ? "Sign in to continue your learning journey" 
+            ? "Sign in to access your learning dashboard" 
             : "Create your free student account in 30 seconds"}
         </p>
       </div>
@@ -295,20 +321,61 @@ export default function AuthForm() {
           </div>
         )}
 
-        {/* Password Field (Always Visible) */}
+        {/* Password Field with Show/Hide Toggle */}
         <div className="space-y-1.5">
           <label className="block text-sm font-semibold text-slate-700 ml-1">
             Password
           </label>
-          <input 
-            type="password" 
-            placeholder="Minimum 6 characters" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            className="input-field" 
-            required 
-            minLength={6}
-          />
+          <div className="relative">
+            <input 
+              type={showPassword ? "text" : "password"} 
+              placeholder="Minimum 6 characters" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              className="input-field pr-12" 
+              required 
+              minLength={6}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              {showPassword ? (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              )}
+            </button>
+          </div>
+          
+          {/* Password Strength Indicator (Only in Signup) */}
+          {!isLogin && password && (
+            <div className="animate-fade-in">
+              <div className="flex gap-1 mb-1">
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <div
+                    key={level}
+                    className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                      level <= passwordStrength ? strengthColors[passwordStrength] : "bg-slate-200"
+                    }`}
+                  />
+                ))}
+              </div>
+              <p className={`text-xs font-medium ${
+                passwordStrength <= 2 ? "text-red-600" : 
+                passwordStrength <= 3 ? "text-yellow-600" : 
+                "text-green-600"
+              }`}>
+                Password strength: {strengthLabels[passwordStrength]}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Error Message - Animated */}
