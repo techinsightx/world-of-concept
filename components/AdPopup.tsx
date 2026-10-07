@@ -25,20 +25,20 @@ export default function AdPopup() {
     {
       id: 1,
       image: "/ad1.jpg",
-      title: "मैथ ऑब्जेक्टिव मास्टरक्लास",
+      title: "गणित: ऑब्जेक्टिव मास्टरक्लास",
       subtitle: "बिहार बोर्ड मैट्रिक 2027 के लिए",
       badge: "🔥 अभी जॉइन करें",
-      cta: "सिर्फ ₹499 में enroll करें",
+      cta: "सिर्फ ₹499 में नामांकन करें",
       link: "#available-courses",
       gradient: "from-blue-600 via-indigo-600 to-purple-600",
     },
     {
       id: 2,
       image: "/ad2.jpg",
-      title: "साइंस कम्प्लीट रिवीज़न",
-      subtitle: "Physics, Chemistry, Biology",
-      badge: "⚡ लिमिटेड सीट्स",
-      cta: "सिर्फ ₹699 में enroll करें",
+      title: "विज्ञान: संपूर्ण रिवीज़न",
+      subtitle: "भौतिकी, रसायन विज्ञान, जीव विज्ञान",
+      badge: "⚡ सीमित सीटें",
+      cta: "सिर्फ ₹699 में नामांकन करें",
       link: "#available-courses",
       gradient: "from-emerald-500 via-teal-500 to-cyan-600",
     },
@@ -46,9 +46,9 @@ export default function AdPopup() {
       id: 3,
       image: "/ad3.jpg",
       title: "इंटर टॉपर बैच",
-      subtitle: "Class 12 Complete Preparation",
+      subtitle: "कक्षा 12 की संपूर्ण तैयारी",
       badge: "🏆 टॉपर स्पेशल",
-      cta: "सिर्फ ₹999 में enroll करें",
+      cta: "सिर्फ ₹999 में नामांकन करें",
       link: "#available-courses",
       gradient: "from-orange-500 via-red-500 to-pink-600",
     },
@@ -155,7 +155,7 @@ export default function AdPopup() {
               <button
                 onClick={handleClose}
                 className="absolute top-3 right-3 z-30 w-9 h-9 bg-white/90 backdrop-blur-md hover:bg-white text-slate-700 hover:text-slate-900 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 group"
-                aria-label="Close"
+                aria-label="बंद करें"
               >
                 <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
               </button>
@@ -215,7 +215,7 @@ export default function AdPopup() {
                   <button
                     onClick={prevAd}
                     className="w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                    aria-label="Previous Ad"
+                    aria-label="पिछला विज्ञापन"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
@@ -234,7 +234,7 @@ export default function AdPopup() {
                             ? "w-8 h-2 bg-slate-900"
                             : "w-2 h-2 bg-slate-300 hover:bg-slate-400"
                         }`}
-                        aria-label={`Go to ad ${idx + 1}`}
+                        aria-label={`विज्ञापन ${idx + 1} पर जाएं`}
                       />
                     ))}
                   </div>
@@ -242,7 +242,7 @@ export default function AdPopup() {
                   <button
                     onClick={nextAd}
                     className="w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                    aria-label="Next Ad"
+                    aria-label="अगला विज्ञापन"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
