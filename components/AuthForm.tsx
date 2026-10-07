@@ -30,8 +30,8 @@ export default function AuthForm() {
         await signInWithEmailAndPassword(auth, email, password);
         window.location.href = "/";
       } else {
-        if (fullName.trim().length < 3) throw new Error("Please enter your full name (minimum 3 characters)");
-        if (password.length < 6) throw new Error("Password must be at least 6 characters long.");
+        if (fullName.trim().length < 3) throw new Error("कृपया अपना पूरा नाम दर्ज करें (कम से कम 3 अक्षर)");
+        if (password.length < 6) throw new Error("पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।");
 
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -53,14 +53,14 @@ export default function AuthForm() {
       }
     } catch (err: unknown) {
       setLoading(false);
-      let errorMessage = "Authentication failed. Please try again.";
+      let errorMessage = "प्रमाणीकरण विफल रहा। कृपया पुनः प्रयास करें।";
       
       if (err instanceof Error) {
         const msg = err.message;
-        if (msg.includes("email-already-in-use")) errorMessage = "This email is already registered. Please login instead.";
-        else if (msg.includes("weak-password")) errorMessage = "Password should be at least 6 characters long.";
-        else if (msg.includes("invalid-email")) errorMessage = "Please enter a valid email address.";
-        else if (msg.includes("wrong-password") || msg.includes("user-not-found")) errorMessage = "Incorrect email or password. Please try again.";
+        if (msg.includes("email-already-in-use")) errorMessage = "यह ईमेल पहले से पंजीकृत है। कृपया लॉगिन करें।";
+        else if (msg.includes("weak-password")) errorMessage = "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।";
+        else if (msg.includes("invalid-email")) errorMessage = "कृपया एक मान्य ईमेल पता दर्ज करें।";
+        else if (msg.includes("wrong-password") || msg.includes("user-not-found")) errorMessage = "ईमेल या पासवर्ड गलत है। कृपया पुनः प्रयास करें।";
         else errorMessage = msg.replace("Firebase: ", "").replace(/\(auth\/.*\)/, "").trim();
       }
       setError(errorMessage);
@@ -120,12 +120,12 @@ export default function AuthForm() {
               <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-3" priority />
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
-              {isLogin ? "Welcome Back" : "Join World of Concept"}
+              {isLogin ? "वापसी पर स्वागत है" : "World of Concept से जुड़ें"}
             </h2>
             <p className="text-blue-200/80 text-sm sm:text-base">
               {isLogin 
-                ? "Enter your credentials to access your dashboard" 
-                : "Start your journey to top the Bihar Board exams"}
+                ? "अपने डैशबोर्ड तक पहुँचने के लिए अपनी जानकारी दर्ज करें" 
+                : "बिहार बोर्ड परीक्षाओं में टॉप करने की अपनी यात्रा शुरू करें"}
             </p>
           </div>
 
@@ -143,7 +143,7 @@ export default function AuthForm() {
                 isLogin ? "text-blue-600" : "text-white/70 hover:text-white"
               }`}
             >
-              Sign In
+              साइन इन
             </button>
             <button
               type="button"
@@ -152,7 +152,7 @@ export default function AuthForm() {
                 !isLogin ? "text-blue-600" : "text-white/70 hover:text-white"
               }`}
             >
-              Sign Up
+              साइन अप
             </button>
           </div>
 
@@ -161,12 +161,12 @@ export default function AuthForm() {
             {!isLogin && (
               <div className="space-y-1.5 animate-fade-in">
                 <label htmlFor="fullName" className="block text-sm font-semibold text-white/90">
-                  Full Name <span className="text-red-400">*</span>
+                  पूरा नाम <span className="text-red-400">*</span>
                 </label>
                 <input
                   id="fullName"
                   type="text"
-                  placeholder="Shubham Kumar"
+                  placeholder="शुभम कुमार"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="w-full px-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200"
@@ -177,7 +177,7 @@ export default function AuthForm() {
 
             <div className="space-y-1.5">
               <label htmlFor="email" className="block text-sm font-semibold text-white/90">
-                Email Address <span className="text-red-400">*</span>
+                ईमेल पता <span className="text-red-400">*</span>
               </label>
               <input
                 id="email"
@@ -192,13 +192,13 @@ export default function AuthForm() {
 
             <div className="space-y-1.5">
               <label htmlFor="password" className="block text-sm font-semibold text-white/90">
-                Password <span className="text-red-400">*</span>
+                पासवर्ड <span className="text-red-400">*</span>
               </label>
               <div className="relative">
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Minimum 6 characters"
+                  placeholder="कम से कम 6 अक्षर"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200 pr-12"
@@ -209,7 +209,7 @@ export default function AuthForm() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors p-1"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? "पासवर्ड छिपाएं" : "पासवर्ड दिखाएं"}
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -247,11 +247,11 @@ export default function AuthForm() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Processing...
+                  प्रोसेसिंग हो रही है...
                 </>
               ) : (
                 <>
-                  {isLogin ? "Sign In to Dashboard" : "Create Free Account"}
+                  {isLogin ? "डैशबोर्ड में प्रवेश करें" : "मुफ्त अकाउंट बनाएं"}
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -262,10 +262,10 @@ export default function AuthForm() {
 
           {/* Footer Links */}
           <p className="text-center text-xs text-white/60 mt-8">
-            By continuing, you agree to our{" "}
-            <a href="/terms" className="text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors">Terms</a>
-            {" & "}
-            <a href="/privacy" className="text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors">Privacy Policy</a>
+            जारी रखकर, आप हमारी{" "}
+            <a href="/terms" className="text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors">शर्तों</a>
+            {" और "}
+            <a href="/privacy" className="text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
           </p>
         </div>
       </div>
