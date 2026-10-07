@@ -54,27 +54,6 @@ export default function Home() {
     window.location.href = "/";
   };
 
-  // ✅ WORKING TRANSLATION FUNCTION (अब English में ट्रांसलेट करने के लिए)
-  const handleTranslateToEnglish = () => {
-    const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-    if (select) {
-      select.value = 'en';
-      select.dispatchEvent(new Event('change'));
-      document.cookie = "googtrans=/hi/en; path=/; domain=" + window.location.hostname;
-    } else {
-      const script = document.createElement('script');
-      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      document.body.appendChild(script);
-      setTimeout(() => {
-        const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-        if (select) {
-          select.value = 'en';
-          select.dispatchEvent(new Event('change'));
-        }
-      }, 1000);
-    }
-  };
-
   const PureLogo = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
     const dimensions = size === "sm" ? "w-10 h-10" : size === "lg" ? "w-20 h-20" : "w-14 h-14";
     return (
@@ -103,7 +82,7 @@ export default function Home() {
   if (!user) {
     return (
       <main className="relative min-h-screen bg-slate-50 overflow-x-hidden flex flex-col" itemScope itemType="https://schema.org/WebPage">
-        <div id="google_translate_element" className="hidden"></div>
+        {/* ✅ REMOVED: google_translate_element div */}
 
         <section className="relative min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
           <div className="absolute inset-0 z-0">
@@ -128,14 +107,8 @@ export default function Home() {
                   RK Sir के साथ सफलता की अपनी नई यात्रा शुरू करें।
                 </span>
               </p>
-
-              <button 
-                onClick={handleTranslateToEnglish}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 hover:border-blue-300 transition-all duration-300 shadow-sm"
-              >
-                <span className="text-xl">🇬🇧</span>
-                <span>English में पढ़ें</span>
-              </button>
+              
+              {/* ✅ REMOVED: Custom Translation Button */}
             </div>
             
             <div className="flex-1 w-full max-w-md lg:max-w-lg animate-fade-in-up-delayed">
@@ -254,19 +227,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col relative overflow-x-hidden">
-      <div id="google_translate_element" className="hidden"></div>
+      {/* ✅ REMOVED: google_translate_element div */}
 
       <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <Logo size="medium" showText={true} />
             <div className="flex items-center gap-2 sm:gap-4">
-              <button 
-                onClick={handleTranslateToEnglish}
-                className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-all duration-300"
-              >
-                <span>🇬🇧</span> <span className="hidden sm:inline">English</span>
-              </button>
+              {/* ✅ REMOVED: Custom Translation Button from Header */}
 
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-semibold text-slate-900">{student?.fullName || "छात्र"}</p>
@@ -293,7 +261,7 @@ export default function Home() {
             <p className="text-slate-600 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
           </div>
 
-          {/* ✅ CINEMATIC LIVE CLASS CARD (Fitted & Centered Button) */}
+          {/* ✅ CINEMATIC LIVE CLASS CARD */}
           <div className="animate-fade-in-up w-full">
             <div className="card-interactive border-2 border-red-100 bg-gradient-to-br from-red-50 to-white relative overflow-hidden group rounded-2xl w-full hover:shadow-2xl hover:shadow-red-500/10 hover:-translate-y-1 transition-all duration-500 ease-out">
               <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-10">
@@ -304,7 +272,6 @@ export default function Home() {
                 <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-2 w-full leading-tight">RK Sir के साथ दैनिक लाइव क्लास</h3>
                 <p className="text-slate-600 text-xs sm:text-base mb-4 sm:mb-6 w-full max-w-xl">दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें, और हमारे आधिकारिक YouTube चैनल पर सीधे विशेष बोर्ड परीक्षा टिप्स प्राप्त करें।</p>
                 
-                {/* ✅ FIXED: Removed w-full, added mx-auto for perfect centering and premium fitted look */}
                 <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-bold hover:bg-red-700 transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/20 mx-auto">
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                   अभी लाइव क्लास में शामिल हों
@@ -340,14 +307,13 @@ export default function Home() {
               <h3 className="text-base sm:text-xl font-bold text-slate-900 mb-2">अभी तक कोई कोर्स नहीं</h3>
               <p className="text-slate-600 text-xs sm:text-sm mb-4 sm:mb-6 max-w-md mx-auto">बिहार बोर्ड के लिए बनाए गए कोर्स में नामांकन करके अपनी शिक्षा यात्रा शुरू करें।</p>
               
-              {/* ✅ FIXED: Removed w-full, added mx-auto for premium fitted look */}
               <a href="#available-courses" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm mx-auto">
                 कोर्सेस देखें
               </a>
             </div>
           </div>
 
-          {/* 🎓 CINEMATIC COURSES RAIL (Arriving Style & Fitted Buttons) */}
+          {/* 🎓 CINEMATIC COURSES RAIL */}
           <div id="available-courses" className="animate-fade-in-up w-full" style={{ animationDelay: "0.4s" }}>
             <div className="text-center mb-6 sm:mb-8 px-2">
               <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">उपलब्ध कोर्सेस</h2>
@@ -370,7 +336,6 @@ export default function Home() {
                   const course = courses[i % 5];
                   
                   return (
-                    // 🎬 CINEMATIC ARRIVING CARD
                     <div key={`course-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 lg:w-96 flex-shrink-0 group" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
                       <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-slate-100 hover:border-blue-300 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                         <div className="relative h-40 sm:h-56 overflow-hidden">
@@ -389,7 +354,6 @@ export default function Home() {
                           <p className="text-slate-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
                           <div className="flex items-center justify-between mt-auto">
                             <span className="text-lg sm:text-2xl font-extrabold text-slate-900">{course.price}</span>
-                            {/* ✅ FIXED: Perfectly fitted enroll button */}
                             <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2 px-4 sm:py-2.5 sm:px-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
                               अभी नामांकन करें
                             </button>
@@ -403,7 +367,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 🎬 CINEMATIC GALLERY (Arriving Text Overlay) */}
+          {/* 🎬 CINEMATIC GALLERY */}
           <div className="animate-fade-in-up w-full" style={{ animationDelay: "0.6s" }}>
             <div className="text-center mb-6 sm:mb-8 px-2">
               <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">World of Concept में जीवन</h2>
@@ -419,7 +383,6 @@ export default function Home() {
                   <div key={`row1-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 ease-out hover:-translate-y-2">
                     <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-                    {/* ✅ ARRIVING STYLE: Text slides up smoothly on hover */}
                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                       <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">World of Concept क्लास</span>
                     </div>
@@ -432,7 +395,6 @@ export default function Home() {
                   <div key={`row2-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 ease-out hover:-translate-y-2">
                     <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-                    {/* ✅ ARRIVING STYLE: Text slides up smoothly on hover */}
                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                       <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">छात्र सफलता की कहानी</span>
                     </div>
