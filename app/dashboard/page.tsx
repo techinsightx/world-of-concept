@@ -8,7 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/components/logo";
-import AdPopup from "@/components/AdPopup"; // 🔥 Ad Popup Component Imported
+import AdPopup from "@/components/AdPopup"; 
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
   Bell, LogOut, Sparkles, Trophy, PlusCircle, Users 
@@ -25,10 +25,10 @@ interface StudentData {
 }
 
 const retentionData = [
-  { day: "Mon", students: 120 }, { day: "Tue", students: 145 },
-  { day: "Wed", students: 132 }, { day: "Thu", students: 180 },
-  { day: "Fri", students: 210 }, { day: "Sat", students: 250 },
-  { day: "Sun", students: 285 },
+  { day: "सोम", students: 120 }, { day: "मंगल", students: 145 },
+  { day: "बुध", students: 132 }, { day: "गुरु", students: 180 },
+  { day: "शुक्र", students: 210 }, { day: "शनि", students: 250 },
+  { day: "रवि", students: 285 },
 ];
 
 export default function DashboardPage() {
@@ -75,7 +75,7 @@ export default function DashboardPage() {
   const myCourses = [
     {
       id: "math_class_10_001",
-      title: "Math: Objective Masterclass",
+      title: "गणित: ऑब्जेक्टिव मास्टरक्लास",
       instructor: "RK Sir",
       progress: 35,
       totalLectures: 45,
@@ -83,11 +83,11 @@ export default function DashboardPage() {
       driveLink: "https://drive.google.com/drive/folders/YOUR_FOLDER_ID",
       color: "from-blue-500 to-indigo-600",
       icon: "📐",
-      nextClass: "Today, 5:00 PM"
+      nextClass: "आज, शाम 5:00 बजे"
     },
     {
       id: "science_class_10_001",
-      title: "Science: Complete Revision",
+      title: "विज्ञान: संपूर्ण रिवीजन",
       instructor: "RK Sir",
       progress: 12,
       totalLectures: 60,
@@ -95,7 +95,7 @@ export default function DashboardPage() {
       driveLink: "https://drive.google.com/drive/folders/YOUR_FOLDER_ID",
       color: "from-purple-500 to-pink-600",
       icon: "🔬",
-      nextClass: "Tomorrow, 4:00 PM"
+      nextClass: "कल, शाम 4:00 बजे"
     },
   ];
 
@@ -112,7 +112,7 @@ export default function DashboardPage() {
               <span className="text-4xl">🎓</span>
             </div>
           </div>
-          <p className="text-slate-600 font-medium animate-pulse">Loading your dashboard...</p>
+          <p className="text-slate-600 font-medium animate-pulse">आपका डैशबोर्ड लोड हो रहा है...</p>
         </div>
       </div>
     );
@@ -122,12 +122,12 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-slate-600 text-lg">Unable to load student data</p>
+          <p className="text-slate-600 text-lg">छात्र डेटा लोड करने में असमर्थ</p>
           <button 
             onClick={() => window.location.replace("/")} 
             className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
           >
-            Go to Home
+            होम पर जाएं
           </button>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-x-hidden font-sans">
       
-      {/* 🎯 AD POPUP COMPONENT (Site load hone par automatically aayega) */}
+      {/* 🎯 AD POPUP COMPONENT */}
       <AdPopup />
 
       <style jsx global>{`
@@ -169,7 +169,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 border border-red-100 hover:border-red-200">
-                <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Logout</span>
+                <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
               </button>
             </div>
           </div>
@@ -178,25 +178,25 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
-        {/* 🚨 ADMIN DASHBOARD SECTION (Sirf Admin ko dikhega) */}
+        {/* 🚨 ADMIN DASHBOARD SECTION */}
         {student?.role === "admin" && (
           <section className="mb-12 animate-fade-in-up bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-sm font-bold mb-3 border border-indigo-100">
-                  <Sparkles className="w-4 h-4" /> Creator Mode
+                  <Sparkles className="w-4 h-4" /> क्रिएटर मोड
                 </div>
-                <h2 className="text-2xl font-extrabold text-slate-900">Admin Dashboard</h2>
-                <p className="text-slate-500 text-sm">Welcome back, RK Sir. Here is your platform overview.</p>
+                <h2 className="text-2xl font-extrabold text-slate-900">एडमिन डैशबोर्ड</h2>
+                <p className="text-slate-500 text-sm">वापसी पर स्वागत है, RK Sir। यहाँ आपका प्लेटफ़ॉर्म अवलोकन है।</p>
               </div>
               <button className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
-                <PlusCircle className="w-5 h-5" /> Create New Post / Class
+                <PlusCircle className="w-5 h-5" /> नई पोस्ट / क्लास बनाएं
               </button>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-slate-50 rounded-2xl p-4 sm:p-6 border border-slate-100">
-                <h3 className="text-lg font-bold text-slate-900 mb-4">Student Retention & Daily Active Users</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-4">छात्र प्रतिधारण और दैनिक सक्रिय उपयोगकर्ता</h3>
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={retentionData}>
@@ -216,40 +216,40 @@ export default function DashboardPage() {
               </div>
               <div className="space-y-6">
                 <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-xl shadow-blue-500/20">
-                  <p className="text-blue-100 text-sm font-medium mb-1 flex items-center gap-2"><Users className="w-4 h-4"/> Total Enrolled Students</p>
+                  <p className="text-blue-100 text-sm font-medium mb-1 flex items-center gap-2"><Users className="w-4 h-4"/> कुल नामांकित छात्र</p>
                   <p className="text-3xl sm:text-4xl font-extrabold">12,450+</p>
-                  <p className="text-blue-200 text-xs mt-2">↑ 12% from last month</p>
+                  <p className="text-blue-200 text-xs mt-2">↑ पिछले महीने से 12%</p>
                 </div>
                 <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-                  <p className="text-slate-500 text-sm font-medium mb-1">Active Courses</p>
+                  <p className="text-slate-500 text-sm font-medium mb-1">सक्रिय कोर्सेस</p>
                   <p className="text-3xl font-extrabold text-slate-900">8</p>
-                  <p className="text-slate-400 text-xs mt-2">Matric & Inter Batches</p>
+                  <p className="text-slate-400 text-xs mt-2">मैट्रिक और इंटर बैच</p>
                 </div>
               </div>
             </div>
           </section>
         )}
 
-        {/* STUDENT DASHBOARD SECTION (Sabko dikhega) */}
+        {/* STUDENT DASHBOARD SECTION */}
         <div className="animate-fade-in-up">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold mb-4 border border-blue-100">
             <Sparkles className="w-4 h-4" />
-            <span>Student Dashboard</span>
+            <span>छात्र डैशबोर्ड</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-3 leading-tight">
-            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{student.fullName.split(" ")[0]}</span> 👋
+            वापसी पर स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{student.fullName.split(" ")[0]}</span> 👋
           </h1>
           <p className="text-slate-600 text-lg max-w-2xl">
-            Continue your learning journey with RK Sir. Stay consistent, and let us make today productive!
+            RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। निरंतरता बनाए रखें, और आइए आज को उत्पादक बनाएं!
           </p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12">
           {[
-            { icon: BookOpen, label: "Total Courses", value: myCourses.length, color: "bg-blue-50 text-blue-600", delay: "0s" },
-            { icon: CheckCircle2, label: "Completed", value: "0", color: "bg-green-50 text-green-600", delay: "0.1s" },
-            { icon: Target, label: "In Progress", value: myCourses.length, color: "bg-purple-50 text-purple-600", delay: "0.2s" },
+            { icon: BookOpen, label: "कुल कोर्सेस", value: myCourses.length, color: "bg-blue-50 text-blue-600", delay: "0s" },
+            { icon: CheckCircle2, label: "पूर्ण", value: "0", color: "bg-green-50 text-green-600", delay: "0.1s" },
+            { icon: Target, label: "प्रगति में", value: myCourses.length, color: "bg-purple-50 text-purple-600", delay: "0.2s" },
           ].map((stat, i) => (
             <div 
               key={i} 
@@ -273,11 +273,11 @@ export default function DashboardPage() {
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div>
-              <h2 className="text-2xl font-extrabold text-slate-900">My Enrolled Courses</h2>
-              <p className="text-slate-500 text-sm mt-1">Pick up where you left off</p>
+              <h2 className="text-2xl font-extrabold text-slate-900">मेरे नामांकित कोर्सेस</h2>
+              <p className="text-slate-500 text-sm mt-1">जहाँ छोड़ा था वहीं से शुरू करें</p>
             </div>
             <Link href="/courses" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm transition-colors group bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl w-fit">
-              Browse All Courses
+              सभी कोर्सेस देखें
               <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </Link>
           </div>
@@ -307,12 +307,12 @@ export default function DashboardPage() {
                   <h3 className="text-xl font-bold text-slate-900 mb-1 line-clamp-1">{course.title}</h3>
                   <p className="text-sm text-slate-500 mb-6 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                    By {course.instructor}
+                    द्वारा {course.instructor}
                   </p>
                   
                   <div className="mb-6">
                     <div className="flex justify-between text-xs text-slate-600 mb-2 font-semibold">
-                      <span>Course Progress</span>
+                      <span>कोर्स प्रगति</span>
                       <span className="text-blue-600">{course.progress}%</span>
                     </div>
                     <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
@@ -324,7 +324,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <p className="text-xs text-slate-400 mt-2 text-right">
-                      {course.completedLectures} / {course.totalLectures} Lectures
+                      {course.completedLectures} / {course.totalLectures} लेक्चर्स
                     </p>
                   </div>
 
@@ -335,7 +335,7 @@ export default function DashboardPage() {
                     className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-semibold py-3.5 rounded-xl hover:bg-slate-800 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-slate-900/20"
                   >
                     <PlayCircle className="w-5 h-5" />
-                    <span>Continue Learning</span>
+                    <span>पढ़ाई जारी रखें</span>
                   </a>
                 </div>
               </div>
@@ -346,8 +346,8 @@ export default function DashboardPage() {
         {/* 🎬 Cinematic Infinite Scrolling Gallery */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
           <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">Life at World of Concept</h2>
-            <p className="text-slate-500 max-w-xl mx-auto">Glimpses of our classrooms, interactive sessions, and student success stories</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
+            <p className="text-slate-500 max-w-xl mx-auto">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
           </div>
 
           <div className="relative w-full overflow-hidden py-6">
@@ -369,7 +369,7 @@ export default function DashboardPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
                     <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
-                      <PlayCircle className="w-4 h-4" /> World of Concept Class
+                      <PlayCircle className="w-4 h-4" /> World of Concept क्लास
                     </span>
                   </div>
                 </div>
@@ -391,7 +391,7 @@ export default function DashboardPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
                     <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
-                      <Trophy className="w-4 h-4 text-yellow-400" /> Student Success Story
+                      <Trophy className="w-4 h-4 text-yellow-400" /> छात्र सफलता की कहानी
                     </span>
                   </div>
                 </div>
@@ -411,15 +411,15 @@ export default function DashboardPage() {
               <div className="w-20 h-20 mx-auto mb-6 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-xl">
                 <PlayCircle className="w-10 h-10 text-white" />
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">Daily Motivation by RK Sir</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">RK Sir द्वारा दैनिक प्रेरणा</h2>
               <p className="text-blue-100 text-lg leading-relaxed mb-8">
-                "Success is not final, failure is not fatal: it is the courage to continue that counts." 
+                "सफलता अंतिम नहीं है, असफलता घातक नहीं है: जारी रखने का साहस ही मायने रखता है।" 
                 <br />
-                <span className="text-sm font-semibold text-blue-200 mt-2 block">Special guidelines and motivational videos coming soon to keep you inspired!</span>
+                <span className="text-sm font-semibold text-blue-200 mt-2 block">आपको प्रेरित रखने के लिए विशेष दिशानिर्देश और प्रेरक वीडियो जल्द ही आ रहे हैं!</span>
               </p>
               <button className="px-8 py-3.5 bg-white text-indigo-700 rounded-xl font-bold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center gap-2 mx-auto">
                 <Bell className="w-5 h-5" />
-                Notify Me When Live
+                लाइव होने पर सूचित करें
               </button>
             </div>
           </div>
