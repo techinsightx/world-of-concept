@@ -54,13 +54,13 @@ export default function Home() {
     window.location.href = "/";
   };
 
-  // ✅ WORKING TRANSLATION FUNCTION
-  const handleTranslateToHindi = () => {
+  // ✅ WORKING TRANSLATION FUNCTION (अब English में ट्रांसलेट करने के लिए)
+  const handleTranslateToEnglish = () => {
     const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
     if (select) {
-      select.value = 'hi';
+      select.value = 'en';
       select.dispatchEvent(new Event('change'));
-      document.cookie = "googtrans=/en/hi; path=/; domain=" + window.location.hostname;
+      document.cookie = "googtrans=/hi/en; path=/; domain=" + window.location.hostname;
     } else {
       const script = document.createElement('script');
       script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
@@ -68,7 +68,7 @@ export default function Home() {
       setTimeout(() => {
         const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
         if (select) {
-          select.value = 'hi';
+          select.value = 'en';
           select.dispatchEvent(new Event('change'));
         }
       }, 1000);
@@ -90,7 +90,7 @@ export default function Home() {
         <div className="text-center space-y-6">
           <PureLogo size="lg" />
           <div className="space-y-2">
-            <p className="text-slate-800 font-semibold text-lg tracking-wide">Loading World of Concept</p>
+            <p className="text-slate-800 font-semibold text-lg tracking-wide">World of Concept लोड हो रहा है...</p>
             <div className="w-48 h-1.5 bg-slate-200 rounded-full mx-auto overflow-hidden">
               <div className="h-full bg-blue-600 rounded-full animate-[loading_1.5s_ease-in-out_infinite]" style={{ width: '60%' }} />
             </div>
@@ -115,7 +115,7 @@ export default function Home() {
             <div className="flex-1 text-center lg:text-left space-y-6 lg:space-y-8 animate-fade-in-up">
               <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-blue-50/80 border border-blue-100 text-blue-700 rounded-full text-sm font-semibold backdrop-blur-sm shadow-sm">
                 <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-                Admissions Open for 2027 Batch
+                2027 बैच के लिए एडमिशन खुले
               </div>
               
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight text-center lg:text-left" itemProp="name">
@@ -123,18 +123,18 @@ export default function Home() {
               </h1>
               
               <p className="text-lg sm:text-xl md:text-2xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium" itemProp="description">
-                The most trusted platform for Bihar Board Matric & Inter.
+                बिहार बोर्ड मैट्रिक और इंटर की तैयारी के लिए सबसे भरोसेमंद प्लेटफॉर्म।
                 <span className="block mt-3 text-slate-800 font-bold">
-                  Start your new journey of success with RK Sir.
+                  RK Sir के साथ सफलता की अपनी नई यात्रा शुरू करें।
                 </span>
               </p>
 
               <button 
-                onClick={handleTranslateToHindi}
+                onClick={handleTranslateToEnglish}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 hover:border-blue-300 transition-all duration-300 shadow-sm"
               >
-                <span className="text-xl">🇮🇳</span>
-                <span>हिंदी में पढ़ें</span>
+                <span className="text-xl">🇬🇧</span>
+                <span>English में पढ़ें</span>
               </button>
             </div>
             
@@ -153,19 +153,19 @@ export default function Home() {
           <div className="relative z-10 max-w-7xl mx-auto">
             <div className="text-center mb-16 sm:mb-20">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-                Why Choose <span className="gradient-text">World of Concept?</span>
+                World of Concept <span className="gradient-text">क्यों चुनें?</span>
               </h2>
               <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-                Everything you need to top the Bihar Board exams, curated by RK Sir.
+                बिहार बोर्ड परीक्षाओं में टॉप करने के लिए RK Sir द्वारा तैयार किया गया सब कुछ।
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
               {[
-                { icon: "🎬", title: "HD Video Lectures", desc: "Crystal clear concept-based lessons recorded in studio quality." },
-                { icon: "📝", title: "Smart Notes", desc: "Structured, handwritten notes for quick and effective revision." },
-                { icon: "📊", title: "Test Series", desc: "Chapter-wise and full mock tests with detailed performance analysis." },
-                { icon: "💬", title: "Doubt Support", desc: "Direct and prompt help from RK Sir and his dedicated mentor team." },
+                { icon: "🎬", title: "HD वीडियो लेक्चर", desc: "स्टूडियो क्वालिटी में रिकॉर्ड किए गए स्पष्ट कॉन्सेप्ट-बेस्ड पाठ।" },
+                { icon: "📝", title: "स्मार्ट नोट्स", desc: "त्वरित और प्रभावी पुनरावृत्ति के लिए संरचित, हस्तलिखित नोट्स।" },
+                { icon: "📊", title: "टेस्ट सीरीज", desc: "विस्तृत प्रदर्शन विश्लेषण के साथ अध्याय-वार और पूर्ण मॉक टेस्ट।" },
+                { icon: "💬", title: "डाउट सपोर्ट", desc: "RK Sir और उनकी समर्पित मेंटर टीम से सीधी और त्वरित सहायता।" },
               ].map((feature, i) => (
                 <div key={i} className="group bg-white/60 backdrop-blur-md border border-white/60 rounded-3xl p-8 text-center hover:bg-white hover:shadow-2xl hover:shadow-blue-900/5 hover:-translate-y-2 transition-all duration-500 ease-out">
                   <div className="w-20 h-20 mx-auto mb-6 bg-blue-50 rounded-2xl flex items-center justify-center text-4xl group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
@@ -189,7 +189,7 @@ export default function Home() {
                   <span className="font-extrabold text-xl tracking-tight">World of Concept</span>
                 </div>
                 <p className="text-sm leading-relaxed max-w-xs text-slate-400">
-                  Empowering Bihar students with world-class education, structured guidance, and a proven path to success.
+                  बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
                 </p>
                 <div className="flex gap-4 pt-2">
                   <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-red-600 hover:border-red-500 hover:text-white transition-all duration-300 hover:-translate-y-1" aria-label="YouTube">
@@ -208,42 +208,42 @@ export default function Home() {
               </div>
 
               <div>
-                <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Platform</h4>
+                <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
                 <ul className="space-y-4 text-sm">
-                  <li><a href="#available-courses" className="hover:text-blue-400 transition-colors duration-300">All Courses</a></li>
-                  <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">Why Choose Us</a></li>
-                  <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">Student Success Stories</a></li>
+                  <li><a href="#available-courses" className="hover:text-blue-400 transition-colors duration-300">सभी कोर्सेस</a></li>
+                  <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
+                  <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
                 </ul>
               </div>
 
               <div>
-                <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Legal</h4>
+                <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">कानूनी</h4>
                 <ul className="space-y-4 text-sm">
-                  <li><a href="/privacy" className="hover:text-blue-400 transition-colors duration-300">Privacy Policy</a></li>
-                  <li><a href="/terms" className="hover:text-blue-400 transition-colors duration-300">Terms of Service</a></li>
-                  <li><a href="/refund" className="hover:text-blue-400 transition-colors duration-300">Refund Policy</a></li>
-                  <li><a href="/contact" className="hover:text-blue-400 transition-colors duration-300">Contact Us</a></li>
+                  <li><a href="/privacy" className="hover:text-blue-400 transition-colors duration-300">गोपनीयता नीति</a></li>
+                  <li><a href="/terms" className="hover:text-blue-400 transition-colors duration-300">सेवा की शर्तें</a></li>
+                  <li><a href="/refund" className="hover:text-blue-400 transition-colors duration-300">रिफंड नीति</a></li>
+                  <li><a href="/contact" className="hover:text-blue-400 transition-colors duration-300">संपर्क करें</a></li>
                 </ul>
               </div>
 
               <div>
-                <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">Support</h4>
+                <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">सहायता</h4>
                 <ul className="space-y-4 text-sm">
                   <li className="flex items-center gap-3"><span>📧</span> support@worldofconcept.in</li>
                   <li className="flex items-center gap-3"><span>📞</span> +91 7979096954</li>
-                  <li className="flex items-center gap-3"><span>📍</span> Alamnagar, Bihar, India</li>
+                  <li className="flex items-center gap-3"><span>📍</span> अलमनगर, बिहार, भारत</li>
                 </ul>
               </div>
             </div>
 
             <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-              <p>© {new Date().getFullYear()} World of Concept. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
               <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-2 hover:text-blue-400 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
-                <span>Crafted with</span>
+                <span>निर्मित</span>
                 <svg className="w-4 h-4 text-red-500 group-hover:scale-125 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
-                <span>by <span className="font-semibold text-slate-400 group-hover:text-blue-400">Mukesh Kumar Malakar</span></span>
+                <span>द्वारा <span className="font-semibold text-slate-400 group-hover:text-blue-400">Mukesh Kumar Malakar</span></span>
               </a>
             </div>
           </div>
@@ -262,18 +262,18 @@ export default function Home() {
             <Logo size="medium" showText={true} />
             <div className="flex items-center gap-2 sm:gap-4">
               <button 
-                onClick={handleTranslateToHindi}
+                onClick={handleTranslateToEnglish}
                 className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-all duration-300"
               >
-                <span>🇮🇳</span> <span className="hidden sm:inline">हिंदी</span>
+                <span>🇬🇧</span> <span className="hidden sm:inline">English</span>
               </button>
 
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-slate-900">{student?.fullName || "Student"}</p>
+                <p className="text-sm font-semibold text-slate-900">{student?.fullName || "छात्र"}</p>
                 <p className="text-xs text-slate-500">{student?.email || user.email}</p>
               </div>
               <button onClick={handleLogout} className="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300 border border-red-200 hover:border-red-300 hover:shadow-md">
-                Logout
+                लॉगआउट
               </button>
             </div>
           </div>
@@ -288,9 +288,9 @@ export default function Home() {
         <div className="relative z-10 space-y-6 sm:space-y-12 lg:space-y-16">
           <div className="animate-fade-in-up">
             <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">
-              Welcome back, <span className="gradient-text">{student?.fullName?.split(" ")[0] || "Student"}</span> 👋
+              वापसी पर स्वागत है, <span className="gradient-text">{student?.fullName?.split(" ")[0] || "छात्र"}</span> 👋
             </h1>
-            <p className="text-slate-600 text-sm sm:text-lg">Continue your learning journey with RK Sir. Let us make today productive!</p>
+            <p className="text-slate-600 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
           </div>
 
           {/* ✅ CINEMATIC LIVE CLASS CARD (Fitted & Centered Button) */}
@@ -301,13 +301,13 @@ export default function Home() {
               </div>
               <div className="p-4 sm:p-8 flex flex-col items-center text-center w-full">
                 <div className="w-14 h-14 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center text-2xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 mb-3 sm:mb-4">▶️</div>
-                <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-2 w-full leading-tight">Daily Live Class with RK Sir</h3>
-                <p className="text-slate-600 text-xs sm:text-base mb-4 sm:mb-6 w-full max-w-xl">Join the daily live session, clear your doubts in real time, and get exclusive board exam tips directly on our official YouTube channel.</p>
+                <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-2 w-full leading-tight">RK Sir के साथ दैनिक लाइव क्लास</h3>
+                <p className="text-slate-600 text-xs sm:text-base mb-4 sm:mb-6 w-full max-w-xl">दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें, और हमारे आधिकारिक YouTube चैनल पर सीधे विशेष बोर्ड परीक्षा टिप्स प्राप्त करें।</p>
                 
                 {/* ✅ FIXED: Removed w-full, added mx-auto for perfect centering and premium fitted look */}
                 <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-bold hover:bg-red-700 transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/20 mx-auto">
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                  Join Live Class Now
+                  अभी लाइव क्लास में शामिल हों
                 </a>
               </div>
             </div>
@@ -315,9 +315,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
             {[
-              { icon: "📚", label: "Total Courses", value: "0", color: "bg-blue-100 text-blue-600", delay: "0s" },
-              { icon: "✅", label: "Completed", value: "0", color: "bg-green-100 text-green-600", delay: "0.1s" },
-              { icon: "🎯", label: "In Progress", value: "0", color: "bg-purple-100 text-purple-600", delay: "0.2s" },
+              { icon: "📚", label: "कुल कोर्सेस", value: "0", color: "bg-blue-100 text-blue-600", delay: "0s" },
+              { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-100 text-green-600", delay: "0.1s" },
+              { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-100 text-purple-600", delay: "0.2s" },
             ].map((stat, i) => (
               <div key={i} className="card bg-white border border-slate-100 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:scale-[1.02] hover:shadow-xl transition-all duration-300" style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
@@ -334,15 +334,15 @@ export default function Home() {
           </div>
 
           <div className="w-full">
-            <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-3 sm:mb-6">My Courses</h2>
+            <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-3 sm:mb-6">मेरे कोर्सेस</h2>
             <div className="card bg-white border border-slate-100 rounded-2xl text-center py-8 sm:py-10 px-3 sm:px-4 w-full hover:shadow-lg transition-all duration-300">
               <span className="text-4xl sm:text-5xl mb-3 sm:mb-4 block">📚</span>
-              <h3 className="text-base sm:text-xl font-bold text-slate-900 mb-2">No courses yet</h3>
-              <p className="text-slate-600 text-xs sm:text-sm mb-4 sm:mb-6 max-w-md mx-auto">Start your learning journey by enrolling in a course tailored for Bihar Board.</p>
+              <h3 className="text-base sm:text-xl font-bold text-slate-900 mb-2">अभी तक कोई कोर्स नहीं</h3>
+              <p className="text-slate-600 text-xs sm:text-sm mb-4 sm:mb-6 max-w-md mx-auto">बिहार बोर्ड के लिए बनाए गए कोर्स में नामांकन करके अपनी शिक्षा यात्रा शुरू करें।</p>
               
               {/* ✅ FIXED: Removed w-full, added mx-auto for premium fitted look */}
               <a href="#available-courses" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm mx-auto">
-                Explore Courses
+                कोर्सेस देखें
               </a>
             </div>
           </div>
@@ -350,8 +350,8 @@ export default function Home() {
           {/* 🎓 CINEMATIC COURSES RAIL (Arriving Style & Fitted Buttons) */}
           <div id="available-courses" className="animate-fade-in-up w-full" style={{ animationDelay: "0.4s" }}>
             <div className="text-center mb-6 sm:mb-8 px-2">
-              <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">Available Courses</h2>
-              <p className="text-slate-500 text-xs sm:text-base">Complete preparation with RK Sir for Bihar Board exams</p>
+              <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">उपलब्ध कोर्सेस</h2>
+              <p className="text-slate-500 text-xs sm:text-base">बिहार बोर्ड परीक्षाओं के लिए RK Sir के साथ पूर्ण तैयारी</p>
             </div>
             
             <div className="relative w-full overflow-hidden py-4 sm:py-6">
@@ -361,11 +361,11 @@ export default function Home() {
               <div className="flex gap-3 sm:gap-4 w-max animate-marquee-reverse touch-pan-y">
                 {[...courseImages, ...courseImages, ...courseImages].map((src, i) => {
                   const courses: CourseItem[] = [
-                    { title: "Math: Objective Masterclass", price: "₹499", badge: "Class 10", desc: "Complete math preparation with shortcuts." },
-                    { title: "Science: Complete Revision", price: "₹699", badge: "Class 10", desc: "Physics, Chemistry, Biology full coverage." },
-                    { title: "Inter: Complete Topper Batch", price: "₹999", badge: "Class 12", desc: "All subjects covered with mock tests." },
-                    { title: "English: Grammar & Writing", price: "₹399", badge: "All Classes", desc: "Master English language effortlessly." },
-                    { title: "Social Science: Full Course", price: "₹599", badge: "Class 10", desc: "History, Geography, Civics simplified." },
+                    { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।" },
+                    { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन विज्ञान, जीव विज्ञान का पूर्ण कवरेज।" },
+                    { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय शामिल।" },
+                    { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी भाषा में आसानी से महारत हासिल करें।" },
+                    { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।" },
                   ];
                   const course = courses[i % 5];
                   
@@ -391,7 +391,7 @@ export default function Home() {
                             <span className="text-lg sm:text-2xl font-extrabold text-slate-900">{course.price}</span>
                             {/* ✅ FIXED: Perfectly fitted enroll button */}
                             <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2 px-4 sm:py-2.5 sm:px-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
-                              Enroll Now
+                              अभी नामांकन करें
                             </button>
                           </div>
                         </div>
@@ -406,8 +406,8 @@ export default function Home() {
           {/* 🎬 CINEMATIC GALLERY (Arriving Text Overlay) */}
           <div className="animate-fade-in-up w-full" style={{ animationDelay: "0.6s" }}>
             <div className="text-center mb-6 sm:mb-8 px-2">
-              <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">Life at World of Concept</h2>
-              <p className="text-slate-500 text-xs sm:text-base">Glimpses of our classrooms, sessions, and student success</p>
+              <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">World of Concept में जीवन</h2>
+              <p className="text-slate-500 text-xs sm:text-base">हमारी कक्षाओं, सत्रों और छात्रों की सफलता की झलकियां</p>
             </div>
 
             <div className="relative w-full overflow-hidden py-4 sm:py-6">
@@ -421,7 +421,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
                     {/* ✅ ARRIVING STYLE: Text slides up smoothly on hover */}
                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">World of Concept Class</span>
+                      <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">World of Concept क्लास</span>
                     </div>
                   </div>
                 ))}
@@ -434,7 +434,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
                     {/* ✅ ARRIVING STYLE: Text slides up smoothly on hover */}
                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">Student Success Story</span>
+                      <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">छात्र सफलता की कहानी</span>
                     </div>
                   </div>
                 ))}
@@ -454,7 +454,7 @@ export default function Home() {
                 <PureLogo size="sm" />
                 <span className="font-extrabold text-lg sm:text-xl tracking-tight">World of Concept</span>
               </div>
-              <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">Empowering Bihar students with world-class education, structured guidance, and a proven path to success.</p>
+              <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
               <div className="flex gap-3 sm:gap-4 pt-2">
                 <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-red-600 hover:border-red-500 hover:text-white transition-all duration-300 hover:-translate-y-1" aria-label="YouTube">
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -472,42 +472,42 @@ export default function Home() {
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">Platform</h4>
+              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="#available-courses" className="hover:text-blue-400 transition-colors duration-300">All Courses</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">Why Choose Us</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">Student Success Stories</a></li>
+                <li><a href="#available-courses" className="hover:text-blue-400 transition-colors duration-300">सभी कोर्सेस</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">Legal</h4>
+              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">कानूनी</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="/privacy" className="hover:text-blue-400 transition-colors duration-300">Privacy Policy</a></li>
-                <li><a href="/terms" className="hover:text-blue-400 transition-colors duration-300">Terms of Service</a></li>
-                <li><a href="/refund" className="hover:text-blue-400 transition-colors duration-300">Refund Policy</a></li>
-                <li><a href="/contact" className="hover:text-blue-400 transition-colors duration-300">Contact Us</a></li>
+                <li><a href="/privacy" className="hover:text-blue-400 transition-colors duration-300">गोपनीयता नीति</a></li>
+                <li><a href="/terms" className="hover:text-blue-400 transition-colors duration-300">सेवा की शर्तें</a></li>
+                <li><a href="/refund" className="hover:text-blue-400 transition-colors duration-300">रिफंड नीति</a></li>
+                <li><a href="/contact" className="hover:text-blue-400 transition-colors duration-300">संपर्क करें</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">Support</h4>
+              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">सहायता</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
                 <li className="flex items-center gap-2 sm:gap-3"><span>📧</span> support@worldofconcept.in</li>
                 <li className="flex items-center gap-2 sm:gap-3"><span>📞</span> +91 7979096954</li>
-                <li className="flex items-center gap-2 sm:gap-3"><span>📍</span> Alamnagar, Bihar, India</li>
+                <li className="flex items-center gap-2 sm:gap-3"><span>📍</span> अलमनगर, बिहार, भारत</li>
               </ul>
             </div>
           </div>
 
           <div className="pt-6 sm:pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500">
-            <p>© {new Date().getFullYear()} World of Concept. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:text-blue-400 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
-              <span>Crafted with</span>
+              <span>निर्मित</span>
               <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:scale-125 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
-              <span>by <span className="font-semibold text-slate-400 group-hover:text-blue-400">Mukesh Kumar Malakar</span></span>
+              <span>द्वारा <span className="font-semibold text-slate-400 group-hover:text-blue-400">Mukesh Kumar Malakar</span></span>
             </a>
           </div>
         </div>
