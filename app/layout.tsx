@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Noto_Sans_Devanagari } from "next/font/google"; // 🔥 Premium Hindi Font Import
 import "./globals.css";
 
 const geistSans = localFont({
@@ -13,6 +14,14 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+  display: "swap",
+});
+
+// 🔥 Premium Hindi Font Configuration (Google Fonts)
+const hindiFont = Noto_Sans_Devanagari({
+  subsets: ["devanagari"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-hindi",
   display: "swap",
 });
 
@@ -66,7 +75,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_IN",
+    locale: "hi_IN", // 🔥 Changed to hi_IN for Hindi primary audience
     url: "https://worldofconcept.in",
     title: "World of Concept | Best Bihar Board Coaching by RK Sir",
     description: "Bihar Board Matric & Inter का सबसे trusted platform। RK Sir के साथ HD video lectures, smart notes, test series और live doubt support पाएं।",
@@ -99,7 +108,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-search-console-verification-code", // Google Search Console से कोड यहाँ डालें
+    google: "your-google-search-console-verification-code", 
   },
   category: "education",
   classification: "Educational Platform",
@@ -125,7 +134,6 @@ export const viewport: Viewport = {
 
 // ==========================================
 // SCHEMA.ORG STRUCTURED DATA (JSON-LD)
-// Google Rich Snippets के लिए सबसे जरूरी
 // ==========================================
 const structuredData = {
   "@context": "https://schema.org",
@@ -167,8 +175,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    // 🔥 lang="hi" और dir="ltr" set किया गया है
+    <html lang="hi" dir="ltr" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        {/* 🔥 Browser Translation Prompt को 100% Block करने के लिए Meta Tags */}
+        <meta name="google" content="notranslate" />
+        <meta httpEquiv="Content-Language" content="hi" />
+        <meta name="language" content="Hindi" />
+
         {/* Performance Optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -194,7 +208,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 text-slate-900 min-h-screen w-full max-w-[100vw] overflow-x-hidden`}
+        // 🔥 hindiFont.variable को body class में add कर दिया गया है
+        className={`${geistSans.variable} ${geistMono.variable} ${hindiFont.variable} font-sans antialiased bg-slate-50 text-slate-900 min-h-screen w-full max-w-[100vw] overflow-x-hidden`}
         suppressHydrationWarning
       >
         {children}

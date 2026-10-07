@@ -780,3 +780,61 @@
 .animate-marquee { animation: marquee 45s linear infinite; }
 .animate-marquee-reverse { animation: marquee-reverse 45s linear infinite; }
 .animate-marquee:hover, .animate-marquee-reverse:hover { animation-play-state: paused; }
+/* ============================================
+   AD POPUP ANIMATIONS
+   ============================================ */
+@keyframes popup-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px) rotate(-2deg);
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-popup-entrance {
+  animation: popup-entrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes conic-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-conic-rotate {
+  animation: conic-rotate 6s linear infinite;
+}
+
+/* Body scroll lock when popup is open */
+body.popup-open {
+  overflow: hidden;
+}

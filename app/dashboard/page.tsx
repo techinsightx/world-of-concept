@@ -8,17 +8,12 @@ import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/components/logo";
+import AdPopup from "@/components/AdPopup"; // 🔥 Ad Popup Component Imported
 import { 
-  BookOpen, 
-  CheckCircle2, 
-  Target, 
-  ExternalLink, 
-  PlayCircle, 
-  Bell, 
-  LogOut, 
-  Sparkles,
-  Trophy
+  BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
+  Bell, LogOut, Sparkles, Trophy, PlusCircle, Users 
 } from "lucide-react";
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
 interface StudentData {
   fullName: string;
@@ -28,6 +23,13 @@ interface StudentData {
   address: string;
   role?: string;
 }
+
+const retentionData = [
+  { day: "Mon", students: 120 }, { day: "Tue", students: 145 },
+  { day: "Wed", students: 132 }, { day: "Thu", students: 180 },
+  { day: "Fri", students: 210 }, { day: "Sat", students: 250 },
+  { day: "Sun", students: 285 },
+];
 
 export default function DashboardPage() {
   const [student, setStudent] = useState<StudentData | null>(null);
@@ -44,7 +46,14 @@ export default function DashboardPage() {
       try {
         const studentDoc = await getDoc(doc(db, "students", user.uid));
         if (studentDoc.exists()) {
-          setStudent(studentDoc.data() as StudentData);
+          const data = studentDoc.data() as StudentData;
+          
+          // 🔥 DEBUG: Console में देखें कि role क्या आ रहा है
+          console.log("🔥 FIREBASE SE AAYA POORA DATA:", data);
+          console.log("🔥 ROLE KI VALUE:", data.role);
+          console.log("🔥 KYA ROLE 'admin' HAI?", data.role === "admin");
+          
+          setStudent(data);
         } else {
           window.location.replace("/");
         }
@@ -63,7 +72,6 @@ export default function DashboardPage() {
     window.location.replace("/");
   };
 
-  // Enhanced Sample courses
   const myCourses = [
     {
       id: "math_class_10_001",
@@ -128,37 +136,20 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-x-hidden font-sans">
-      {/* Custom Keyframes for Seamless Infinite Scroll */}
+      
+      {/* 🎯 AD POPUP COMPONENT (Site load hone par automatically aayega) */}
+      <AdPopup />
+
       <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        @keyframes marquee-reverse {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0); }
-        }
-        .animate-marquee {
-          animation: marquee 45s linear infinite;
-          will-change: transform;
-        }
-        .animate-marquee-reverse {
-          animation: marquee-reverse 45s linear infinite;
-          will-change: transform;
-        }
-        .animate-marquee:hover, .animate-marquee-reverse:hover {
-          animation-play-state: paused;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out forwards;
-        }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+        .animate-marquee { animation: marquee 45s linear infinite; will-change: transform; }
+        .animate-marquee-reverse { animation: marquee-reverse 45s linear infinite; will-change: transform; }
+        .animate-marquee:hover, .animate-marquee-reverse:hover { animation-play-state: paused; }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
       `}</style>
 
-      {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50 shadow-sm transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -177,12 +168,8 @@ export default function DashboardPage() {
                   {student.fullName.charAt(0).toUpperCase()}
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 border border-red-100 hover:border-red-200"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
+              <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 border border-red-100 hover:border-red-200">
+                <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
@@ -190,8 +177,61 @@ export default function DashboardPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Welcome Section */}
-        <div className="mb-10 animate-fade-in-up">
+        
+        {/* 🚨 ADMIN DASHBOARD SECTION (Sirf Admin ko dikhega) */}
+        {student?.role === "admin" && (
+          <section className="mb-12 animate-fade-in-up bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-sm font-bold mb-3 border border-indigo-100">
+                  <Sparkles className="w-4 h-4" /> Creator Mode
+                </div>
+                <h2 className="text-2xl font-extrabold text-slate-900">Admin Dashboard</h2>
+                <p className="text-slate-500 text-sm">Welcome back, RK Sir. Here is your platform overview.</p>
+              </div>
+              <button className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
+                <PlusCircle className="w-5 h-5" /> Create New Post / Class
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 bg-slate-50 rounded-2xl p-4 sm:p-6 border border-slate-100">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">Student Retention & Daily Active Users</h3>
+                <div className="h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={retentionData}>
+                      <defs>
+                        <linearGradient id="colorStudents" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
+                      <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
+                      <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                      <Area type="monotone" dataKey="students" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorStudents)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-xl shadow-blue-500/20">
+                  <p className="text-blue-100 text-sm font-medium mb-1 flex items-center gap-2"><Users className="w-4 h-4"/> Total Enrolled Students</p>
+                  <p className="text-3xl sm:text-4xl font-extrabold">12,450+</p>
+                  <p className="text-blue-200 text-xs mt-2">↑ 12% from last month</p>
+                </div>
+                <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                  <p className="text-slate-500 text-sm font-medium mb-1">Active Courses</p>
+                  <p className="text-3xl font-extrabold text-slate-900">8</p>
+                  <p className="text-slate-400 text-xs mt-2">Matric & Inter Batches</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* STUDENT DASHBOARD SECTION (Sabko dikhega) */}
+        <div className="animate-fade-in-up">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold mb-4 border border-blue-100">
             <Sparkles className="w-4 h-4" />
             <span>Student Dashboard</span>
