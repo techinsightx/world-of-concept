@@ -12,7 +12,7 @@ import AdPopup from "@/components/AdPopup";
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
   Bell, LogOut, Sparkles, Trophy, Clock, ArrowRight,
-  Calendar, MessageCircle
+  Calendar, MessageCircle, MapPin
 } from "lucide-react";
 
 interface StudentData {
@@ -25,14 +25,44 @@ interface UpdateData {
   id: string;
   title: string;
   description: string;
+  imageUrl?: string;
   timestamp: any;
   type: "announcement" | "motivation" | "tip";
 }
 
-// 🔥 Custom YouTube Icon Component
+// 🔥 Custom Colorful Social Icons
 const YoutubeIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" fill="#FF0000"/>
+    <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FFFFFF"/>
+  </svg>
+);
+
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <defs>
+      <linearGradient id="insta-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#FD5" />
+        <stop offset="50%" stopColor="#FF543E" />
+        <stop offset="100%" stopColor="#C837AB" />
+      </linearGradient>
+    </defs>
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z" fill="url(#insta-gradient)"/>
+    <path d="M12 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" fill="#FFFFFF"/>
+    <circle cx="18.406" cy="5.594" r="1.44" fill="#FFFFFF"/>
+  </svg>
+);
+
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
+  </svg>
+);
+
+const TelegramIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0z" fill="#0088CC"/>
+    <path d="M4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" fill="#FFFFFF"/>
   </svg>
 );
 
@@ -61,12 +91,11 @@ export default function DashboardPage() {
           
           setStudent(data);
           
-          // Fetch RK Sir Updates from Firestore
           try {
             const updatesQuery = query(
               collection(db, "updates"),
               orderBy("timestamp", "desc"),
-              limit(5)
+              limit(6)
             );
             const updatesSnapshot = await getDocs(updatesQuery);
             const updatesData = updatesSnapshot.docs.map(doc => ({
@@ -95,33 +124,6 @@ export default function DashboardPage() {
     window.location.replace("/");
   };
 
-  const myCourses = [
-    {
-      id: "math_class_10_001",
-      title: "गणित: ऑब्जेक्टिव मास्टरक्लास",
-      instructor: "RK Sir",
-      progress: 35,
-      totalLectures: 45,
-      completedLectures: 16,
-      driveLink: "https://drive.google.com/drive/folders/YOUR_FOLDER_ID",
-      color: "from-blue-500 to-indigo-600",
-      icon: "📐",
-      nextClass: "आज, शाम 5:00 बजे"
-    },
-    {
-      id: "science_class_10_001",
-      title: "विज्ञान: संपूर्ण रिवीजन",
-      instructor: "RK Sir",
-      progress: 12,
-      totalLectures: 60,
-      completedLectures: 7,
-      driveLink: "https://drive.google.com/drive/folders/YOUR_FOLDER_ID",
-      color: "from-purple-500 to-pink-600",
-      icon: "🔬",
-      nextClass: "कल, शाम 4:00 बजे"
-    },
-  ];
-
   const availableCourses = [
     { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।", image: "/course1.jpg" },
     { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन विज्ञान, जीव विज्ञान का पूर्ण कवरेज।", image: "/course2.jpg" },
@@ -133,10 +135,18 @@ export default function DashboardPage() {
   const row1Images = ["/class1.jpg", "/class2.jpg", "/class3.jpg", "/class4.jpg", "/class5.jpg"];
   const row2Images = ["/student1.jpg", "/student2.jpg", "/student3.jpg", "/student4.jpg", "/student5.jpg"];
 
+  // 🔥 10 Live Classes Videos with Autoplay
   const youtubeVideos = [
     { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 1" },
     { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - भौतिकी" },
     { id: "dQw4w9WgXcQ", title: "टॉपर कैसे बनें? मोटिवेशनल" },
+    { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 2" },
+    { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - रसायन" },
+    { id: "dQw4w9WgXcQ", title: "English Grammar Masterclass" },
+    { id: "dQw4w9WgXcQ", title: "Social Science Quick Revision" },
+    { id: "dQw4w9WgXcQ", title: "Maths Formula Tricks" },
+    { id: "dQw4w9WgXcQ", title: "Science Practical Guide" },
+    { id: "dQw4w9WgXcQ", title: "Exam Preparation Strategy" },
   ];
 
   if (!authChecked || loading) {
@@ -285,43 +295,51 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 YouTube Video Section */}
+        {/* 🔥 YouTube Video Scrolling Rail (Left to Right) */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 px-2">
             <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-              <YoutubeIcon className="w-6 h-6 text-red-600" />
+              <YoutubeIcon className="w-6 h-6" />
               RK Sir के लेटेस्ट वीडियो
             </h2>
             <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-sm transition-colors group">
               चैनल देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {youtubeVideos.map((video, i) => (
-              <div key={i} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 hover:-translate-y-1">
-                <div className="relative aspect-video">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${video.id}`}
-                    title={video.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
+          
+          <div className="relative w-full py-4">
+            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+
+            <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
+              {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
+                <div key={`yt-${i}`} className="relative w-[85vw] max-w-[400px] sm:w-96 flex-shrink-0 group">
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-1">
+                    <div className="relative aspect-video">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&loop=1&playlist=${video.id}`}
+                        title={video.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2">{video.title}</h3>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2">{video.title}</h3>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12">
           {[
-            { icon: BookOpen, label: "कुल कोर्सेस", value: myCourses.length, color: "bg-blue-50 text-blue-600", delay: "0.3s" },
-            { icon: CheckCircle2, label: "पूर्ण", value: "0", color: "bg-green-50 text-green-600", delay: "0.4s" },
-            { icon: Target, label: "प्रगति में", value: myCourses.length, color: "bg-purple-50 text-purple-600", delay: "0.5s" },
+            { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-50 text-blue-600", delay: "0.3s" },
+            { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-50 text-green-600", delay: "0.4s" },
+            { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-50 text-purple-600", delay: "0.5s" },
           ].map((stat, i) => (
             <div 
               key={i} 
@@ -341,78 +359,8 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* My Enrolled Courses */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-            <div>
-              <h2 className="text-2xl font-extrabold text-slate-900">मेरे नामांकित कोर्सेस</h2>
-              <p className="text-slate-500 text-sm mt-1">जहाँ छोड़ा था वहीं से शुरू करें</p>
-            </div>
-            <Link href="/courses" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm transition-colors group bg-blue-50 hover:bg-blue-100 px-4 py-2.5 rounded-xl w-fit border border-blue-100">
-              सभी कोर्सेस देखें
-              <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {myCourses.map((course, i) => (
-              <div
-                key={course.id}
-                className="group bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-blue-900/5 hover:-translate-y-2 transition-all duration-500 animate-fade-in-up"
-                style={{ animationDelay: `${0.7 + i * 0.1}s` }}
-              >
-                <div className={`h-40 bg-gradient-to-br ${course.color} relative overflow-hidden`}>
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all duration-500" />
-                  <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/30 flex items-center gap-1.5">
-                    <Clock className="w-3 h-3" /> {course.nextClass}
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-7xl relative z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl filter">{course.icon}</span>
-                  </div>
-                </div>
-                
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-slate-900 mb-1 line-clamp-1">{course.title}</h3>
-                  <p className="text-sm text-slate-500 mb-6 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                    द्वारा {course.instructor}
-                  </p>
-                  
-                  <div className="mb-6">
-                    <div className="flex justify-between text-xs text-slate-600 mb-2 font-semibold">
-                      <span>कोर्स प्रगति</span>
-                      <span className="text-blue-600">{course.progress}%</span>
-                    </div>
-                    <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                      <div
-                        className={`bg-gradient-to-r ${course.color} h-3 rounded-full transition-all duration-1000 ease-out relative`}
-                        style={{ width: `${course.progress}%` }}
-                      >
-                        <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                      </div>
-                    </div>
-                    <p className="text-xs text-slate-400 mt-2 text-right">
-                      {course.completedLectures} / {course.totalLectures} लेक्चर्स
-                    </p>
-                  </div>
-
-                  <a
-                    href={course.driveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-semibold py-3.5 rounded-xl hover:bg-slate-800 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-slate-900/20 hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    <PlayCircle className="w-5 h-5" />
-                    <span>पढ़ाई जारी रखें</span>
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Available Courses Scrolling Rail */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
+        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2">
             <div>
               <h2 className="text-2xl font-extrabold text-slate-900">उपलब्ध कोर्सेस</h2>
@@ -460,7 +408,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Cinematic Gallery */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.9s" }}>
+        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
           <div className="text-center mb-10 px-2">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
             <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
@@ -506,8 +454,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 RK Sir Updates (Powered by Admin) */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "1s" }}>
+        {/* 🔥 RK Sir Updates (Cloudinary Powered - Cinematic Cards) */}
+        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
               <MessageCircle className="w-6 h-6 text-indigo-600" />
@@ -520,25 +468,36 @@ export default function DashboardPage() {
               <p className="text-slate-500">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {updates.map((update) => (
-                <div key={update.id} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300">
-                  <div className="flex items-start gap-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      update.type === "announcement" ? "bg-blue-100 text-blue-600" :
-                      update.type === "motivation" ? "bg-purple-100 text-purple-600" :
-                      "bg-green-100 text-green-600"
-                    }`}>
-                      {update.type === "announcement" ? "📢" : update.type === "motivation" ? "💪" : "💡"}
+                <div key={update.id} className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  {update.imageUrl && (
+                    <div className="relative h-48 overflow-hidden">
+                      <Image 
+                        src={update.imageUrl} 
+                        alt={update.title} 
+                        fill 
+                        className="object-cover transition-transform duration-500 group-hover:scale-110" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute top-3 left-3">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-md ${
+                          update.type === "announcement" ? "bg-blue-500/80" :
+                          update.type === "motivation" ? "bg-purple-500/80" :
+                          "bg-green-500/80"
+                        }`}>
+                          {update.type === "announcement" ? "📢 घोषणा" : update.type === "motivation" ? "💪 प्रेरणा" : "💡 टिप"}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-slate-900 mb-1">{update.title}</h3>
-                      <p className="text-slate-600 text-sm mb-2">{update.description}</p>
-                      <p className="text-xs text-slate-400 flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {update.timestamp?.toDate().toLocaleDateString("hi-IN")}
-                      </p>
-                    </div>
+                  )}
+                  <div className="p-5">
+                    <h3 className="font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">{update.title}</h3>
+                    <p className="text-slate-600 text-sm mb-3 line-clamp-3">{update.description}</p>
+                    <p className="text-xs text-slate-400 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {update.timestamp?.toDate().toLocaleDateString("hi-IN", { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -548,10 +507,37 @@ export default function DashboardPage() {
 
       </main>
 
-      {/* 🔥 COMPLETE FOOTER */}
+      {/* 🔥 COMPLETE FOOTER with Dark Matte Map */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         <div className="max-w-7xl mx-auto">
+          
+          {/* Map Integration Section */}
+          <div className="mb-12 sm:mb-16">
+            <h4 className="text-white font-bold mb-4 text-lg flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-red-500" />
+              हमारा पता
+            </h4>
+            <div className="relative rounded-2xl overflow-hidden border-2 border-slate-800 shadow-2xl">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3598.5!2d86.1167!3d25.9333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDU2JzAwLjAiTiA4NsKwMDcnMDAuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
+                width="100%"
+                height="300"
+                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(0.8) contrast(1.2)' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="World of Concept Location"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-950 to-transparent p-4">
+                <p className="text-white text-sm font-semibold flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-red-500" />
+                  आलमनगर पोस्ट ऑफिस चौक, बिहार
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
             
             <div className="sm:col-span-2 lg:col-span-1 space-y-4 sm:space-y-6">
@@ -565,17 +551,17 @@ export default function DashboardPage() {
                 बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
               </p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-red-600 hover:border-red-500 hover:text-white transition-all duration-300 hover:-translate-y-1" aria-label="YouTube">
-                  <YoutubeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="YouTube">
+                  <YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </a>
-                <a href="https://instagram.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-pink-600 hover:border-pink-500 hover:text-white transition-all duration-300 hover:-translate-y-1" aria-label="Instagram">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
+                <a href="https://instagram.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="Instagram">
+                  <InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </a>
-                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:border-blue-500 hover:text-white transition-all duration-300 hover:-translate-y-1" aria-label="Facebook">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="Facebook">
+                  <FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </a>
-                <a href="https://t.me/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-sky-500 hover:border-sky-400 hover:text-white transition-all duration-300 hover:-translate-y-1" aria-label="Telegram">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                <a href="https://t.me/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="Telegram">
+                  <TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </a>
               </div>
             </div>
