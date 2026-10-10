@@ -7,6 +7,7 @@ import { auth, db } from "@/lib/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
@@ -17,6 +18,7 @@ export default function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -24,11 +26,12 @@ export default function AuthForm() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccessMsg("");
 
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = "/";
+        window.location.href = "/dashboard"; // Redirect to dashboard after login
       } else {
         if (fullName.trim().length < 3) throw new Error("कृपया अपना पूरा नाम दर्ज करें (कम से कम 3 अक्षर)");
         if (password.length < 6) throw new Error("पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।");
@@ -49,7 +52,7 @@ export default function AuthForm() {
           console.warn("Firestore warning:", dbError);
         }
 
-        window.location.href = "/";
+        window.location.href = "/dashboard";
       }
     } catch (err: unknown) {
       setLoading(false);
@@ -67,9 +70,28 @@ export default function AuthForm() {
     }
   };
 
+  // 🔥 WORLD-CLASS: Actual Forgot Password Functionality
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError("कृपया पहले अपना पंजीकृत ईमेल पता दर्ज करें।");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setSuccessMsg("पासवर्ड रीसेट लिंक आपके ईमेल पर भेज दिया गया है।");
+    } catch (err) {
+      setError("ईमेल भेजने में त्रुटि। कृपया जांचें कि यह ईमेल पंजीकृत है।");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const switchMode = () => {
     setIsLogin(!isLogin);
     setError("");
+    setSuccessMsg("");
     setFullName("");
     setPassword("");
   };
@@ -86,10 +108,8 @@ export default function AuthForm() {
       
       {/* 🎬 CINEMATIC BACKGROUND */}
       <div className="absolute inset-0 z-0">
-        {/* Fallback Gradient (shows while image loads) */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950" />
         
-        {/* RK Sir Background Image */}
         <img
           src="/rk-sir.jpg"
           alt="RK Sir - World of Concept"
@@ -99,38 +119,35 @@ export default function AuthForm() {
           style={{ transform: "scale(1.05)" }}
         />
         
-        {/* Premium Gradient Overlay - Lighter so image is visible */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950/80 via-slate-900/70 to-blue-950/60 backdrop-blur-[2px]" />
-        
-        {/* Bottom Gradient for depth */}
         <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-slate-950/90 to-transparent" />
         
-        {/* Animated Glowing Orbs - Subtle and Premium */}
         <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-indigo-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }} />
       </div>
 
       {/* 🎯 FLOATING GLASSMORPHISM FORM CARD */}
-      <div className="relative z-10 w-full max-w-md mx-4 animate-fade-in-up">
-        <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 p-6 sm:p-10">
+      {/* 🔥 FIX: max-w-[400px] ensures it looks premium and compact on desktop, while w-full handles mobile perfectly */}
+      <div className="relative z-10 w-full max-w-[400px] mx-4 animate-fade-in-up">
+        <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 p-6 sm:p-8">
           
-          {/* ✅ PERFECT CIRCULAR LOGO (No extra box, exactly logo size) */}
-          <div className="text-center mb-8">
-            <div className="relative w-20 h-20 mx-auto mb-5 rounded-full overflow-hidden bg-white shadow-xl shadow-blue-500/30 transition-transform duration-500 hover:scale-110">
+          {/* ✅ PERFECT CIRCULAR LOGO */}
+          <div className="text-center mb-6">
+            <div className="relative w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden bg-white shadow-xl shadow-blue-500/30 transition-transform duration-500 hover:scale-110">
               <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-3" priority />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
+            <h2 className="text-2xl font-extrabold text-white tracking-tight mb-1">
               {isLogin ? "वापसी पर स्वागत है" : "World of Concept से जुड़ें"}
             </h2>
-            <p className="text-blue-200/80 text-sm sm:text-base">
+            <p className="text-blue-200/80 text-sm">
               {isLogin 
-                ? "अपने डैशबोर्ड तक पहुँचने के लिए अपनी जानकारी दर्ज करें" 
-                : "बिहार बोर्ड परीक्षाओं में टॉप करने की अपनी यात्रा शुरू करें"}
+                ? "अपने डैशबोर्ड तक पहुँचने के लिए लॉगिन करें" 
+                : "बिहार बोर्ड परीक्षाओं में टॉप करने की यात्रा शुरू करें"}
             </p>
           </div>
 
           {/* Smooth Tab Switcher */}
-          <div className="relative flex bg-white/10 backdrop-blur-sm p-1.5 rounded-xl mb-8 border border-white/10">
+          <div className="relative flex bg-white/10 backdrop-blur-sm p-1.5 rounded-xl mb-6 border border-white/10">
             <div 
               className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-lg shadow-lg transition-all duration-300 ease-out ${
                 isLogin ? "left-1.5" : "left-[calc(50%+3px)]"
@@ -157,7 +174,7 @@ export default function AuthForm() {
           </div>
 
           {/* Form Fields */}
-          <form onSubmit={handleEmailAuth} className="space-y-5" noValidate>
+          <form onSubmit={handleEmailAuth} className="space-y-4" noValidate>
             {!isLogin && (
               <div className="space-y-1.5 animate-fade-in">
                 <label htmlFor="fullName" className="block text-sm font-semibold text-white/90">
@@ -169,7 +186,7 @@ export default function AuthForm() {
                   placeholder="शुभम कुमार"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200"
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200"
                   required
                 />
               </div>
@@ -185,7 +202,7 @@ export default function AuthForm() {
                 placeholder="students@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200"
+                className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200"
                 required
               />
             </div>
@@ -201,7 +218,7 @@ export default function AuthForm() {
                   placeholder="कम से कम 6 अक्षर"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200 pr-12"
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all duration-200 pr-12"
                   required
                   minLength={6}
                 />
@@ -223,6 +240,20 @@ export default function AuthForm() {
                   )}
                 </button>
               </div>
+              
+              {/* 🔥 FORGOT PASSWORD LINK (Only shows on Login) */}
+              {isLogin && (
+                <div className="flex justify-end mt-2">
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    disabled={loading}
+                    className="text-xs text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors disabled:opacity-50"
+                  >
+                    पासवर्ड भूल गए?
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Error Message */}
@@ -235,11 +266,21 @@ export default function AuthForm() {
               </div>
             )}
 
+            {/* Success Message (For Password Reset) */}
+            {successMsg && (
+              <div className="bg-green-500/20 backdrop-blur-sm border border-green-400/50 text-green-100 px-4 py-3 rounded-xl text-sm flex items-start gap-2 animate-fade-in">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="font-medium">{successMsg}</span>
+              </div>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-4 rounded-xl shadow-xl shadow-blue-500/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-xl shadow-blue-500/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 mt-6"
             >
               {loading ? (
                 <>
@@ -247,7 +288,7 @@ export default function AuthForm() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  प्रोसेसिंग हो रही है...
+                  प्रोसेसिंग...
                 </>
               ) : (
                 <>
@@ -261,7 +302,7 @@ export default function AuthForm() {
           </form>
 
           {/* Footer Links */}
-          <p className="text-center text-xs text-white/60 mt-8">
+          <p className="text-center text-xs text-white/60 mt-6 leading-relaxed">
             जारी रखकर, आप हमारी{" "}
             <a href="/terms" className="text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors">शर्तों</a>
             {" और "}
