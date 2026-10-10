@@ -143,7 +143,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-slate-50 relative overflow-x-hidden font-sans w-full">
+    // 🔥 MOBILE SCROLL FIX: overscroll-y-auto ensures vertical scroll is never hijacked
+    <div className="min-h-[100dvh] bg-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto">
       
       {/* 🎯 AD POPUP COMPONENT */}
       <AdPopup />
@@ -151,9 +152,22 @@ export default function DashboardPage() {
       <style jsx global>{`
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-        .animate-marquee { animation: marquee 45s linear infinite; will-change: transform; }
-        .animate-marquee-reverse { animation: marquee-reverse 45s linear infinite; will-change: transform; }
-        .animate-marquee:hover, .animate-marquee-reverse:hover { animation-play-state: paused; }
+        
+        /* 🔥 CRITICAL MOBILE FIX: touch-action: pan-y allows vertical scroll over horizontal animation */
+        .animate-marquee { 
+          animation: marquee 45s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee-reverse { 
+          animation: marquee-reverse 45s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee:hover, .animate-marquee-reverse:hover { 
+          animation-play-state: paused; 
+        }
+        
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
       `}</style>
@@ -185,6 +199,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
+      {/* 🔥 MAIN CONTAINER: No restrictive height, full width, safe padding */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
         {/* 🚨 ADMIN DASHBOARD SECTION (Bulletproof Check) */}
@@ -358,20 +373,22 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🎬 Cinematic Infinite Scrolling Gallery (Mobile Optimized) */}
+        {/* 🎬 Cinematic Infinite Scrolling Gallery (100% Mobile Scroll Optimized) */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
           <div className="text-center mb-10 px-2">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
             <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
           </div>
 
-          <div className="relative w-full overflow-hidden py-4 sm:py-6">
+          {/* 🔥 REMOVED overflow-hidden from parent to prevent mobile scroll trapping. 
+              Fade edges handle the visual clipping safely. */}
+          <div className="relative w-full py-4 sm:py-6">
             {/* Mobile optimized fade edges (w-8 on mobile, w-32 on desktop) */}
             <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
 
             {/* ROW 1 */}
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y mb-4 sm:mb-6">
+            <div className="flex gap-4 sm:gap-5 w-max animate-marquee mb-4 sm:mb-6">
               {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
                 <div 
                   key={`row1-${i}`} 
@@ -394,7 +411,7 @@ export default function DashboardPage() {
             </div>
 
             {/* ROW 2 */}
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
+            <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse">
               {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
                 <div 
                   key={`row2-${i}`} 
