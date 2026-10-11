@@ -463,11 +463,13 @@ export default function AdminDashboardPage() {
         {/* Courses Tab */}
         {activeTab === "courses" && (
           <>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h2 className="text-2xl font-bold text-white">कोर्सेस प्रबंधन</h2>
+              
+              {/* 🔥 HIGHLY VISIBLE GLOWING BUTTON */}
               <button
                 onClick={() => setShowCourseForm(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/30"
+                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50"
               >
                 <PlusCircle className="w-5 h-5" /> नया कोर्स जोड़ें
               </button>
@@ -589,11 +591,13 @@ export default function AdminDashboardPage() {
         {/* Posts Tab */}
         {activeTab === "posts" && (
           <>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h2 className="text-2xl font-bold text-white">अपडेट्स प्रबंधन</h2>
+              
+              {/* 🔥 HIGHLY VISIBLE GLOWING BUTTON */}
               <button
                 onClick={() => setShowPostForm(true)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/30"
+                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50"
               >
                 <PlusCircle className="w-5 h-5" /> नई पोस्ट जोड़ें
               </button>
