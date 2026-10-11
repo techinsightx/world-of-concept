@@ -42,9 +42,7 @@ const InstagramIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
     <defs>
       <linearGradient id="insta-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#FD5" />
-        <stop offset="50%" stopColor="#FF543E" />
-        <stop offset="100%" stopColor="#C837AB" />
+        <stop offset="0%" stopColor="#FD5" /><stop offset="50%" stopColor="#FF543E" /><stop offset="100%" stopColor="#C837AB" />
       </linearGradient>
     </defs>
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z" fill="url(#insta-gradient)"/>
@@ -265,6 +263,22 @@ export default function DashboardPage() {
           background-size: 1000px 100%;
           animation: shimmer-reverse 2.5s infinite linear;
         }
+
+        /* 🔥 Smooth Cinematic Background Sliding (Opposite Directions) */
+        @keyframes slide-left {
+          0% { transform: translateX(0) scale(1.1); }
+          100% { transform: translateX(-8%) scale(1.1); }
+        }
+        @keyframes slide-right {
+          0% { transform: translateX(-8%) scale(1.1); }
+          100% { transform: translateX(0) scale(1.1); }
+        }
+        .bg-slide-left {
+          animation: slide-left 40s ease-in-out infinite alternate;
+        }
+        .bg-slide-right {
+          animation: slide-right 45s ease-in-out infinite alternate;
+        }
       `}</style>
 
       {/* Header */}
@@ -296,10 +310,14 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 SHIMMERING WELCOME CARD */}
-        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
-          <div className="absolute inset-0 shimmer-effect" />
+        {/* 🔥 1. SHIMMERING WELCOME CARD with Cinematic Background (Slides Right) */}
+        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-xl">
+          <div className="absolute inset-0 z-0 bg-slide-right">
+            <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover" />
+          </div>
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-900/85 via-indigo-900/85 to-purple-900/85" />
+          <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
+          
           <div className="relative z-10 p-6 sm:p-10 text-white">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-sm font-semibold mb-4 border border-white/30">
               <Sparkles className="w-4 h-4" />
@@ -314,20 +332,25 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 LIVE CLASS BANNER - DARK MATTE RED & KESARIYA with FLOATING STARS */}
+        {/* 🔥 2. LIVE CLASS BANNER with Cinematic Background (Slides Left - Opposite) */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/30 group">
-            {/* 🔥 Dark Matte Red & Kesariya Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-red-950 via-red-900 to-orange-700" />
+            {/* Cinematic Background Sliding Left */}
+            <div className="absolute inset-0 z-0 bg-slide-left">
+              <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover" />
+            </div>
             
-            {/* 🔥 Reverse Shimmer Overlay (Right to Left) */}
-            <div className="absolute inset-0 shimmer-effect-reverse opacity-30" />
+            {/* Dark Matte Red & Kesariya Gradient Overlay */}
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/90 via-red-900/85 to-orange-700/80" />
+            
+            {/* Reverse Shimmer Overlay */}
+            <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-30" />
             
             {/* Subtle pattern overlay */}
-            <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+            <div className="absolute inset-0 z-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
 
             {/* 🔥 Crystal Clear Educational Floating Stars & Icons */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
               <div className="absolute top-8 left-10 text-white/20 animate-float" style={{ animationDelay: '0s' }}>
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               </div>
@@ -356,7 +379,7 @@ export default function DashboardPage() {
                 LIVE NOW
               </div>
               
-              {/* Play Icon - White Circle with Red/Orange theme */}
+              {/* Play Icon */}
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl shadow-black/20">
                 <span className="text-red-700">▶️</span>
               </div>
@@ -370,7 +393,7 @@ export default function DashboardPage() {
                 </p>
               </div>
               
-              {/* CTA Button - Crystal White with Red/Orange text */}
+              {/* CTA Button */}
               <a 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
                 target="_blank" 
@@ -384,7 +407,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 YouTube Video Scrolling Rail (LEFT TO RIGHT) */}
+        {/* 🔥 YouTube Video Scrolling Rail */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-center justify-between mb-6 px-2">
             <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
@@ -448,150 +471,171 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Available Courses Scrolling Rail (RIGHT TO LEFT) */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2">
-            <div>
-              <h2 className="text-2xl font-extrabold text-slate-900">उपलब्ध कोर्सेस</h2>
-              <p className="text-slate-500 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
-            </div>
-            <Link href="/courses" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm transition-colors group">
-              सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+        {/* 🔥 3. AVAILABLE COURSES with Cinematic Background (Slides Right) */}
+        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
+          <div className="absolute inset-0 z-0 bg-slide-right">
+            <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover" />
           </div>
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-50/95 via-slate-50/98 to-slate-50" />
           
-          <div className="relative w-full py-4">
-            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+          <div className="relative z-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
+              <div>
+                <h2 className="text-2xl font-extrabold text-slate-900">उपलब्ध कोर्सेस</h2>
+                <p className="text-slate-500 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
+              </div>
+              <Link href="/courses" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm transition-colors group">
+                सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            
+            <div className="relative w-full py-4">
+              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
 
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
-              {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
-                <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-slate-100 hover:border-blue-300 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
-                    <div className="relative h-40 sm:h-48 overflow-hidden">
-                      <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
-                        <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
-                          {course.badge}
-                        </span>
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
+                {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
+                  <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-slate-100 hover:border-blue-300 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                      <div className="relative h-40 sm:h-48 overflow-hidden">
+                        <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
+                          <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
+                            {course.badge}
+                          </span>
+                        </div>
+                        <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3">
+                          <h3 className="text-white font-bold text-sm sm:text-base drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
+                        </div>
                       </div>
-                      <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3">
-                        <h3 className="text-white font-bold text-sm sm:text-base drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
-                      </div>
-                    </div>
-                    <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-white to-slate-50">
-                      <p className="text-slate-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
-                      <div className="flex items-center justify-between mt-auto">
-                        <span className="text-lg sm:text-xl font-extrabold text-slate-900">{course.price}</span>
-                        <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
-                          नामांकन करें
-                        </button>
+                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-white to-slate-50">
+                        <p className="text-slate-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
+                        <div className="flex items-center justify-between mt-auto">
+                          <span className="text-lg sm:text-xl font-extrabold text-slate-900">{course.price}</span>
+                          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
+                            नामांकन करें
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 🔥 Cinematic Gallery (Row 1: LEFT TO RIGHT, Row 2: RIGHT TO LEFT) */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
-          <div className="text-center mb-10 px-2">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
-            <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
+        {/* 🔥 4. CINEMATIC GALLERY with Cinematic Background (Slides Left) */}
+        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
+          <div className="absolute inset-0 z-0 bg-slide-left">
+            <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover" />
           </div>
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-50/95 via-slate-50/98 to-slate-50" />
 
-          <div className="relative w-full py-4 sm:py-6">
-            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
-
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
-              {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
-                <div 
-                  key={`row1-${i}`} 
-                  className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
-                >
-                  <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
-                      <PlayCircle className="w-4 h-4" /> World of Concept क्लास
-                    </span>
-                  </div>
-                </div>
-              ))}
+          <div className="relative z-10">
+            <div className="text-center mb-10 px-2 pt-4">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
+              <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee">
-              {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
-                <div 
-                  key={`row2-${i}`} 
-                  className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
-                >
-                  <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
-                      <Trophy className="w-4 h-4 text-yellow-400" /> छात्र सफलता की कहानी
-                    </span>
+            <div className="relative w-full py-4 sm:py-6">
+              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
+                {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
+                  <div 
+                    key={`row1-${i}`} 
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                  >
+                    <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                      <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
+                        <PlayCircle className="w-4 h-4" /> World of Concept क्लास
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee">
+                {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
+                  <div 
+                    key={`row2-${i}`} 
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                  >
+                    <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                      <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
+                        <Trophy className="w-4 h-4 text-yellow-400" /> छात्र सफलता की कहानी
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 🔥 RK Sir Updates (Cloudinary Powered - Cinematic Cards) */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-              <MessageCircle className="w-6 h-6 text-indigo-600" />
-              RK Sir के अपडेट्स
-            </h2>
+        {/* 🔥 5. RK SIR UPDATES with Cinematic Background (Slides Right) */}
+        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
+          <div className="absolute inset-0 z-0 bg-slide-right">
+            <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover" />
           </div>
-          
-          {updates.length === 0 ? (
-            <div className="bg-white rounded-2xl p-8 text-center border border-slate-100">
-              <p className="text-slate-500">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-50/95 via-slate-50/98 to-slate-50" />
+
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-6 px-2 pt-4">
+              <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                <MessageCircle className="w-6 h-6 text-indigo-600" />
+                RK Sir के अपडेट्स
+              </h2>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {updates.map((update) => (
-                <div key={update.id} className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  {update.imageUrl && (
-                    <div className="relative h-48 overflow-hidden">
-                      <Image 
-                        src={update.imageUrl} 
-                        alt={update.title} 
-                        fill 
-                        className="object-cover transition-transform duration-500 group-hover:scale-110" 
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute top-3 left-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-md ${
-                          update.type === "announcement" ? "bg-blue-500/80" :
-                          update.type === "motivation" ? "bg-purple-500/80" :
-                          "bg-green-500/80"
-                        }`}>
-                          {update.type === "announcement" ? "📢 घोषणा" : update.type === "motivation" ? "💪 प्रेरणा" : "💡 टिप"}
-                        </span>
+            
+            {updates.length === 0 ? (
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-100">
+                <p className="text-slate-500">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
+                {updates.map((update) => (
+                  <div key={update.id} className="group bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    {update.imageUrl && (
+                      <div className="relative h-48 overflow-hidden">
+                        <Image 
+                          src={update.imageUrl} 
+                          alt={update.title} 
+                          fill 
+                          className="object-cover transition-transform duration-500 group-hover:scale-110" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute top-3 left-3">
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-md ${
+                            update.type === "announcement" ? "bg-blue-500/80" :
+                            update.type === "motivation" ? "bg-purple-500/80" :
+                            "bg-green-500/80"
+                          }`}>
+                            {update.type === "announcement" ? "📢 घोषणा" : update.type === "motivation" ? "💪 प्रेरणा" : "💡 टिप"}
+                          </span>
+                        </div>
                       </div>
+                    )}
+                    <div className="p-5">
+                      <h3 className="font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">{update.title}</h3>
+                      <p className="text-slate-600 text-sm mb-3 line-clamp-3">{update.description}</p>
+                      <p className="text-xs text-slate-400 flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {update.timestamp?.toDate().toLocaleDateString("hi-IN", { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </p>
                     </div>
-                  )}
-                  <div className="p-5">
-                    <h3 className="font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">{update.title}</h3>
-                    <p className="text-slate-600 text-sm mb-3 line-clamp-3">{update.description}</p>
-                    <p className="text-xs text-slate-400 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {update.timestamp?.toDate().toLocaleDateString("hi-IN", { day: 'numeric', month: 'long', year: 'numeric' })}
-                    </p>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
       </main>
@@ -600,7 +644,6 @@ export default function DashboardPage() {
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
-        {/* 🔥 VISIBLE GOOGLE MAP BACKGROUND - Alamnagar, Bihar (Real Location) */}
         <div className="absolute inset-0 z-0">
           <iframe
             src="https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&output=embed"
@@ -620,13 +663,10 @@ export default function DashboardPage() {
             title="World of Concept Location - Alamnagar, Bihar"
             allowFullScreen
           />
-          {/* Dark Matte Overlay - Adjusted for better map visibility */}
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/90" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
-          
-          {/* Location Badge with Map Link */}
           <div className="mb-8 flex items-center justify-center">
             <a 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
@@ -641,7 +681,6 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
-            
             <div className="sm:col-span-2 lg:col-span-1 space-y-4 sm:space-y-6">
               <div className="flex items-center gap-3 text-white">
                 <div className="relative w-10 h-10 flex-shrink-0">
@@ -697,7 +736,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* 🔥 DEVELOPER CONTRIBUTION WITH SHIMMERING EFFECT */}
           <div className="pt-6 sm:pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
