@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
@@ -63,6 +63,95 @@ const TelegramIcon = ({ className }: { className?: string }) => (
     <path d="M4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" fill="#FFFFFF"/>
   </svg>
 );
+
+// 🔥 YouTube Video Card with Viewport-Aware Autoplay (Intersection Observer)
+const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) => {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          // Once it starts playing, stop observing to save resources
+          if (cardRef.current) observer.unobserve(cardRef.current);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5 // Trigger when 50% of the card is visible on screen
+      }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => {
+      if (cardRef.current) {
+        observer.unobserve(cardRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div ref={cardRef} className="relative w-[85vw] max-w-[400px] sm:w-96 flex-shrink-0 group">
+      <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-1">
+        <div className="relative aspect-video bg-slate-200">
+          {!isIntersecting ? (
+            <>
+              {/* Thumbnail Image with Skeleton Loader */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-slate-200 animate-pulse" />
+              )}
+              <Image
+                src={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
+                alt={video.title}
+                fill
+                className={`object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => setImageLoaded(true)}
+                unoptimized
+              />
+              
+              {/* Play Button Overlay (Visual Cue) */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-300">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-600/90 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
+                  <PlayCircle className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                </div>
+              </div>
+
+              {/* Badge */}
+              <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">
+                NEW
+              </div>
+            </>
+          ) : (
+            /* Video Player (Autoplays ONLY when intersecting viewport) */
+            <iframe
+              src={`https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&rel=0&modestbranding=1&loop=1&playlist=${video.id}`}
+              title={video.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          )}
+        </div>
+        <div className="p-4">
+          <h3 className="font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2">{video.title}</h3>
+          <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
+            <YoutubeIcon className="w-4 h-4" />
+            <span>World of Concept</span>
+            <span>•</span>
+            <span>Just now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function DashboardPage() {
   const [student, setStudent] = useState<StudentData | null>(null);
@@ -202,7 +291,6 @@ export default function DashboardPage() {
           100% { background-position: -1000px 0; }
         }
 
-        /* 🔥 Floating Animation for Stars & Icons */
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-15px) rotate(5deg); }
@@ -211,7 +299,6 @@ export default function DashboardPage() {
           animation: float 4s ease-in-out infinite;
         }
 
-        /* 🔥 Shimmer Text Effect for Developer Name */
         @keyframes shimmer-text {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -264,7 +351,6 @@ export default function DashboardPage() {
           animation: shimmer-reverse 2.5s infinite linear;
         }
 
-        /* 🔥 Smooth Cinematic Background Sliding (Opposite Directions) */
         @keyframes slide-left {
           0% { transform: translateX(0) scale(1.1); }
           100% { transform: translateX(-8%) scale(1.1); }
@@ -310,12 +396,12 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. SHIMMERING WELCOME CARD with Cinematic Background (Slides Right) */}
+        {/* 🔥 1. SHIMMERING WELCOME CARD - STRONGER BACKGROUND */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-xl">
           <div className="absolute inset-0 z-0 bg-slide-right">
             <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-900/85 via-indigo-900/85 to-purple-900/85" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-900/90 via-indigo-900/90 to-purple-900/90" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
           
           <div className="relative z-10 p-6 sm:p-10 text-white">
@@ -332,24 +418,19 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER with Cinematic Background (Slides Left - Opposite) */}
+        {/* 🔥 2. LIVE CLASS BANNER - STRONGER BACKGROUND */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/30 group">
-            {/* Cinematic Background Sliding Left */}
             <div className="absolute inset-0 z-0 bg-slide-left">
               <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover" />
             </div>
             
-            {/* Dark Matte Red & Kesariya Gradient Overlay */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/90 via-red-900/85 to-orange-700/80" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/95 via-red-900/90 to-orange-700/85" />
             
-            {/* Reverse Shimmer Overlay */}
             <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-30" />
             
-            {/* Subtle pattern overlay */}
             <div className="absolute inset-0 z-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
 
-            {/* 🔥 Crystal Clear Educational Floating Stars & Icons */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
               <div className="absolute top-8 left-10 text-white/20 animate-float" style={{ animationDelay: '0s' }}>
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -373,13 +454,11 @@ export default function DashboardPage() {
             </div>
             
             <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
-              {/* LIVE Badge */}
               <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white/20">
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-ping"></span>
                 LIVE NOW
               </div>
               
-              {/* Play Icon */}
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl shadow-black/20">
                 <span className="text-red-700">▶️</span>
               </div>
@@ -393,7 +472,6 @@ export default function DashboardPage() {
                 </p>
               </div>
               
-              {/* CTA Button */}
               <a 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
                 target="_blank" 
@@ -407,13 +485,20 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 YouTube Video Scrolling Rail */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION - VIEWPORT-AWARE AUTOPLAY */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-center justify-between mb-6 px-2">
-            <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-              <YoutubeIcon className="w-6 h-6" />
-              RK Sir के लेटेस्ट वीडियो
-            </h2>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                <YoutubeIcon className="w-7 h-7" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                  RK Sir के लेटेस्ट वीडियो
+                </h2>
+                <p className="text-sm text-slate-500 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
+              </div>
+            </div>
             <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-sm transition-colors group">
               चैनल देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
@@ -425,22 +510,7 @@ export default function DashboardPage() {
 
             <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
               {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
-                <div key={`yt-${i}`} className="relative w-[85vw] max-w-[400px] sm:w-96 flex-shrink-0 group">
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-1">
-                    <div className="relative aspect-video">
-                      <iframe
-                        src={`https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&loop=1&playlist=${video.id}`}
-                        title={video.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2">{video.title}</h3>
-                    </div>
-                  </div>
-                </div>
+                <YouTubeVideoCard key={`yt-${i}`} video={video} />
               ))}
             </div>
           </div>
@@ -471,7 +541,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* 🔥 3. AVAILABLE COURSES with Cinematic Background (Slides Right) */}
+        {/* 🔥 4. AVAILABLE COURSES - STRONGER BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
             <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover" />
@@ -526,7 +596,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 4. CINEMATIC GALLERY with Cinematic Background (Slides Left) */}
+        {/* 🔥 5. CINEMATIC GALLERY - STRONGER BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <div className="absolute inset-0 z-0 bg-slide-left">
             <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover" />
@@ -580,7 +650,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. RK SIR UPDATES with Cinematic Background (Slides Right) */}
+        {/* 🔥 6. RK SIR UPDATES - STRONGER BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
             <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover" />
@@ -640,7 +710,7 @@ export default function DashboardPage() {
 
       </main>
 
-      {/* 🔥 COMPLETE FOOTER with VISIBLE MAP BACKGROUND (Dark Matte) */}
+      {/* 🔥 COMPLETE FOOTER with VISIBLE MAP BACKGROUND */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
