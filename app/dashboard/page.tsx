@@ -64,7 +64,7 @@ const TelegramIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// 🔥 YouTube Video Card with Viewport-Aware Autoplay (Intersection Observer)
+// 🔥 YouTube Video Card with Viewport-Aware Autoplay
 const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) => {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -75,38 +75,25 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsIntersecting(true);
-          // Once it starts playing, stop observing to save resources
           if (cardRef.current) observer.unobserve(cardRef.current);
         }
       },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5 // Trigger when 50% of the card is visible on screen
-      }
+      { root: null, rootMargin: '0px', threshold: 0.5 }
     );
 
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
+    if (cardRef.current) observer.observe(cardRef.current);
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
-      }
+      if (cardRef.current) observer.unobserve(cardRef.current);
     };
   }, []);
 
   return (
     <div ref={cardRef} className="relative w-[85vw] max-w-[400px] sm:w-96 flex-shrink-0 group">
-      <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-slate-100 transition-all duration-300 hover:-translate-y-1">
-        <div className="relative aspect-video bg-slate-200">
+      <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-slate-700/50 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/50">
+        <div className="relative aspect-video bg-slate-900">
           {!isIntersecting ? (
             <>
-              {/* Thumbnail Image with Skeleton Loader */}
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-slate-200 animate-pulse" />
-              )}
+              {!imageLoaded && <div className="absolute inset-0 bg-slate-800 animate-pulse" />}
               <Image
                 src={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
                 alt={video.title}
@@ -115,21 +102,14 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
                 onLoad={() => setImageLoaded(true)}
                 unoptimized
               />
-              
-              {/* Play Button Overlay (Visual Cue) */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-300">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all duration-300">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-600/90 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
                   <PlayCircle className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                 </div>
               </div>
-
-              {/* Badge */}
-              <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">
-                NEW
-              </div>
+              <div className="absolute bottom-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">NEW</div>
             </>
           ) : (
-            /* Video Player (Autoplays ONLY when intersecting viewport) */
             <iframe
               src={`https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&rel=0&modestbranding=1&loop=1&playlist=${video.id}`}
               title={video.title}
@@ -140,8 +120,8 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
           )}
         </div>
         <div className="p-4">
-          <h3 className="font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2">{video.title}</h3>
-          <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
+          <h3 className="font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-2">{video.title}</h3>
+          <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
             <YoutubeIcon className="w-4 h-4" />
             <span>World of Concept</span>
             <span>•</span>
@@ -237,7 +217,7 @@ export default function DashboardPage() {
 
   if (!authChecked || loading) {
     return (
-      <div className="min-h-[100dvh] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-slate-950 flex items-center justify-center">
         <div className="text-center space-y-6 px-4">
           <div className="relative w-24 h-24 mx-auto">
             <div className="absolute inset-0 bg-blue-500/20 rounded-full animate-ping" />
@@ -246,8 +226,8 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <p className="text-slate-800 font-bold text-xl tracking-wide">World of Concept</p>
-            <p className="text-slate-500 font-medium animate-pulse">आपका डैशबोर्ड लोड हो रहा है...</p>
+            <p className="text-slate-300 font-bold text-xl tracking-wide">World of Concept</p>
+            <p className="text-slate-400 font-medium animate-pulse">आपका डैशबोर्ड लोड हो रहा है...</p>
           </div>
         </div>
       </div>
@@ -256,12 +236,12 @@ export default function DashboardPage() {
 
   if (!student) {
     return (
-      <div className="min-h-[100dvh] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-slate-950 flex items-center justify-center">
         <div className="text-center space-y-6 px-4">
-          <div className="w-20 h-20 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto bg-red-900/50 rounded-full flex items-center justify-center">
             <span className="text-4xl">⚠️</span>
           </div>
-          <p className="text-slate-600 text-lg font-medium">छात्र डेटा लोड करने में असमर्थ</p>
+          <p className="text-slate-300 text-lg font-medium">छात्र डेटा लोड करने में असमर्थ</p>
           <button 
             onClick={() => window.location.replace("/")} 
             className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 hover:scale-105 active:scale-95"
@@ -274,7 +254,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto">
+    <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto">
       <AdPopup />
 
       <style jsx global>{`
@@ -367,26 +347,26 @@ export default function DashboardPage() {
         }
       `}</style>
 
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+      {/* 🔥 DARK HEADER */}
+      <header className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <Logo size="medium" showText={true} />
             <div className="flex items-center gap-3 sm:gap-6">
-              <button className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+              <button className="relative p-2 text-slate-400 hover:bg-slate-800 rounded-full transition-colors">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-slate-950 animate-pulse"></span>
               </button>
-              <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-slate-200">
+              <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-slate-800">
                 <div className="text-right">
-                  <p className="text-sm font-bold text-slate-900">{student.fullName}</p>
-                  <p className="text-xs text-slate-500">{student.email}</p>
+                  <p className="text-sm font-bold text-white">{student.fullName}</p>
+                  <p className="text-xs text-slate-400">{student.email}</p>
                 </div>
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ring-2 ring-white">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ring-2 ring-slate-950">
                   {student.fullName.charAt(0).toUpperCase()}
                 </div>
               </div>
-              <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 border border-red-100 hover:border-red-200 hover:shadow-md">
+              <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-300 border border-red-500/30 hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20">
                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
               </button>
             </div>
@@ -396,16 +376,16 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. SHIMMERING WELCOME CARD - STRONGER BACKGROUND */}
-        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-xl">
+        {/* 🔥 1. WELCOME CARD - DARK CINEMATIC with STRONGER BACKGROUND */}
+        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover" />
+            <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover opacity-70" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-900/90 via-indigo-900/90 to-purple-900/90" />
-          <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/70 via-indigo-950/70 to-purple-950/70" />
+          <div className="absolute inset-0 z-0 shimmer-effect opacity-50" />
           
           <div className="relative z-10 p-6 sm:p-10 text-white">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-sm font-semibold mb-4 border border-white/30">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-sm font-semibold mb-4 border border-white/20">
               <Sparkles className="w-4 h-4" />
               <span>छात्र डैशबोर्ड</span>
             </div>
@@ -418,37 +398,35 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER - STRONGER BACKGROUND */}
+        {/* 🔥 2. LIVE CLASS BANNER - DARK CINEMATIC with STRONGER BACKGROUND */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
-          <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/30 group">
+          <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
             <div className="absolute inset-0 z-0 bg-slide-left">
-              <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover" />
+              <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover opacity-70" />
             </div>
             
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/95 via-red-900/90 to-orange-700/85" />
-            
-            <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-30" />
-            
-            <div className="absolute inset-0 z-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/80 via-red-900/75 to-orange-900/70" />
+            <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40" />
+            <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
 
             <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-              <div className="absolute top-8 left-10 text-white/20 animate-float" style={{ animationDelay: '0s' }}>
+              <div className="absolute top-8 left-10 text-white/30 animate-float" style={{ animationDelay: '0s' }}>
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               </div>
-              <div className="absolute top-16 right-16 text-orange-300/30 animate-float" style={{ animationDelay: '1s' }}>
+              <div className="absolute top-16 right-16 text-orange-300/40 animate-float" style={{ animationDelay: '1s' }}>
                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               </div>
-              <div className="absolute bottom-12 left-1/4 text-red-300/20 animate-float" style={{ animationDelay: '2s' }}>
+              <div className="absolute bottom-12 left-1/4 text-red-300/30 animate-float" style={{ animationDelay: '2s' }}>
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               </div>
               
-              <div className="absolute top-1/2 left-8 text-white/10 animate-float" style={{ animationDelay: '0.5s' }}>
+              <div className="absolute top-1/2 left-8 text-white/20 animate-float" style={{ animationDelay: '0.5s' }}>
                 <BookOpen className="w-12 h-12" />
               </div>
-              <div className="absolute bottom-1/4 right-8 text-orange-200/10 animate-float" style={{ animationDelay: '1.5s' }}>
+              <div className="absolute bottom-1/4 right-8 text-orange-200/20 animate-float" style={{ animationDelay: '1.5s' }}>
                 <Sparkles className="w-10 h-10" />
               </div>
-              <div className="absolute top-1/4 right-1/3 text-white/10 animate-float" style={{ animationDelay: '2.5s' }}>
+              <div className="absolute top-1/4 right-1/3 text-white/20 animate-float" style={{ animationDelay: '2.5s' }}>
                 <Target className="w-8 h-8" />
               </div>
             </div>
@@ -459,7 +437,7 @@ export default function DashboardPage() {
                 LIVE NOW
               </div>
               
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl shadow-black/20">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl shadow-black/40">
                 <span className="text-red-700">▶️</span>
               </div>
               
@@ -476,7 +454,7 @@ export default function DashboardPage() {
                 href="https://www.youtube.com/@JoinWorldofConcept" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-black/20 whitespace-nowrap border-2 border-white/50 hover:border-orange-300"
+                className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-white/50 hover:border-orange-300"
               >
                 <PlayCircle className="w-5 h-5" />
                 अभी जुड़ें
@@ -485,28 +463,28 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION - VIEWPORT-AWARE AUTOPLAY */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-center justify-between mb-6 px-2">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30">
                 <YoutubeIcon className="w-7 h-7" />
               </div>
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                <h2 className="text-2xl font-extrabold text-white flex items-center gap-2">
                   RK Sir के लेटेस्ट वीडियो
                 </h2>
-                <p className="text-sm text-slate-500 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
+                <p className="text-sm text-slate-400 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
               </div>
             </div>
-            <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-sm transition-colors group">
+            <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-semibold text-sm transition-colors group">
               चैनल देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
           
           <div className="relative w-full py-4">
-            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
             <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
               {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
@@ -516,60 +494,60 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Stats Cards */}
+        {/* 🔥 STATS CARDS - DARK THEME */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12">
           {[
-            { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-50 text-blue-600", delay: "0.3s" },
-            { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-50 text-green-600", delay: "0.4s" },
-            { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-50 text-purple-600", delay: "0.5s" },
+            { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-500/10 text-blue-400 border-blue-500/20", delay: "0.3s" },
+            { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-500/10 text-green-400 border-green-500/20", delay: "0.4s" },
+            { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", delay: "0.5s" },
           ].map((stat, i) => (
             <div 
               key={i} 
-              className="bg-white border border-slate-100 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-fade-in-up" 
+              className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300 animate-fade-in-up" 
               style={{ animationDelay: stat.delay }}
             >
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 sm:w-14 sm:h-14 ${stat.color} rounded-2xl flex items-center justify-center shadow-sm`}>
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 ${stat.color} border rounded-2xl flex items-center justify-center shadow-sm`}>
                   <stat.icon className="w-6 h-6 sm:w-7 sm:h-7" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500 font-medium mb-1">{stat.label}</p>
-                  <p className="text-2xl sm:text-3xl font-extrabold text-slate-900">{stat.value}</p>
+                  <p className="text-sm text-slate-400 font-medium mb-1">{stat.label}</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-white">{stat.value}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* 🔥 4. AVAILABLE COURSES - STRONGER BACKGROUND */}
+        {/* 🔥 4. AVAILABLE COURSES - DARK CINEMATIC with STRONGER BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover" />
+            <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover opacity-60" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-50/95 via-slate-50/98 to-slate-50" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
           
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-900">उपलब्ध कोर्सेस</h2>
-                <p className="text-slate-500 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
+                <h2 className="text-2xl font-extrabold text-white">उपलब्ध कोर्सेस</h2>
+                <p className="text-slate-400 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
               </div>
-              <Link href="/courses" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-sm transition-colors group">
+              <Link href="/courses" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group">
                 सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             
             <div className="relative w-full py-4">
-              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
                 {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-slate-100 hover:border-blue-300 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                    <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                       <div className="relative h-40 sm:h-48 overflow-hidden">
                         <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                         <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
                           <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
                             {course.badge}
@@ -579,11 +557,11 @@ export default function DashboardPage() {
                           <h3 className="text-white font-bold text-sm sm:text-base drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
                         </div>
                       </div>
-                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-white to-slate-50">
-                        <p className="text-slate-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
+                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-800/50 to-slate-900/50">
+                        <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
                         <div className="flex items-center justify-between mt-auto">
-                          <span className="text-lg sm:text-xl font-extrabold text-slate-900">{course.price}</span>
-                          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
+                          <span className="text-lg sm:text-xl font-extrabold text-white">{course.price}</span>
+                          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
                             नामांकन करें
                           </button>
                         </div>
@@ -596,31 +574,31 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. CINEMATIC GALLERY - STRONGER BACKGROUND */}
+        {/* 🔥 5. CINEMATIC GALLERY - DARK with STRONGER BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <div className="absolute inset-0 z-0 bg-slide-left">
-            <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover" />
+            <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover opacity-60" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-50/95 via-slate-50/98 to-slate-50" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
-              <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">World of Concept में जीवन</h2>
+              <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
             <div className="relative w-full py-4 sm:py-6">
-              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
                 {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
                   <div 
                     key={`row1-${i}`} 
-                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2"
                   >
                     <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
                     <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                       <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
                         <PlayCircle className="w-4 h-4" /> World of Concept क्लास
@@ -634,10 +612,10 @@ export default function DashboardPage() {
                 {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
                   <div 
                     key={`row2-${i}`} 
-                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 hover:-translate-y-2"
                   >
                     <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
                     <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                       <span className="text-white font-bold text-sm tracking-wide drop-shadow-md flex items-center gap-2">
                         <Trophy className="w-4 h-4 text-yellow-400" /> छात्र सफलता की कहानी
@@ -650,29 +628,29 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES - STRONGER BACKGROUND */}
+        {/* 🔥 6. RK SIR UPDATES - DARK with STRONGER BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover" />
+            <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover opacity-60" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-50/95 via-slate-50/98 to-slate-50" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
-              <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-                <MessageCircle className="w-6 h-6 text-indigo-600" />
+              <h2 className="text-2xl font-extrabold text-white flex items-center gap-2">
+                <MessageCircle className="w-6 h-6 text-indigo-400" />
                 RK Sir के अपडेट्स
               </h2>
             </div>
             
             {updates.length === 0 ? (
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-100">
-                <p className="text-slate-500">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
+              <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-8 text-center border border-slate-700/50">
+                <p className="text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="group bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div key={update.id} className="group bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
                     {update.imageUrl && (
                       <div className="relative h-48 overflow-hidden">
                         <Image 
@@ -681,7 +659,7 @@ export default function DashboardPage() {
                           fill 
                           className="object-cover transition-transform duration-500 group-hover:scale-110" 
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                         <div className="absolute top-3 left-3">
                           <span className={`px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-md ${
                             update.type === "announcement" ? "bg-blue-500/80" :
@@ -694,9 +672,9 @@ export default function DashboardPage() {
                       </div>
                     )}
                     <div className="p-5">
-                      <h3 className="font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">{update.title}</h3>
-                      <p className="text-slate-600 text-sm mb-3 line-clamp-3">{update.description}</p>
-                      <p className="text-xs text-slate-400 flex items-center gap-1">
+                      <h3 className="font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors line-clamp-2">{update.title}</h3>
+                      <p className="text-slate-300 text-sm mb-3 line-clamp-3">{update.description}</p>
+                      <p className="text-xs text-slate-500 flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {update.timestamp?.toDate().toLocaleDateString("hi-IN", { day: 'numeric', month: 'long', year: 'numeric' })}
                       </p>
@@ -711,7 +689,7 @@ export default function DashboardPage() {
       </main>
 
       {/* 🔥 COMPLETE FOOTER with VISIBLE MAP BACKGROUND */}
-      <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden">
+      <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-slate-800">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
         <div className="absolute inset-0 z-0">
@@ -725,7 +703,7 @@ export default function DashboardPage() {
               top: 0,
               left: 0,
               filter: 'invert(92%) hue-rotate(180deg) brightness(0.95) contrast(1.1) saturate(0.4)',
-              opacity: 0.4
+              opacity: 0.5
             }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -733,7 +711,7 @@ export default function DashboardPage() {
             title="World of Concept Location - Alamnagar, Bihar"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/70 to-slate-950/85" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
@@ -742,7 +720,7 @@ export default function DashboardPage() {
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg"
             >
               <MapPin className="w-4 h-4 text-red-500 group-hover:text-orange-400 transition-colors" />
               <span className="text-white text-sm font-semibold">आलमनगर पोस्ट ऑफिस चौक, मधेपुरा, बिहार</span>
@@ -806,7 +784,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="pt-6 sm:pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
+          <div className="pt-6 sm:pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
               <span>निर्मित</span>
