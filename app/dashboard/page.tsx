@@ -132,7 +132,6 @@ export default function DashboardPage() {
     { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।", image: "/course5.jpg" },
   ];
 
-  // 🔥 UPDATED: Gallery images from gallery1.jpg to gallery10.jpg
   const row1Images = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
   const row2Images = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
 
@@ -194,9 +193,17 @@ export default function DashboardPage() {
       <style jsx global>{`
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+        
+        /* 🔥 Welcome Card Shimmer: LEFT TO RIGHT */
         @keyframes shimmer {
           0% { background-position: -1000px 0; }
           100% { background-position: 1000px 0; }
+        }
+        
+        /* 🔥 Live Class Shimmer: RIGHT TO LEFT (Opposite Direction) */
+        @keyframes shimmer-reverse {
+          0% { background-position: 1000px 0; }
+          100% { background-position: -1000px 0; }
         }
         
         .animate-marquee { 
@@ -225,6 +232,18 @@ export default function DashboardPage() {
           );
           background-size: 1000px 100%;
           animation: shimmer 2s infinite linear;
+        }
+        
+        /* 🔥 REVERSE SHIMMER for Live Class Banner */
+        .shimmer-effect-reverse {
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.5) 50%,
+            rgba(255, 255, 255, 0) 100%
+          );
+          background-size: 1000px 100%;
+          animation: shimmer-reverse 2.5s infinite linear;
         }
       `}</style>
 
@@ -275,19 +294,44 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 Live Class Banner */}
+        {/* 🔥 LIVE CLASS BANNER - ORANGE & GREEN with REVERSE SHIMMER */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
-          <div className="card-interactive border-2 border-red-100 bg-gradient-to-br from-red-50 to-white relative overflow-hidden group rounded-2xl w-full hover:shadow-2xl hover:shadow-red-500/10 hover:-translate-y-1 transition-all duration-500 ease-out">
-            <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-10">
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></span> LIVE
-            </div>
-            <div className="p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0">▶️</div>
-              <div className="flex-1">
-                <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-2 w-full leading-tight">RK Sir के साथ दैनिक लाइव क्लास</h3>
-                <p className="text-slate-600 text-xs sm:text-base w-full max-w-xl">दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।</p>
+          <div className="relative overflow-hidden rounded-2xl w-full border-2 border-orange-200 hover:border-green-300 transition-all duration-500">
+            {/* 🔥 Orange & Green Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-yellow-300 to-green-500" />
+            {/* 🔥 Reverse Shimmer Overlay (Right to Left) */}
+            <div className="absolute inset-0 shimmer-effect-reverse" />
+            {/* Subtle pattern overlay */}
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+            
+            <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
+              {/* LIVE Badge */}
+              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-ping"></span>
+                LIVE NOW
               </div>
-              <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-bold hover:bg-red-700 transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/20 whitespace-nowrap">
+              
+              {/* Play Icon - White Circle with Orange/Green theme */}
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl">
+                <span className="text-orange-600">▶️</span>
+              </div>
+              
+              <div className="flex-1">
+                <h3 className="text-lg sm:text-2xl font-extrabold text-white mb-2 w-full leading-tight drop-shadow-lg">
+                  RK Sir के साथ दैनिक लाइव क्लास
+                </h3>
+                <p className="text-white/95 text-xs sm:text-base w-full max-w-xl font-medium drop-shadow">
+                  दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।
+                </p>
+              </div>
+              
+              {/* CTA Button - White with Orange/Green gradient text */}
+              <a 
+                href="https://www.youtube.com/@JoinWorldofConcept" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center justify-center gap-2 bg-white text-orange-600 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-yellow-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-orange-900/30 whitespace-nowrap border-2 border-orange-300 hover:border-green-400"
+              >
                 <PlayCircle className="w-5 h-5" />
                 अभी जुड़ें
               </a>
@@ -407,7 +451,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 Cinematic Gallery (Row 1: LEFT TO RIGHT, Row 2: RIGHT TO LEFT - OPPOSITE) */}
+        {/* 🔥 Cinematic Gallery (Row 1: LEFT TO RIGHT, Row 2: RIGHT TO LEFT) */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
           <div className="text-center mb-10 px-2">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
@@ -418,7 +462,6 @@ export default function DashboardPage() {
             <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
 
-            {/* 🔥 Row 1: LEFT TO RIGHT (animate-marquee-reverse) */}
             <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
               {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
                 <div 
@@ -436,7 +479,6 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* 🔥 Row 2: RIGHT TO LEFT (animate-marquee) - OPPOSITE DIRECTION */}
             <div className="flex gap-4 sm:gap-5 w-max animate-marquee">
               {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
                 <div 
@@ -509,38 +551,48 @@ export default function DashboardPage() {
 
       </main>
 
-      {/* 🔥 COMPLETE FOOTER with SECURE MAP BACKGROUND (Dark Matte) */}
+      {/* 🔥 COMPLETE FOOTER with VISIBLE MAP BACKGROUND (Dark Matte) */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
-        {/* 🔥 SECURE MAP BACKGROUND (Dark Matte) */}
+        {/* 🔥 VISIBLE GOOGLE MAP BACKGROUND - Alamnagar, Bihar (Real Location) */}
         <div className="absolute inset-0 z-0">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3598.5!2d86.1167!3d25.9333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDU2JzAwLjAiTiA4NsKwMDcnMDAuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
+            src="https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&output=embed"
             width="100%"
             height="100%"
             style={{ 
-              border: 0, 
-              filter: 'invert(90%) hue-rotate(180deg) brightness(0.6) contrast(1.3) saturate(0.3)',
-              opacity: 0.15
+              border: 0,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              filter: 'invert(92%) hue-rotate(180deg) brightness(0.95) contrast(1.1) saturate(0.4)',
+              opacity: 0.4
             }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             sandbox="allow-scripts allow-same-origin allow-popups"
-            title="World of Concept Location"
+            title="World of Concept Location - Alamnagar, Bihar"
+            allowFullScreen
           />
-          {/* Dark overlay for readability */}
-          <div className="absolute inset-0 bg-slate-950/80" />
+          {/* Dark Matte Overlay - Adjusted for better map visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/90" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
           
-          {/* Location Badge */}
+          {/* Location Badge with Map Link */}
           <div className="mb-8 flex items-center justify-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-800">
-              <MapPin className="w-4 h-4 text-red-500" />
-              <span className="text-white text-sm font-semibold">आलमनगर पोस्ट ऑफिस चौक, बिहार</span>
-            </div>
+            <a 
+              href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg"
+            >
+              <MapPin className="w-4 h-4 text-red-500 group-hover:text-orange-400 transition-colors" />
+              <span className="text-white text-sm font-semibold">आलमनगर पोस्ट ऑफिस चौक, मधेपुरा, बिहार</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-orange-400 transition-colors" />
+            </a>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
@@ -553,7 +605,7 @@ export default function DashboardPage() {
                 <span className="font-extrabold text-lg sm:text-xl tracking-tight">World of Concept</span>
               </div>
               <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">
-                बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
+                बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
               </p>
               <div className="flex gap-3 sm:gap-4 pt-2">
                 <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="YouTube">
