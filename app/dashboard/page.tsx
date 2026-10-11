@@ -194,16 +194,37 @@ export default function DashboardPage() {
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
         
-        /* 🔥 Welcome Card Shimmer: LEFT TO RIGHT */
         @keyframes shimmer {
           0% { background-position: -1000px 0; }
           100% { background-position: 1000px 0; }
         }
         
-        /* 🔥 Live Class Shimmer: RIGHT TO LEFT (Opposite Direction) */
         @keyframes shimmer-reverse {
           0% { background-position: 1000px 0; }
           100% { background-position: -1000px 0; }
+        }
+
+        /* 🔥 Floating Animation for Stars & Icons */
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+
+        /* 🔥 Shimmer Text Effect for Developer Name */
+        @keyframes shimmer-text {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-shimmer-text {
+          background: linear-gradient(90deg, #94a3b8 0%, #ffffff 50%, #94a3b8 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer-text 3s linear infinite;
         }
         
         .animate-marquee { 
@@ -234,7 +255,6 @@ export default function DashboardPage() {
           animation: shimmer 2s infinite linear;
         }
         
-        /* 🔥 REVERSE SHIMMER for Live Class Banner */
         .shimmer-effect-reverse {
           background: linear-gradient(
             90deg,
@@ -294,43 +314,68 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 LIVE CLASS BANNER - ORANGE & GREEN with REVERSE SHIMMER */}
+        {/* 🔥 LIVE CLASS BANNER - DARK MATTE RED & KESARIYA with FLOATING STARS */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
-          <div className="relative overflow-hidden rounded-2xl w-full border-2 border-orange-200 hover:border-green-300 transition-all duration-500">
-            {/* 🔥 Orange & Green Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-yellow-300 to-green-500" />
+          <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/30 group">
+            {/* 🔥 Dark Matte Red & Kesariya Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-red-950 via-red-900 to-orange-700" />
+            
             {/* 🔥 Reverse Shimmer Overlay (Right to Left) */}
-            <div className="absolute inset-0 shimmer-effect-reverse" />
+            <div className="absolute inset-0 shimmer-effect-reverse opacity-30" />
+            
             {/* Subtle pattern overlay */}
-            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+            <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+
+            {/* 🔥 Crystal Clear Educational Floating Stars & Icons */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-8 left-10 text-white/20 animate-float" style={{ animationDelay: '0s' }}>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <div className="absolute top-16 right-16 text-orange-300/30 animate-float" style={{ animationDelay: '1s' }}>
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <div className="absolute bottom-12 left-1/4 text-red-300/20 animate-float" style={{ animationDelay: '2s' }}>
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              
+              <div className="absolute top-1/2 left-8 text-white/10 animate-float" style={{ animationDelay: '0.5s' }}>
+                <BookOpen className="w-12 h-12" />
+              </div>
+              <div className="absolute bottom-1/4 right-8 text-orange-200/10 animate-float" style={{ animationDelay: '1.5s' }}>
+                <Sparkles className="w-10 h-10" />
+              </div>
+              <div className="absolute top-1/4 right-1/3 text-white/10 animate-float" style={{ animationDelay: '2.5s' }}>
+                <Target className="w-8 h-8" />
+              </div>
+            </div>
             
             <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
               {/* LIVE Badge */}
-              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white">
+              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white/20">
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-ping"></span>
                 LIVE NOW
               </div>
               
-              {/* Play Icon - White Circle with Orange/Green theme */}
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl">
-                <span className="text-orange-600">▶️</span>
+              {/* Play Icon - White Circle with Red/Orange theme */}
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl shadow-black/20">
+                <span className="text-red-700">▶️</span>
               </div>
               
               <div className="flex-1">
                 <h3 className="text-lg sm:text-2xl font-extrabold text-white mb-2 w-full leading-tight drop-shadow-lg">
                   RK Sir के साथ दैनिक लाइव क्लास
                 </h3>
-                <p className="text-white/95 text-xs sm:text-base w-full max-w-xl font-medium drop-shadow">
+                <p className="text-orange-100/95 text-xs sm:text-base w-full max-w-xl font-medium drop-shadow">
                   दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।
                 </p>
               </div>
               
-              {/* CTA Button - White with Orange/Green gradient text */}
+              {/* CTA Button - Crystal White with Red/Orange text */}
               <a 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="inline-flex items-center justify-center gap-2 bg-white text-orange-600 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-yellow-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-orange-900/30 whitespace-nowrap border-2 border-orange-300 hover:border-green-400"
+                className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-black/20 whitespace-nowrap border-2 border-white/50 hover:border-orange-300"
               >
                 <PlayCircle className="w-5 h-5" />
                 अभी जुड़ें
@@ -652,14 +697,15 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* 🔥 DEVELOPER CONTRIBUTION WITH SHIMMERING EFFECT */}
           <div className="pt-6 sm:pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
-            <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:text-blue-400 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
+            <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
               <span>निर्मित</span>
-              <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:scale-125 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
-              <span>द्वारा <span className="font-semibold text-slate-400 group-hover:text-blue-400">Mukesh Kumar Malakar</span></span>
+              <span>द्वारा <span className="font-bold animate-shimmer-text">Mukesh Kumar Malakar</span></span>
             </a>
           </div>
         </div>
