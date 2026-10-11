@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -66,40 +66,52 @@ export default function Home() {
   const [student, setStudent] = useState<StudentData | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // 🔥 Continuous Typing Effect States
+  // 🔥 Smooth Typing Effect States
   const [typedText, setTypedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const fullText = "World of Concept";
+  const typingRef = useRef<NodeJS.Timeout | null>(null);
 
   const row1Images = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
   const row2Images = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
   const courseImages = ["/course1.jpg", "/course2.jpg", "/course3.jpg", "/course4.jpg", "/course5.jpg"];
-  const heroBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"]; // Dedicated cinematic hero backgrounds
+  const heroBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
 
+  // 🔥 Smooth Typing Effect with useRef for stable intervals
   useEffect(() => {
-    // 🔥 Continuous Typing Logic
     const handleType = () => {
-      const currentText = isDeleting 
-        ? fullText.substring(0, typedText.length - 1) 
-        : fullText.substring(0, typedText.length + 1);
-      
-      setTypedText(currentText);
-
-      let typeSpeed = isDeleting ? 50 : 100;
-
-      if (!isDeleting && currentText === fullText) {
-        typeSpeed = 2500; // Pause at the end
-        setIsDeleting(true);
-      } else if (isDeleting && currentText === "") {
-        typeSpeed = 500; // Pause before retyping
-        setIsDeleting(false);
-      }
-      
-      setTimeout(handleType, typeSpeed);
+      setTypedText(prev => {
+        if (!isDeleting) {
+          // Typing forward
+          if (prev.length < fullText.length) {
+            return fullText.substring(0, prev.length + 1);
+          } else {
+            // Finished typing, start deleting after pause
+            setTimeout(() => setIsDeleting(true), 2500);
+            return prev;
+          }
+        } else {
+          // Deleting backward
+          if (prev.length > 0) {
+            return prev.substring(0, prev.length - 1);
+          } else {
+            // Finished deleting, start typing after pause
+            setTimeout(() => setIsDeleting(false), 500);
+            return prev;
+          }
+        }
+      });
     };
 
-    const timer = setTimeout(handleType, 100);
+    const typeSpeed = isDeleting ? 50 : 100;
+    typingRef.current = setTimeout(handleType, typeSpeed);
 
+    return () => {
+      if (typingRef.current) clearTimeout(typingRef.current);
+    };
+  }, [typedText, isDeleting]);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
@@ -115,11 +127,8 @@ export default function Home() {
       setLoading(false);
     });
 
-    return () => {
-      clearTimeout(timer);
-      unsubscribe();
-    };
-  }, [typedText, isDeleting]);
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = async () => {
     await auth.signOut();
@@ -155,6 +164,7 @@ export default function Home() {
     return (
       <main className="relative min-h-[100dvh] bg-slate-950 overflow-x-hidden flex flex-col" itemScope itemType="https://schema.org/WebPage">
         <style jsx global>{`
+          /* 🔥 Tricolor Shimmer - LEFT TO RIGHT */
           @keyframes tricolor-shimmer {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
@@ -167,22 +177,36 @@ export default function Home() {
             -webkit-text-fill-color: transparent;
             animation: tricolor-shimmer 4s linear infinite;
           }
-          @keyframes fade-bg {
-            0%, 100% { opacity: 0; transform: scale(1.1); }
-            20%, 80% { opacity: 1; transform: scale(1); }
+          
+          /* 🔥 Tricolor Shimmer - RIGHT TO LEFT (Opposite) */
+          @keyframes tricolor-shimmer-reverse {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
           }
-          .hero-bg-img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            animation: fade-bg 20s infinite;
+          .tricolor-text-reverse {
+            background: linear-gradient(90deg, #138808 0%, #FFFFFF 30%, #FFFFFF 70%, #FF9933 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: tricolor-shimmer-reverse 4s linear infinite;
           }
-          @keyframes pan-left { 0% { transform: translateX(0) scale(1.1); } 100% { transform: translateX(-5%) scale(1.1); } }
-          @keyframes pan-right { 0% { transform: translateX(-5%) scale(1.1); } 100% { transform: translateX(0) scale(1.1); } }
-          .bg-pan-left { animation: pan-left 30s linear infinite alternate; }
-          .bg-pan-right { animation: pan-right 35s linear infinite alternate; }
+          
+          /* 🔥 Smooth Cinematic Background Sliding */
+          @keyframes slide-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-10%); }
+          }
+          @keyframes slide-right {
+            0% { transform: translateX(-10%); }
+            100% { transform: translateX(0); }
+          }
+          .bg-slide-left {
+            animation: slide-left 40s ease-in-out infinite alternate;
+          }
+          .bg-slide-right {
+            animation: slide-right 45s ease-in-out infinite alternate;
+          }
           
           @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
           @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
@@ -206,15 +230,15 @@ export default function Home() {
           }
         `}</style>
 
-        {/* 1. HERO SECTION with Cinematic Opposite Panning Backgrounds */}
+        {/* 1. HERO SECTION with Smooth Cinematic Backgrounds */}
         <section className="relative min-h-[100dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
           <div className="absolute inset-0 z-0">
-            {/* Layer 1: Pans Right */}
-            <div className="absolute inset-0 bg-pan-right">
+            {/* Layer 1: Slides Right */}
+            <div className="absolute inset-0 bg-slide-right">
               <Image src={heroBgImages[0]} alt="Hero Background 1" fill className="object-cover opacity-60" />
             </div>
-            {/* Layer 2: Pans Left (Opposite) */}
-            <div className="absolute inset-0 bg-pan-left mix-blend-overlay">
+            {/* Layer 2: Slides Left (Opposite) */}
+            <div className="absolute inset-0 bg-slide-left mix-blend-overlay">
               <Image src={heroBgImages[1]} alt="Hero Background 2" fill className="object-cover opacity-40" />
             </div>
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
@@ -229,7 +253,7 @@ export default function Home() {
               </div>
               
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white" itemProp="name">
-                <span className="tricolor-text">{typedText}</span>
+                <span className="tricolor-text-reverse">{typedText}</span>
               </h1>
               
               <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium" itemProp="description">
@@ -246,10 +270,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. WHY CHOOSE US SECTION with Cinematic Background */}
+        {/* 2. WHY CHOOSE US SECTION with Smooth Cinematic Background */}
         <section className="relative py-24 overflow-hidden border-t border-slate-800">
-          {/* Cinematic Background: Pans Right */}
-          <div className="absolute inset-0 z-0 bg-pan-right">
+          {/* Cinematic Background: Slides Right */}
+          <div className="absolute inset-0 z-0 bg-slide-right">
             <Image src="/gallery2.jpg" alt="Why Choose Us Background" fill className="object-cover opacity-20" />
           </div>
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-950" />
@@ -281,8 +305,8 @@ export default function Home() {
 
         {/* 3. CINEMATIC DUAL ROW SCROLLING with Opposite Cinematic Background */}
         <section className="relative py-16 overflow-hidden border-y border-slate-800">
-          {/* Cinematic Background: Pans Left (Opposite to Why Choose Us) */}
-          <div className="absolute inset-0 z-0 bg-pan-left">
+          {/* Cinematic Background: Slides Left (Opposite) */}
+          <div className="absolute inset-0 z-0 bg-slide-left">
             <Image src="/gallery4.jpg" alt="Dual Row Background" fill className="object-cover opacity-15" />
           </div>
           <div className="absolute inset-0 z-0 bg-slate-950/90" />
