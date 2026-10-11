@@ -132,10 +132,10 @@ export default function DashboardPage() {
     { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।", image: "/course5.jpg" },
   ];
 
-  const row1Images = ["/class1.jpg", "/class2.jpg", "/class3.jpg", "/class4.jpg", "/class5.jpg"];
-  const row2Images = ["/student1.jpg", "/student2.jpg", "/student3.jpg", "/student4.jpg", "/student5.jpg"];
+  // 🔥 UPDATED: Gallery images from gallery1.jpg to gallery10.jpg
+  const row1Images = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
+  const row2Images = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
 
-  // 🔥 10 Live Classes Videos with Autoplay
   const youtubeVideos = [
     { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 1" },
     { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - भौतिकी" },
@@ -407,7 +407,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Cinematic Gallery (Row 1: RIGHT TO LEFT, Row 2: LEFT TO RIGHT) */}
+        {/* 🔥 Cinematic Gallery (Row 1: LEFT TO RIGHT, Row 2: RIGHT TO LEFT - OPPOSITE) */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
           <div className="text-center mb-10 px-2">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">World of Concept में जीवन</h2>
@@ -418,7 +418,8 @@ export default function DashboardPage() {
             <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
 
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee mb-4 sm:mb-6">
+            {/* 🔥 Row 1: LEFT TO RIGHT (animate-marquee-reverse) */}
+            <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
               {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
                 <div 
                   key={`row1-${i}`} 
@@ -435,7 +436,8 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse">
+            {/* 🔥 Row 2: RIGHT TO LEFT (animate-marquee) - OPPOSITE DIRECTION */}
+            <div className="flex gap-4 sm:gap-5 w-max animate-marquee">
               {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
                 <div 
                   key={`row2-${i}`} 
@@ -507,11 +509,11 @@ export default function DashboardPage() {
 
       </main>
 
-      {/* 🔥 COMPLETE FOOTER with MAP BACKGROUND */}
+      {/* 🔥 COMPLETE FOOTER with SECURE MAP BACKGROUND (Dark Matte) */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
-        {/* 🔥 MAP AS BACKGROUND */}
+        {/* 🔥 SECURE MAP BACKGROUND (Dark Matte) */}
         <div className="absolute inset-0 z-0">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3598.5!2d86.1167!3d25.9333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDU2JzAwLjAiTiA4NsKwMDcnMDAuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
@@ -522,9 +524,9 @@ export default function DashboardPage() {
               filter: 'invert(90%) hue-rotate(180deg) brightness(0.6) contrast(1.3) saturate(0.3)',
               opacity: 0.15
             }}
-            allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
+            sandbox="allow-scripts allow-same-origin allow-popups"
             title="World of Concept Location"
           />
           {/* Dark overlay for readability */}
