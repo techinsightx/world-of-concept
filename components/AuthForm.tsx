@@ -10,9 +10,9 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowRight, X, BookOpen, Target, Award, Users } from "lucide-react";
 
-// 🔥 Custom Colorful Social Icons (Same as Dashboard)
+// 🔥 Custom Colorful Social Icons
 const YoutubeIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" fill="#FF0000"/>
@@ -24,9 +24,7 @@ const InstagramIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
     <defs>
       <linearGradient id="insta-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#FD5" />
-        <stop offset="50%" stopColor="#FF543E" />
-        <stop offset="100%" stopColor="#C837AB" />
+        <stop offset="0%" stopColor="#FD5" /><stop offset="50%" stopColor="#FF543E" /><stop offset="100%" stopColor="#C837AB" />
       </linearGradient>
     </defs>
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z" fill="url(#insta-gradient)"/>
@@ -48,7 +46,7 @@ const TelegramIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export default function AuthForm() {
+export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -58,7 +56,7 @@ export default function AuthForm() {
   const [successMsg, setSuccessMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   
-  // 🔥 New States for Hero & Form Toggle
+  // 🔥 Form Visibility State
   const [showForm, setShowForm] = useState(false);
   const [typedText, setTypedText] = useState("");
   const fullText = "World of Concept";
@@ -94,18 +92,14 @@ export default function AuthForm() {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        try {
-          await setDoc(doc(db, "students", user.uid), {
-            fullName: fullName.trim(),
-            email: user.email,
-            createdAt: serverTimestamp(),
-            role: "student",
-            uid: user.uid,
-            isActive: true,
-          });
-        } catch (dbError) {
-          console.warn("Firestore warning:", dbError);
-        }
+        await setDoc(doc(db, "students", user.uid), {
+          fullName: fullName.trim(),
+          email: user.email,
+          createdAt: serverTimestamp(),
+          role: "student",
+          uid: user.uid,
+          isActive: true,
+        });
         window.location.href = "/dashboard";
       }
     } catch (err: unknown) {
@@ -116,7 +110,7 @@ export default function AuthForm() {
         if (msg.includes("email-already-in-use")) errorMessage = "यह ईमेल पहले से पंजीकृत है। कृपया लॉगिन करें।";
         else if (msg.includes("weak-password")) errorMessage = "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।";
         else if (msg.includes("invalid-email")) errorMessage = "कृपया एक मान्य ईमेल पता दर्ज करें।";
-        else if (msg.includes("wrong-password") || msg.includes("user-not-found")) errorMessage = "ईमेल या पासवर्ड गलत है। कृपया पुनः प्रयास करें।";
+        else if (msg.includes("wrong-password") || msg.includes("user-not-found")) errorMessage = "ईमेल या पासवर्ड गलत है।";
         else errorMessage = msg.replace("Firebase: ", "").replace(/\(auth\/.*\)/, "").trim();
       }
       setError(errorMessage);
@@ -148,13 +142,13 @@ export default function AuthForm() {
     setPassword("");
   };
 
-  // Background images for Hero (Replace with your actual hero images)
+  // Cinematic Background Images
   const heroImages = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
   const marqueeRow1 = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
   const marqueeRow2 = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
 
   return (
-    <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-50 relative overflow-x-hidden font-sans">
       
       <style jsx global>{`
         @keyframes tricolor-shimmer {
@@ -198,113 +192,31 @@ export default function AuthForm() {
           -webkit-text-fill-color: transparent;
           animation: shimmer-text 3s linear infinite;
         }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
       `}</style>
 
       {/* ==========================================
-          HERO SECTION (Visible when showForm is false)
+          1. FLOATING TOP-RIGHT AUTH BUTTON
           ========================================== */}
-      {!showForm && (
-        <>
-          <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center overflow-hidden">
-            {/* 5 Cinematic Background Images with Fade */}
-            <div className="absolute inset-0 z-0">
-              {heroImages.map((src, i) => (
-                <Image 
-                  key={i} 
-                  src={src} 
-                  alt={`Hero Background ${i + 1}`} 
-                  fill 
-                  className="hero-bg-img"
-                  style={{ animationDelay: `${i * 5}s` }}
-                />
-              ))}
-              {/* Heavy Dark Overlay for Text Readability */}
-              <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
-            </div>
-
-            <div className="relative z-10 max-w-4xl mx-auto space-y-8 animate-fade-in-up">
-              {/* Logo */}
-              <div className="relative w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden bg-white shadow-2xl shadow-blue-500/30 border-4 border-white/10">
-                <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-4" priority />
-              </div>
-
-              {/* Typing Tricolor Title */}
-              <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-none">
-                <span className="tricolor-text">{typedText}</span>
-                <span className="animate-pulse text-white">|</span>
-              </h1>
-
-              <p className="text-lg sm:text-2xl text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
-                बिहार बोर्ड मैट्रिक और इंटर की तैयारी के लिए सबसे भरोसेमंद प्लेटफॉर्म। <br className="hidden sm:block" />
-                <span className="text-blue-400 font-bold">RK Sir</span> के साथ सफलता की नई यात्रा शुरू करें।
-              </p>
-
-              {/* Premium Login/Signup Button (Logout Button Style) */}
-              <div className="pt-8">
-                <button
-                  onClick={() => setShowForm(true)}
-                  className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-lg font-bold rounded-xl shadow-2xl shadow-blue-600/30 transition-all duration-300 transform hover:scale-105 active:scale-95 border border-white/10"
-                >
-                  <span>लॉगिन / साइन अप करें</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* 🔥 Cinematic Marquee Section (Opposite Directions) */}
-          <div className="relative py-12 bg-slate-950 border-t border-slate-800">
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
-
-            <div className="flex gap-4 w-max animate-marquee mb-4">
-              {[...marqueeRow1, ...marqueeRow1, ...marqueeRow1].map((src, i) => (
-                <div key={`m1-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl">
-                  <Image src={src} alt={`Marquee 1 ${i}`} fill className="object-cover hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-4 w-max animate-marquee-reverse">
-              {[...marqueeRow2, ...marqueeRow2, ...marqueeRow2].map((src, i) => (
-                <div key={`m2-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl">
-                  <Image src={src} alt={`Marquee 2 ${i}`} fill className="object-cover hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
+      <button
+        onClick={() => setShowForm(!showForm)}
+        className="fixed top-6 right-6 z-50 group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 via-white to-green-600 text-slate-900 font-extrabold rounded-full shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-white/30 backdrop-blur-sm"
+      >
+        <User className="w-5 h-5" />
+        <span>{showForm ? "बंद करें" : "लॉगिन / साइन अप"}</span>
+      </button>
 
       {/* ==========================================
-          AUTH FORM SECTION (Visible when showForm is true)
+          2. ADJACENT GLASSMORPHIC FORM CARD
           ========================================== */}
-      {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl animate-fade-in">
-          {/* Background decorative elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }} />
-          </div>
-
-          <div className="relative w-full max-w-[420px] bg-white/5 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/10 p-6 sm:p-8 animate-fade-in-up">
-            
-            {/* Back Button (Premium Style) */}
-            <button
-              onClick={() => setShowForm(false)}
-              className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 border border-transparent hover:border-white/10"
-            >
-              <ArrowLeft className="w-4 h-4" /> वापस जाएं
-            </button>
-
-            {/* Logo & Title */}
-            <div className="text-center mb-6 pt-6">
-              <div className="relative w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden bg-white shadow-xl shadow-blue-500/20">
-                <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-3" />
-              </div>
+      <div className={`fixed top-20 right-6 z-40 w-full max-w-md transition-all duration-500 ease-out transform ${showForm ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-8 scale-95 pointer-events-none'}`}>
+        <div className="bg-slate-900/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/10 p-6 relative overflow-hidden">
+          {/* Decorative glow */}
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl" />
+          
+          <div className="relative z-10">
+            <div className="text-center mb-6">
               <h2 className="text-2xl font-extrabold text-white tracking-tight mb-1">
                 {isLogin ? "वापसी पर स्वागत है" : "World of Concept से जुड़ें"}
               </h2>
@@ -314,47 +226,19 @@ export default function AuthForm() {
             </div>
 
             {/* Smooth Tab Switcher */}
-            <div className="relative flex bg-slate-900/50 backdrop-blur-sm p-1.5 rounded-xl mb-6 border border-white/5">
-              <div 
-                className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg transition-all duration-300 ease-out ${
-                  isLogin ? "left-1.5" : "left-[calc(50%+3px)]"
-                }`} 
-              />
-              <button
-                type="button"
-                onClick={() => { if (!isLogin) switchMode(); }}
-                className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${
-                  isLogin ? "text-white" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                साइन इन
-              </button>
-              <button
-                type="button"
-                onClick={() => { if (isLogin) switchMode(); }}
-                className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${
-                  !isLogin ? "text-white" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                साइन अप
-              </button>
+            <div className="relative flex bg-slate-800/50 backdrop-blur-sm p-1.5 rounded-xl mb-6 border border-white/5">
+              <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg transition-all duration-300 ease-out ${isLogin ? "left-1.5" : "left-[calc(50%+3px)]"}`} />
+              <button type="button" onClick={() => { if (!isLogin) switchMode(); }} className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${isLogin ? "text-white" : "text-slate-400 hover:text-white"}`}>साइन इन</button>
+              <button type="button" onClick={() => { if (isLogin) switchMode(); }} className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${!isLogin ? "text-white" : "text-slate-400 hover:text-white"}`}>साइन अप</button>
             </div>
 
-            {/* Form Fields */}
             <form onSubmit={handleEmailAuth} className="space-y-4" noValidate>
               {!isLogin && (
-                <div className="space-y-1.5 animate-fade-in">
+                <div className="space-y-1.5">
                   <label className="block text-sm font-semibold text-slate-300">पूरा नाम <span className="text-red-400">*</span></label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                    <input
-                      type="text"
-                      placeholder="शुभम कुमार"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
-                      required
-                    />
+                    <input type="text" placeholder="शुभम कुमार" value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all" required />
                   </div>
                 </div>
               )}
@@ -363,14 +247,7 @@ export default function AuthForm() {
                 <label className="block text-sm font-semibold text-slate-300">ईमेल पता <span className="text-red-400">*</span></label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <input
-                    type="email"
-                    placeholder="students@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
-                    required
-                  />
+                  <input type="email" placeholder="students@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all" required />
                 </div>
               </div>
 
@@ -378,82 +255,120 @@ export default function AuthForm() {
                 <label className="block text-sm font-semibold text-slate-300">पासवर्ड <span className="text-red-400">*</span></label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="कम से कम 6 अक्षर"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-12 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
-                    required
-                    minLength={6}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
-                  >
+                  <input type={showPassword ? "text" : "password"} placeholder="कम से कम 6 अक्षर" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full pl-10 pr-12 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all" required minLength={6} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-                
                 {isLogin && (
                   <div className="flex justify-end mt-2">
-                    <button
-                      type="button"
-                      onClick={handleForgotPassword}
-                      disabled={loading}
-                      className="text-xs text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors disabled:opacity-50"
-                    >
-                      पासवर्ड भूल गए?
-                    </button>
+                    <button type="button" onClick={handleForgotPassword} disabled={loading} className="text-xs text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors disabled:opacity-50">पासवर्ड भूल गए?</button>
                   </div>
                 )}
               </div>
 
-              {error && (
-                <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm flex items-start gap-2">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> <span>{error}</span>
-                </div>
-              )}
+              {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm flex items-start gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> <span>{error}</span></div>}
+              {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl text-sm flex items-start gap-2"><CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> <span>{successMsg}</span></div>}
 
-              {successMsg && (
-                <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl text-sm flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> <span>{successMsg}</span>
-                </div>
-              )}
-
-              {/* Premium Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-xl shadow-blue-600/20 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    प्रोसेसिंग...
-                  </>
-                ) : (
-                  <>
-                    {isLogin ? "डैशबोर्ड में प्रवेश करें" : "मुफ्त अकाउंट बनाएं"}
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
+              <button type="submit" disabled={loading} className="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-xl shadow-blue-600/20 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2">
+                {loading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> प्रोसेसिंग...</>) : (<>{isLogin ? "डैशबोर्ड में प्रवेश करें" : "मुफ्त अकाउंट बनाएं"} <ArrowRight className="w-5 h-5" /></>)}
               </button>
             </form>
 
             <p className="text-center text-xs text-slate-500 mt-6 leading-relaxed">
-              जारी रखकर, आप हमारी{" "}
-              <a href="/terms" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">शर्तों</a>
-              {" और "}
-              <a href="/privacy" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
+              जारी रखकर, आप हमारी <a href="/terms" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">शर्तों</a> और <a href="/privacy" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
             </p>
           </div>
         </div>
-      )}
+      </div>
 
       {/* ==========================================
-          WORLD-CLASS FOOTER (Same as Dashboard)
+          3. FULLY VISIBLE HERO SECTION
+          ========================================== */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+        {/* 5 Cinematic Background Images with Fade */}
+        <div className="absolute inset-0 z-0">
+          {heroImages.map((src, i) => (
+            <Image key={i} src={src} alt={`Hero Background ${i + 1}`} fill className="hero-bg-img" style={{ animationDelay: `${i * 5}s` }} />
+          ))}
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+          <div className="relative w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden bg-white shadow-2xl shadow-blue-500/30 border-4 border-white/10">
+            <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-4" priority />
+          </div>
+
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-none">
+            <span className="tricolor-text">{typedText}</span>
+            <span className="animate-pulse text-white">|</span>
+          </h1>
+
+          <p className="text-lg sm:text-2xl text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
+            बिहार बोर्ड मैट्रिक और इंटर की तैयारी के लिए सबसे भरोसेमंद प्लेटफॉर्म। <br className="hidden sm:block" />
+            <span className="text-blue-400 font-bold">RK Sir</span> के साथ सफलता की नई यात्रा शुरू करें।
+          </p>
+        </div>
+      </section>
+
+      {/* ==========================================
+          4. WHY CHOOSE US SECTION (Opposite Cinematic Slides)
+          ========================================== */}
+      <section className="relative py-24 bg-slate-900 overflow-hidden border-t border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">
+            World of Concept <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-green-500">क्यों चुनें?</span>
+          </h2>
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto">बिहार बोर्ड परीक्षाओं में टॉप करने के लिए RK Sir द्वारा तैयार किया गया सब कुछ।</p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+            {[
+              { icon: BookOpen, title: "HD वीडियो लेक्चर", desc: "स्टूडियो क्वालिटी में रिकॉर्ड किए गए स्पष्ट कॉन्सेप्ट-बेस्ड पाठ।" },
+              { icon: Target, title: "स्मार्ट नोट्स", desc: "त्वरित और प्रभावी पुनरावृत्ति के लिए संरचित, हस्तलिखित नोट्स।" },
+              { icon: Award, title: "टेस्ट सीरीज", desc: "विस्तृत प्रदर्शन विश्लेषण के साथ अध्याय-वार और पूर्ण मॉक टेस्ट।" },
+              { icon: Users, title: "डाउट सपोर्ट", desc: "RK Sir और उनकी समर्पित मेंटर टीम से सीधी और त्वरित सहायता।" }
+            ].map((item, i) => (
+              <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6 text-center hover:bg-slate-800 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300 group">
+                <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                  <item.icon className="w-8 h-8 text-blue-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 🔥 Opposite Direction Cinematic Slides Integration */}
+        <div className="relative w-full py-8 border-y border-slate-800 bg-slate-950/50">
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none" />
+
+          {/* Row 1: Left to Right */}
+          <div className="flex gap-4 w-max animate-marquee mb-4">
+            {[...marqueeRow1, ...marqueeRow1, ...marqueeRow1].map((src, i) => (
+              <div key={`m1-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
+                <Image src={src} alt={`Marquee 1 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+              </div>
+            ))}
+          </div>
+
+          {/* Row 2: Right to Left (Opposite) */}
+          <div className="flex gap-4 w-max animate-marquee-reverse">
+            {[...marqueeRow2, ...marqueeRow2, ...marqueeRow2].map((src, i) => (
+              <div key={`m2-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
+                <Image src={src} alt={`Marquee 2 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================
+          5. WORLD-CLASS FOOTER (Outside the Form)
           ========================================== */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-slate-900">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
@@ -483,12 +398,7 @@ export default function AuthForm() {
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
-            <a 
-              href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-800 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg"
-            >
+            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-800 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg">
               <svg className="w-4 h-4 text-red-500 group-hover:text-orange-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
               <span className="text-white text-sm font-semibold">आलमनगर पोस्ट ऑफिस चौक, मधेपुरा, बिहार</span>
             </a>
@@ -506,18 +416,10 @@ export default function AuthForm() {
                 बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
               </p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110">
-                  <YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
-                <a href="https://instagram.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110">
-                  <InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
-                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110">
-                  <FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
-                <a href="https://t.me/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110">
-                  <TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
+                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <a href="https://instagram.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <a href="https://t.me/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
               </div>
             </div>
 
