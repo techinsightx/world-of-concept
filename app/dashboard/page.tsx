@@ -331,19 +331,30 @@ export default function DashboardPage() {
           animation: shimmer-reverse 2.5s infinite linear;
         }
 
-        @keyframes slide-left {
-          0% { transform: translateX(0) scale(1.1); }
-          100% { transform: translateX(-8%) scale(1.1); }
+        /* 🔥 KEN BURNS EFFECT - Ultra Smooth Cinematic Background Sliders */
+        @keyframes ken-burns-right {
+          0% { 
+            transform: translateX(0) scale(1.15);
+          }
+          100% { 
+            transform: translateX(-5%) scale(1.2);
+          }
         }
-        @keyframes slide-right {
-          0% { transform: translateX(-8%) scale(1.1); }
-          100% { transform: translateX(0) scale(1.1); }
-        }
-        .bg-slide-left {
-          animation: slide-left 40s ease-in-out infinite alternate;
+        @keyframes ken-burns-left {
+          0% { 
+            transform: translateX(-5%) scale(1.2);
+          }
+          100% { 
+            transform: translateX(0) scale(1.15);
+          }
         }
         .bg-slide-right {
-          animation: slide-right 45s ease-in-out infinite alternate;
+          animation: ken-burns-right 60s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        .bg-slide-left {
+          animation: ken-burns-left 65s ease-in-out infinite alternate;
+          will-change: transform;
         }
       `}</style>
 
@@ -376,12 +387,12 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. WELCOME CARD - DARK CINEMATIC with STRONGER BACKGROUND */}
+        {/* 🔥 1. WELCOME CARD - KEN BURNS EFFECT */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover opacity-70" />
+            <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/70 via-indigo-950/70 to-purple-950/70" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/60 via-indigo-950/60 to-purple-950/60" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-50" />
           
           <div className="relative z-10 p-6 sm:p-10 text-white">
@@ -398,14 +409,14 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER - DARK CINEMATIC with STRONGER BACKGROUND */}
+        {/* 🔥 2. LIVE CLASS BANNER - KEN BURNS EFFECT */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
             <div className="absolute inset-0 z-0 bg-slide-left">
-              <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover opacity-70" />
+              <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover" />
             </div>
             
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/80 via-red-900/75 to-orange-900/70" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/70 via-red-900/65 to-orange-900/60" />
             <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40" />
             <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
 
@@ -463,7 +474,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION - EDGELESS */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-center justify-between mb-6 px-2">
             <div className="flex items-center gap-3">
@@ -482,10 +493,8 @@ export default function DashboardPage() {
             </a>
           </div>
           
-          <div className="relative w-full py-4">
-            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
-
+          {/* 🔥 EDGELESS SCROLLING */}
+          <div className="relative w-full overflow-hidden py-4">
             <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
               {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
                 <YouTubeVideoCard key={`yt-${i}`} video={video} />
@@ -519,12 +528,12 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* 🔥 4. AVAILABLE COURSES - DARK CINEMATIC with STRONGER BACKGROUND */}
+        {/* 🔥 4. AVAILABLE COURSES - KEN BURNS + EDGELESS */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover opacity-60" />
+            <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/60 via-slate-950/65 to-slate-950/70" />
           
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
@@ -537,10 +546,8 @@ export default function DashboardPage() {
               </Link>
             </div>
             
-            <div className="relative w-full py-4">
-              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
-
+            {/* 🔥 EDGELESS SCROLLING */}
+            <div className="relative w-full overflow-hidden py-4">
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
                 {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
@@ -574,12 +581,12 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. CINEMATIC GALLERY - DARK with STRONGER BACKGROUND */}
+        {/* 🔥 5. CINEMATIC GALLERY - KEN BURNS + EDGELESS */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <div className="absolute inset-0 z-0 bg-slide-left">
-            <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover opacity-60" />
+            <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/60 via-slate-950/65 to-slate-950/70" />
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
@@ -587,10 +594,8 @@ export default function DashboardPage() {
               <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
-            <div className="relative w-full py-4 sm:py-6">
-              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
-
+            {/* 🔥 EDGELESS SCROLLING */}
+            <div className="relative w-full overflow-hidden py-4 sm:py-6">
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
                 {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
                   <div 
@@ -628,12 +633,12 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES - DARK with STRONGER BACKGROUND */}
+        {/* 🔥 6. RK SIR UPDATES - KEN BURNS */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover opacity-60" />
+            <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover" />
           </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/60 via-slate-950/65 to-slate-950/70" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
