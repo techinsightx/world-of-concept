@@ -65,25 +65,40 @@ export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [student, setStudent] = useState<StudentData | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  // 🔥 Continuous Typing Effect States
   const [typedText, setTypedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const fullText = "World of Concept";
 
   const row1Images = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
   const row2Images = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
   const courseImages = ["/course1.jpg", "/course2.jpg", "/course3.jpg", "/course4.jpg", "/course5.jpg"];
-  const heroImages = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
+  const heroBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"]; // Dedicated cinematic hero backgrounds
 
   useEffect(() => {
-    // Typing Effect
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
-        setTypedText(fullText.slice(0, index));
-        index++;
-      } else {
-        clearInterval(timer);
+    // 🔥 Continuous Typing Logic
+    const handleType = () => {
+      const currentText = isDeleting 
+        ? fullText.substring(0, typedText.length - 1) 
+        : fullText.substring(0, typedText.length + 1);
+      
+      setTypedText(currentText);
+
+      let typeSpeed = isDeleting ? 50 : 100;
+
+      if (!isDeleting && currentText === fullText) {
+        typeSpeed = 2500; // Pause at the end
+        setIsDeleting(true);
+      } else if (isDeleting && currentText === "") {
+        typeSpeed = 500; // Pause before retyping
+        setIsDeleting(false);
       }
-    }, 100);
+      
+      setTimeout(handleType, typeSpeed);
+    };
+
+    const timer = setTimeout(handleType, 100);
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
@@ -99,11 +114,12 @@ export default function Home() {
       }
       setLoading(false);
     });
+
     return () => {
+      clearTimeout(timer);
       unsubscribe();
-      clearInterval(timer);
     };
-  }, []);
+  }, [typedText, isDeleting]);
 
   const handleLogout = async () => {
     await auth.signOut();
@@ -135,9 +151,6 @@ export default function Home() {
     );
   }
 
-  // ==========================================
-  // LOGGED OUT VIEW (Public Homepage)
-  // ==========================================
   if (!user) {
     return (
       <main className="relative min-h-[100dvh] bg-slate-950 overflow-x-hidden flex flex-col" itemScope itemType="https://schema.org/WebPage">
@@ -155,7 +168,7 @@ export default function Home() {
             animation: tricolor-shimmer 4s linear infinite;
           }
           @keyframes fade-bg {
-            0%, 100% { opacity: 0; transform: scale(1.05); }
+            0%, 100% { opacity: 0; transform: scale(1.1); }
             20%, 80% { opacity: 1; transform: scale(1); }
           }
           .hero-bg-img {
@@ -164,8 +177,13 @@ export default function Home() {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            animation: fade-bg 25s infinite;
+            animation: fade-bg 20s infinite;
           }
+          @keyframes pan-left { 0% { transform: translateX(0) scale(1.1); } 100% { transform: translateX(-5%) scale(1.1); } }
+          @keyframes pan-right { 0% { transform: translateX(-5%) scale(1.1); } 100% { transform: translateX(0) scale(1.1); } }
+          .bg-pan-left { animation: pan-left 30s linear infinite alternate; }
+          .bg-pan-right { animation: pan-right 35s linear infinite alternate; }
+          
           @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
           @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
           @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
@@ -188,13 +206,18 @@ export default function Home() {
           }
         `}</style>
 
-        {/* 1. HERO SECTION */}
+        {/* 1. HERO SECTION with Cinematic Opposite Panning Backgrounds */}
         <section className="relative min-h-[100dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
           <div className="absolute inset-0 z-0">
-            {heroImages.map((src, i) => (
-              <Image key={i} src={src} alt={`Hero Background ${i + 1}`} fill className="hero-bg-img" style={{ animationDelay: `${i * 5}s` }} />
-            ))}
-            <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px]" />
+            {/* Layer 1: Pans Right */}
+            <div className="absolute inset-0 bg-pan-right">
+              <Image src={heroBgImages[0]} alt="Hero Background 1" fill className="object-cover opacity-60" />
+            </div>
+            {/* Layer 2: Pans Left (Opposite) */}
+            <div className="absolute inset-0 bg-pan-left mix-blend-overlay">
+              <Image src={heroBgImages[1]} alt="Hero Background 2" fill className="object-cover opacity-40" />
+            </div>
+            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
           </div>
 
@@ -207,7 +230,6 @@ export default function Home() {
               
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white" itemProp="name">
                 <span className="tricolor-text">{typedText}</span>
-                <span className="animate-pulse text-white">|</span>
               </h1>
               
               <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium" itemProp="description">
@@ -224,9 +246,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. WHY CHOOSE US SECTION */}
-        <section className="relative py-24 bg-slate-900 overflow-hidden border-t border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* 2. WHY CHOOSE US SECTION with Cinematic Background */}
+        <section className="relative py-24 overflow-hidden border-t border-slate-800">
+          {/* Cinematic Background: Pans Right */}
+          <div className="absolute inset-0 z-0 bg-pan-right">
+            <Image src="/gallery2.jpg" alt="Why Choose Us Background" fill className="object-cover opacity-20" />
+          </div>
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-950" />
+
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">
               World of Concept <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-green-500">क्यों चुनें?</span>
             </h2>
@@ -239,7 +267,7 @@ export default function Home() {
                 { icon: "📊", title: "टेस्ट सीरीज", desc: "विस्तृत प्रदर्शन विश्लेषण के साथ अध्याय-वार और पूर्ण मॉक टेस्ट।" },
                 { icon: "💬", title: "डाउट सपोर्ट", desc: "RK Sir और उनकी समर्पित मेंटर टीम से सीधी और त्वरित सहायता।" },
               ].map((feature, i) => (
-                <div key={i} className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6 text-center hover:bg-slate-800 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300 group">
+                <div key={i} className="group bg-slate-800/40 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 text-center hover:bg-slate-800/80 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300">
                   <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
                     {feature.icon}
                   </div>
@@ -251,12 +279,18 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. CINEMATIC DUAL ROW SCROLLING */}
-        <section className="relative py-12 bg-slate-950 border-y border-slate-800 overflow-hidden">
+        {/* 3. CINEMATIC DUAL ROW SCROLLING with Opposite Cinematic Background */}
+        <section className="relative py-16 overflow-hidden border-y border-slate-800">
+          {/* Cinematic Background: Pans Left (Opposite to Why Choose Us) */}
+          <div className="absolute inset-0 z-0 bg-pan-left">
+            <Image src="/gallery4.jpg" alt="Dual Row Background" fill className="object-cover opacity-15" />
+          </div>
+          <div className="absolute inset-0 z-0 bg-slate-950/90" />
+
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
-          <div className="flex gap-4 w-max animate-marquee mb-4">
+          <div className="relative z-10 flex gap-4 w-max animate-marquee mb-4">
             {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
               <div key={`m1-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
                 <Image src={src} alt={`Marquee 1 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -268,7 +302,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="flex gap-4 w-max animate-marquee-reverse">
+          <div className="relative z-10 flex gap-4 w-max animate-marquee-reverse">
             {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
               <div key={`m2-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
                 <Image src={src} alt={`Marquee 2 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -457,14 +491,14 @@ export default function Home() {
           {/* STATS CARDS */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 w-full">
             {[
-              { icon: BookOpen, label: "कुल कोर्सेस", value: "0", color: "bg-blue-100 text-blue-600", delay: "0s" },
-              { icon: CheckCircle2, label: "पूर्ण", value: "0", color: "bg-green-100 text-green-600", delay: "0.1s" },
-              { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-100 text-purple-600", delay: "0.2s" },
+              { icon: "📚", label: "कुल कोर्सेस", value: "0", color: "bg-blue-100 text-blue-600", delay: "0s" },
+              { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-100 text-green-600", delay: "0.1s" },
+              { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-100 text-purple-600", delay: "0.2s" },
             ].map((stat, i) => (
               <div key={i} className="card bg-white border border-slate-100 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:scale-[1.02] hover:shadow-xl transition-all duration-300" style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} rounded-xl flex items-center justify-center shadow-sm`}>
-                    <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="text-xl sm:text-2xl">{stat.icon}</span>
                   </div>
                   <div>
                     <p className="text-xs sm:text-sm text-slate-500 font-medium">{stat.label}</p>
@@ -475,7 +509,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* MY COURSES (Empty State) */}
+          {/* MY COURSES */}
           <div className="w-full">
             <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-3 sm:mb-6">मेरे कोर्सेस</h2>
             <div className="card bg-white border border-slate-100 rounded-2xl text-center py-8 sm:py-10 px-3 sm:px-4 w-full hover:shadow-lg transition-all duration-300">
@@ -582,7 +616,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* WORLD-CLASS FOOTER (Same as Public View) */}
+      {/* WORLD-CLASS FOOTER */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-slate-900">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
