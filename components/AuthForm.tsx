@@ -10,7 +10,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowRight, BookOpen, Target, Award, Users } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowRight, BookOpen, Target, Award, Users, LogIn } from "lucide-react";
 
 // 🔥 Custom Colorful Social Icons
 const YoutubeIcon = ({ className }: { className?: string }) => (
@@ -55,10 +55,10 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [typedText, setTypedText] = useState("");
   const fullText = "World of Concept";
 
-  // 🔥 Typing Effect
   useEffect(() => {
     let index = 0;
     const timer = setInterval(() => {
@@ -104,7 +104,7 @@ export default function AuthPage() {
       let errorMessage = "प्रमाणीकरण विफल रहा। कृपया पुनः प्रयास करें।";
       if (err instanceof Error) {
         const msg = err.message;
-        if (msg.includes("email-already-in-use")) errorMessage = "यह ईमेल पहले से पंजीकृत है। कृपया लॉगिन करें।";
+        if (msg.includes("email-already-in-use")) errorMessage = "यह ईमेल पहले से पंजीकृत है।";
         else if (msg.includes("weak-password")) errorMessage = "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।";
         else if (msg.includes("invalid-email")) errorMessage = "कृपया एक मान्य ईमेल पता दर्ज करें।";
         else if (msg.includes("wrong-password") || msg.includes("user-not-found")) errorMessage = "ईमेल या पासवर्ड गलत है।";
@@ -116,16 +116,15 @@ export default function AuthPage() {
 
   const handleForgotPassword = async () => {
     if (!email) {
-      setError("कृपया पहले अपना पंजीकृत ईमेल पता दर्ज करें।");
+      setError("कृपया पहले अपना ईमेल पता दर्ज करें।");
       return;
     }
     setLoading(true);
-    setError("");
     try {
       await sendPasswordResetEmail(auth, email);
-      setSuccessMsg("पासवर्ड रीसेट लिंक आपके ईमेल पर भेज दिया गया है।");
+      setSuccessMsg("पासवर्ड रीसेट लिंक भेज दिया गया है।");
     } catch (err) {
-      setError("ईमेल भेजने में त्रुटि। कृपया जांचें कि यह ईमेल पंजीकृत है।");
+      setError("ईमेल भेजने में त्रुटि।");
     } finally {
       setLoading(false);
     }
@@ -139,7 +138,6 @@ export default function AuthPage() {
     setPassword("");
   };
 
-  // Cinematic Background Images
   const heroImages = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
   const marqueeRow1 = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
   const marqueeRow2 = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
@@ -194,114 +192,128 @@ export default function AuthPage() {
       `}</style>
 
       {/* ==========================================
-          1. HERO SECTION (AuthForm IS the Hero)
+          HEADER (Dashboard Style with Login/Signup Button)
           ========================================== */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20 overflow-hidden">
-        {/* 5 Cinematic Background Images with Fade */}
+      <header className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 sm:h-20">
+            <div className="flex items-center gap-3">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
+              </div>
+              <span className="font-extrabold text-lg sm:text-xl text-white tracking-tight">World of Concept</span>
+            </div>
+            
+            {/* 🔥 Login/Signup Button (Dashboard Logout Style) */}
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-xl transition-all duration-300 border border-blue-500/30 hover:border-blue-400/50 hover:shadow-lg hover:shadow-blue-500/20"
+            >
+              <LogIn className="w-4 h-4" />
+              <span className="hidden sm:inline">{showForm ? "बंद करें" : "लॉगिन / साइन अप"}</span>
+              <span className="sm:hidden">{showForm ? "बंद" : "लॉगिन"}</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ==========================================
+          ADJACENT SHORT ANIMATED FORM CARD
+          ========================================== */}
+      <div className={`fixed top-24 right-4 sm:right-6 z-40 w-[calc(100%-2rem)] sm:w-96 transition-all duration-500 ease-out transform ${showForm ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-8 scale-95 pointer-events-none'}`}>
+        <div className="bg-slate-900/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-slate-700 p-5 relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl" />
+          
+          <div className="relative z-10">
+            <div className="text-center mb-4">
+              <h2 className="text-xl font-extrabold text-white tracking-tight mb-1">
+                {isLogin ? "वापसी पर स्वागत है" : "World of Concept से जुड़ें"}
+              </h2>
+              <p className="text-slate-400 text-xs">
+                {isLogin ? "अपने डैशबोर्ड तक पहुँचने के लिए लॉगिन करें" : "अपनी यात्रा शुरू करें"}
+              </p>
+            </div>
+
+            {/* Tab Switcher */}
+            <div className="relative flex bg-slate-800/50 p-1 rounded-lg mb-4 border border-slate-700">
+              <div className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-gradient-to-r from-blue-600 to-indigo-600 rounded-md shadow-lg transition-all duration-300 ${isLogin ? "left-1" : "left-[calc(50%+2px)]"}`} />
+              <button type="button" onClick={() => { if (!isLogin) switchMode(); }} className={`relative z-10 flex-1 py-2 text-xs font-bold transition-colors ${isLogin ? "text-white" : "text-slate-400"}`}>साइन इन</button>
+              <button type="button" onClick={() => { if (isLogin) switchMode(); }} className={`relative z-10 flex-1 py-2 text-xs font-bold transition-colors ${!isLogin ? "text-white" : "text-slate-400"}`}>साइन अप</button>
+            </div>
+
+            <form onSubmit={handleEmailAuth} className="space-y-3" noValidate>
+              {!isLogin && (
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <input type="text" placeholder="पूरा नाम" value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full pl-9 pr-3 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all" required />
+                </div>
+              )}
+
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input type="email" placeholder="ईमेल पता" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full pl-9 pr-3 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all" required />
+              </div>
+
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input type={showPassword ? "text" : "password"} placeholder="पासवर्ड" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full pl-9 pr-10 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all" required minLength={6} />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {isLogin && (
+                <div className="flex justify-end">
+                  <button type="button" onClick={handleForgotPassword} disabled={loading} className="text-xs text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors disabled:opacity-50">पासवर्ड भूल गए?</button>
+                </div>
+              )}
+
+              {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-3 py-2 rounded-lg text-xs flex items-start gap-2"><AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /> <span>{error}</span></div>}
+              {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-3 py-2 rounded-lg text-xs flex items-start gap-2"><CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /> <span>{successMsg}</span></div>}
+
+              <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2.5 rounded-lg shadow-lg shadow-blue-600/20 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm">
+                {loading ? (<><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> प्रोसेसिंग...</>) : (<>{isLogin ? "प्रवेश करें" : "अकाउंट बनाएं"} <ArrowRight className="w-4 h-4" /></>)}
+              </button>
+            </form>
+
+            <p className="text-center text-[10px] text-slate-500 mt-4 leading-relaxed">
+              जारी रखकर, आप हमारी <a href="/terms" className="text-blue-400 hover:underline">शर्तों</a> और <a href="/privacy" className="text-blue-400 hover:underline">गोपनीयता नीति</a> से सहमत होते हैं।
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ==========================================
+          HERO SECTION (Full Visible)
+          ========================================== */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           {heroImages.map((src, i) => (
             <Image key={i} src={src} alt={`Hero Background ${i + 1}`} fill className="hero-bg-img" style={{ animationDelay: `${i * 5}s` }} />
           ))}
-          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
         </div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          
-          {/* Left Side: Branding & Typing Effect */}
-          <div className="flex-1 text-center lg:text-left space-y-6 animate-fade-in-up">
-            <div className="relative w-20 h-20 lg:w-24 lg:h-24 mx-auto lg:mx-0 rounded-full overflow-hidden bg-white shadow-2xl shadow-blue-500/30 border-4 border-white/10">
-              <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-4" priority />
-            </div>
-            
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none">
-              <span className="tricolor-text">{typedText}</span>
-              <span className="animate-pulse text-white">|</span>
-            </h1>
-            
-            <p className="text-lg sm:text-xl text-slate-300 max-w-lg mx-auto lg:mx-0 font-medium leading-relaxed">
-              बिहार बोर्ड मैट्रिक और इंटर की तैयारी के लिए सबसे भरोसेमंद प्लेटफॉर्म। <br className="hidden sm:block" />
-              <span className="text-blue-400 font-bold">RK Sir</span> के साथ सफलता की नई यात्रा शुरू करें।
-            </p>
+        <div className="relative z-10 max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+          <div className="relative w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden bg-white shadow-2xl shadow-blue-500/30 border-4 border-white/10">
+            <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-4" priority />
           </div>
 
-          {/* Right Side: The AuthForm (Front and Center) */}
-          <div className="flex-1 w-full max-w-md animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 p-6 sm:p-8 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl" />
-              
-              <div className="relative z-10">
-                <div className="text-center mb-6">
-                  <h2 className="text-2xl font-extrabold text-white tracking-tight mb-1">
-                    {isLogin ? "वापसी पर स्वागत है" : "World of Concept से जुड़ें"}
-                  </h2>
-                  <p className="text-blue-200/80 text-sm">
-                    {isLogin ? "अपने डैशबोर्ड तक पहुँचने के लिए लॉगिन करें" : "बिहार बोर्ड परीक्षाओं में टॉप करने की यात्रा शुरू करें"}
-                  </p>
-                </div>
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-none">
+            <span className="tricolor-text">{typedText}</span>
+            <span className="animate-pulse text-white">|</span>
+          </h1>
 
-                {/* Smooth Tab Switcher */}
-                <div className="relative flex bg-white/10 backdrop-blur-sm p-1.5 rounded-xl mb-6 border border-white/10">
-                  <div className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-lg shadow-lg transition-all duration-300 ease-out ${isLogin ? "left-1.5" : "left-[calc(50%+3px)]"}`} />
-                  <button type="button" onClick={() => { if (!isLogin) switchMode(); }} className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${isLogin ? "text-blue-600" : "text-white/70 hover:text-white"}`}>साइन इन</button>
-                  <button type="button" onClick={() => { if (isLogin) switchMode(); }} className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${!isLogin ? "text-blue-600" : "text-white/70 hover:text-white"}`}>साइन अप</button>
-                </div>
-
-                <form onSubmit={handleEmailAuth} className="space-y-4" noValidate>
-                  {!isLogin && (
-                    <div className="space-y-1.5">
-                      <label className="block text-sm font-semibold text-white/90">पूरा नाम <span className="text-red-400">*</span></label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
-                        <input type="text" placeholder="शुभम कुमार" value={fullName} onChange={(e) => setFullName(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all" required />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="space-y-1.5">
-                    <label className="block text-sm font-semibold text-white/90">ईमेल पता <span className="text-red-400">*</span></label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
-                      <input type="email" placeholder="students@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all" required />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="block text-sm font-semibold text-white/90">पासवर्ड <span className="text-red-400">*</span></label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
-                      <input type={showPassword ? "text" : "password"} placeholder="कम से कम 6 अक्षर" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all" required minLength={6} />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors">
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                    {isLogin && (
-                      <div className="flex justify-end mt-2">
-                        <button type="button" onClick={handleForgotPassword} disabled={loading} className="text-xs text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors disabled:opacity-50">पासवर्ड भूल गए?</button>
-                      </div>
-                    )}
-                  </div>
-
-                  {error && <div className="bg-red-500/20 border border-red-400/50 text-red-100 px-4 py-3 rounded-xl text-sm flex items-start gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> <span>{error}</span></div>}
-                  {successMsg && <div className="bg-green-500/20 border border-green-400/50 text-green-100 px-4 py-3 rounded-xl text-sm flex items-start gap-2"><CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" /> <span>{successMsg}</span></div>}
-
-                  <button type="submit" disabled={loading} className="w-full mt-6 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-xl shadow-blue-500/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2">
-                    {loading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> प्रोसेसिंग...</>) : (<>{isLogin ? "डैशबोर्ड में प्रवेश करें" : "मुफ्त अकाउंट बनाएं"} <ArrowRight className="w-5 h-5" /></>)}
-                  </button>
-                </form>
-
-                <p className="text-center text-xs text-white/60 mt-6 leading-relaxed">
-                  जारी रखकर, आप हमारी <a href="/terms" className="text-blue-300 hover:text-blue-200 hover:underline transition-colors">शर्तों</a> और <a href="/privacy" className="text-blue-300 hover:text-blue-200 hover:underline transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
-                </p>
-              </div>
-            </div>
-          </div>
+          <p className="text-lg sm:text-2xl text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
+            बिहार बोर्ड मैट्रिक और इंटर की तैयारी के लिए सबसे भरोसेमंद प्लेटफॉर्म। <br className="hidden sm:block" />
+            <span className="text-blue-400 font-bold">RK Sir</span> के साथ सफलता की नई यात्रा शुरू करें।
+          </p>
         </div>
       </section>
 
       {/* ==========================================
-          2. WHY CHOOSE US SECTION
+          WHY CHOOSE US SECTION (Full Visible)
           ========================================== */}
       <section className="relative py-24 bg-slate-900 overflow-hidden border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -330,13 +342,12 @@ export default function AuthPage() {
       </section>
 
       {/* ==========================================
-          3. CINEMATIC DUAL ROW SCROLLING (Opposite Directions)
+          CINEMATIC DUAL ROW SCROLLING (Opposite Directions)
           ========================================== */}
       <section className="relative py-12 bg-slate-950 border-y border-slate-800 overflow-hidden">
         <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
-        {/* Row 1: Left to Right */}
         <div className="flex gap-4 w-max animate-marquee mb-4">
           {[...marqueeRow1, ...marqueeRow1, ...marqueeRow1].map((src, i) => (
             <div key={`m1-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
@@ -346,7 +357,6 @@ export default function AuthPage() {
           ))}
         </div>
 
-        {/* Row 2: Right to Left (Opposite) */}
         <div className="flex gap-4 w-max animate-marquee-reverse">
           {[...marqueeRow2, ...marqueeRow2, ...marqueeRow2].map((src, i) => (
             <div key={`m2-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
@@ -358,12 +368,11 @@ export default function AuthPage() {
       </section>
 
       {/* ==========================================
-          4. WORLD-CLASS FOOTER
+          WORLD-CLASS FOOTER (Dashboard Style)
           ========================================== */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-slate-900">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
-        {/* Dark Matte Map Background */}
         <div className="absolute inset-0 z-0">
           <iframe
             src="https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&output=embed"
