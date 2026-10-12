@@ -14,6 +14,38 @@ import {
   Calendar, MessageCircle, MapPin
 } from "lucide-react";
 
+// 🔥 Reusable Cinematic Background Component (Changes images every 6s with Ken Burns)
+const CinematicBackground = ({ images }: { images: string[] }) => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 6000); // Change every 6 seconds
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden">
+      {images.map((src, i) => (
+        <div
+          key={src}
+          className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${
+            i === index ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <img 
+            src={src} 
+            alt={`Cinematic BG ${i}`} 
+            className="w-full h-full object-cover animate-ken-burns" 
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 interface StudentData {
   fullName: string;
   email: string;
@@ -136,6 +168,29 @@ export default function DashboardPage() {
   const [authChecked, setAuthChecked] = useState(false);
   const [updates, setUpdates] = useState<UpdateData[]>([]);
 
+  // 🔥 Dedicated Image Arrays for Every Section's Cinematic Background
+  const welcomeBgImages = ["/gallery2.jpg", "/gallery4.jpg", "/gallery6.jpg"];
+  const liveClassBgImages = ["/gallery4.jpg", "/gallery2.jpg", "/gallery5.jpg"];
+  const coursesBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
+  const gallerySectionBgImages = ["/gallery3.jpg", "/gallery6.jpg", "/gallery8.jpg"];
+  const updatesBgImages = ["/gallery5.jpg", "/gallery7.jpg", "/gallery9.jpg"];
+
+  const row1Images = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
+  const row2Images = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
+
+  const youtubeVideos = [
+    { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 1" },
+    { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - भौतिकी" },
+    { id: "dQw4w9WgXcQ", title: "टॉपर कैसे बनें? मोटिवेशनल" },
+    { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 2" },
+    { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - रसायन" },
+    { id: "dQw4w9WgXcQ", title: "English Grammar Masterclass" },
+    { id: "dQw4w9WgXcQ", title: "Social Science Quick Revision" },
+    { id: "dQw4w9WgXcQ", title: "Maths Formula Tricks" },
+    { id: "dQw4w9WgXcQ", title: "Science Practical Guide" },
+    { id: "dQw4w9WgXcQ", title: "Exam Preparation Strategy" },
+  ];
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setAuthChecked(true);
@@ -194,22 +249,6 @@ export default function DashboardPage() {
     { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय शामिल।", image: "/course3.jpg" },
     { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी भाषा में आसानी से महारत हासिल करें।", image: "/course4.jpg" },
     { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।", image: "/course5.jpg" },
-  ];
-
-  const row1Images = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
-  const row2Images = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
-
-  const youtubeVideos = [
-    { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 1" },
-    { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - भौतिकी" },
-    { id: "dQw4w9WgXcQ", title: "टॉपर कैसे बनें? मोटिवेशनल" },
-    { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 2" },
-    { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - रसायन" },
-    { id: "dQw4w9WgXcQ", title: "English Grammar Masterclass" },
-    { id: "dQw4w9WgXcQ", title: "Social Science Quick Revision" },
-    { id: "dQw4w9WgXcQ", title: "Maths Formula Tricks" },
-    { id: "dQw4w9WgXcQ", title: "Science Practical Guide" },
-    { id: "dQw4w9WgXcQ", title: "Exam Preparation Strategy" },
   ];
 
   if (!authChecked || loading) {
@@ -341,35 +380,14 @@ export default function DashboardPage() {
           animation: shimmer-reverse 2.5s infinite linear;
         }
 
-        /* 🔥 WORLD-CLASS CINEMATIC BACKGROUND TECH */
-        .cinematic-bg {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          will-change: transform;
-          transform: translateZ(0); /* Force GPU acceleration */
-          backface-visibility: hidden;
+        @keyframes ken-burns {
+          0% { transform: scale(1) translate(0, 0); }
+          100% { transform: scale(1.15) translate(-2%, -2%); }
+        }
+        .animate-ken-burns {
+          animation: ken-burns 8s ease-out forwards;
         }
 
-        @keyframes ken-burns-right {
-          0% { transform: scale(1.1) translate(0, 0); }
-          100% { transform: scale(1.25) translate(-4%, -4%); }
-        }
-        @keyframes ken-burns-left {
-          0% { transform: scale(1.25) translate(-4%, -4%); }
-          100% { transform: scale(1.1) translate(0, 0); }
-        }
-
-        .bg-ken-burns-right {
-          animation: ken-burns-right 30s ease-in-out infinite alternate;
-        }
-        .bg-ken-burns-left {
-          animation: ken-burns-left 30s ease-in-out infinite alternate;
-        }
-
-        /* 🔥 LIVING GRADIENT OVERLAY (Makes it feel like it's constantly changing) */
         @keyframes gradient-pan {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -419,15 +437,9 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. WELCOME CARD - PERFECT FILL + LIVING EFFECT */}
+        {/* 🔥 1. WELCOME CARD - DYNAMIC CINEMATIC BACKGROUND */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
-          <img 
-            src="/gallery2.jpg" 
-            alt="Welcome Banner" 
-            className="cinematic-bg bg-ken-burns-right"
-            loading="eager"
-          />
-          {/* Living Gradient Overlay */}
+          <CinematicBackground images={welcomeBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/70 via-indigo-950/70 to-purple-950/70" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
@@ -446,15 +458,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER - PERFECT FILL + LIVING EFFECT */}
+        {/* 🔥 2. LIVE CLASS BANNER - DYNAMIC CINEMATIC BACKGROUND */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
-            <img 
-              src="/gallery4.jpg" 
-              alt="Live Class Banner" 
-              className="cinematic-bg bg-ken-burns-left"
-              loading="eager"
-            />
+            <CinematicBackground images={liveClassBgImages} />
             <div className="absolute inset-0 z-0 animate-living-gradient" />
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/75 via-red-900/70 to-orange-900/65" />
             <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40" />
@@ -567,13 +574,9 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* 🔥 4. AVAILABLE COURSES - PERFECT FILL + LIVING EFFECT */}
+        {/* 🔥 4. AVAILABLE COURSES - DYNAMIC CINEMATIC BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
-          <img 
-            src="/gallery1.jpg" 
-            alt="Courses Background" 
-            className="cinematic-bg bg-ken-burns-right"
-          />
+          <CinematicBackground images={coursesBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
           
@@ -622,13 +625,9 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. CINEMATIC GALLERY - PERFECT FILL + LIVING EFFECT */}
+        {/* 🔥 5. CINEMATIC GALLERY - DYNAMIC CINEMATIC BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
-          <img 
-            src="/gallery3.jpg" 
-            alt="Gallery Background" 
-            className="cinematic-bg bg-ken-burns-left"
-          />
+          <CinematicBackground images={gallerySectionBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
@@ -676,13 +675,9 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES - PERFECT FILL + LIVING EFFECT */}
+        {/* 🔥 6. RK SIR UPDATES - DYNAMIC CINEMATIC BACKGROUND */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
-          <img 
-            src="/gallery5.jpg" 
-            alt="Updates Background" 
-            className="cinematic-bg bg-ken-burns-right"
-          />
+          <CinematicBackground images={updatesBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
