@@ -220,7 +220,6 @@ export default function AdminDashboardPage() {
                 <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:-translate-x-1 group-hover:text-white transition-all" />
               </Link>
               <Logo size="medium" showText={false} />
-              {/* 🔥 SHIMMERING LOGO TEXT */}
               <span className="text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">
                 World of Concept
               </span>
@@ -245,14 +244,12 @@ export default function AdminDashboardPage() {
 
       {/* 🔥 MAIN CONTENT */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Background layers */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <CinematicBackground images={adminBgImages} />
           <div className="absolute inset-0 animate-living-gradient" />
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
         </div>
 
-        {/* Content */}
         <div className="relative z-10">
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
@@ -280,6 +277,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
+          {/* Overview Tab */}
           {activeTab === "overview" && (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -337,6 +335,7 @@ export default function AdminDashboardPage() {
             </>
           )}
 
+          {/* 🔥 COURSES TAB - INLINE FORM (NO MODAL) */}
           {activeTab === "courses" && (
             <>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -346,59 +345,55 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
 
-              {/* 🔥 WORLD-CLASS MODAL FORM with CINEMATIC BACKGROUND */}
+              {/* 🔥 INLINE FORM - Same style as Overview cards */}
               {showCourseForm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in-up">
-                  <div className="relative w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl shadow-indigo-500/30 border-2 border-indigo-500/50">
-                    {/* Cinematic Background Inside Form */}
-                    <div className="absolute inset-0 z-0">
-                      <CinematicBackground images={formBgImages} />
-                      <div className="absolute inset-0 bg-slate-950/90" />
+                <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-slate-700/50 shadow-xl">
+                  <div className="absolute inset-0 z-0">
+                    <CinematicBackground images={formBgImages} />
+                    <div className="absolute inset-0 bg-slate-950/85" />
+                  </div>
+                  <div className="relative z-10 bg-slate-800/60 backdrop-blur-md p-6 sm:p-8">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <BookOpen className="w-5 h-5 text-indigo-400" /> नया कोर्स जोड़ें
+                      </h3>
+                      <button onClick={() => setShowCourseForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
+                        <X className="w-5 h-5 text-slate-400" />
+                      </button>
                     </div>
                     
-                    <div className="relative z-10 bg-slate-900/95 backdrop-blur-xl p-6 sm:p-8">
-                      <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                          <BookOpen className="w-6 h-6 text-indigo-400" /> नया कोर्स जोड़ें
-                        </h3>
-                        <button onClick={() => setShowCourseForm(false)} className="p-2 hover:bg-slate-800 rounded-full transition-colors">
-                          <X className="w-6 h-6 text-slate-400" />
-                        </button>
-                      </div>
-                      
-                      {errorMsg && <div className="bg-red-500/20 border-2 border-red-500/50 text-red-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
-                      {successMsg && <div className="bg-green-500/20 border-2 border-green-500/50 text-green-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
-                      
-                      <form onSubmit={handleAddCourse} className="space-y-5">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                          <div>
-                            <label className="block text-sm font-bold text-indigo-300 mb-2">कोर्स शीर्षक *</label>
-                            <input type="text" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: गणित मास्टरक्लास" required />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-bold text-indigo-300 mb-2">बैज *</label>
-                            <input type="text" value={courseBadge} onChange={(e) => setCourseBadge(e.target.value)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: कक्षा 10" required />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                          <div>
-                            <label className="block text-sm font-bold text-indigo-300 mb-2">मूल्य *</label>
-                            <input type="text" value={coursePrice} onChange={(e) => setCoursePrice(e.target.value)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: ₹499" required />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-bold text-indigo-300 mb-2">कोर्स इमेज *</label>
-                            <input type="file" accept="image/*" onChange={(e) => setCourseImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" required />
-                          </div>
+                    {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
+                    {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
+                    
+                    <form onSubmit={handleAddCourse} className="space-y-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-sm font-semibold text-slate-300 mb-2">कोर्स शीर्षक *</label>
+                          <input type="text" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: गणित मास्टरक्लास" required />
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-indigo-300 mb-2">विवरण *</label>
-                          <textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none" rows={3} placeholder="कोर्स का विस्तृत विवरण..." required />
+                          <label className="block text-sm font-semibold text-slate-300 mb-2">बैज *</label>
+                          <input type="text" value={courseBadge} onChange={(e) => setCourseBadge(e.target.value)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: कक्षा 10" required />
                         </div>
-                        <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30 text-lg">
-                          {uploading ? (<><div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-6 h-6" /> कोर्स सेव करें</>)}
-                        </button>
-                      </form>
-                    </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                          <label className="block text-sm font-semibold text-slate-300 mb-2">मूल्य *</label>
+                          <input type="text" value={coursePrice} onChange={(e) => setCoursePrice(e.target.value)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: ₹499" required />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-slate-300 mb-2">कोर्स इमेज *</label>
+                          <input type="file" accept="image/*" onChange={(e) => setCourseImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" required />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-slate-300 mb-2">विवरण *</label>
+                        <textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none" rows={3} placeholder="कोर्स का विस्तृत विवरण..." required />
+                      </div>
+                      <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20">
+                        {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> कोर्स सेव करें</>)}
+                      </button>
+                    </form>
                   </div>
                 </div>
               )}
@@ -425,6 +420,7 @@ export default function AdminDashboardPage() {
             </>
           )}
 
+          {/* 🔥 POSTS TAB - INLINE FORM (NO MODAL) */}
           {activeTab === "posts" && (
             <>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -434,55 +430,51 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
 
-              {/* 🔥 WORLD-CLASS MODAL FORM with CINEMATIC BACKGROUND */}
+              {/* 🔥 INLINE FORM - Same style as Overview cards */}
               {showPostForm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in-up">
-                  <div className="relative w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl shadow-indigo-500/30 border-2 border-indigo-500/50">
-                    {/* Cinematic Background Inside Form */}
-                    <div className="absolute inset-0 z-0">
-                      <CinematicBackground images={formBgImages} />
-                      <div className="absolute inset-0 bg-slate-950/90" />
+                <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-slate-700/50 shadow-xl">
+                  <div className="absolute inset-0 z-0">
+                    <CinematicBackground images={formBgImages} />
+                    <div className="absolute inset-0 bg-slate-950/85" />
+                  </div>
+                  <div className="relative z-10 bg-slate-800/60 backdrop-blur-md p-6 sm:p-8">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-indigo-400" /> नई पोस्ट जोड़ें
+                      </h3>
+                      <button onClick={() => setShowPostForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
+                        <X className="w-5 h-5 text-slate-400" />
+                      </button>
                     </div>
                     
-                    <div className="relative z-10 bg-slate-900/95 backdrop-blur-xl p-6 sm:p-8">
-                      <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                          <Sparkles className="w-6 h-6 text-indigo-400" /> नई पोस्ट जोड़ें
-                        </h3>
-                        <button onClick={() => setShowPostForm(false)} className="p-2 hover:bg-slate-800 rounded-full transition-colors">
-                          <X className="w-6 h-6 text-slate-400" />
-                        </button>
+                    {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
+                    {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
+                    
+                    <form onSubmit={handleAddPost} className="space-y-5">
+                      <div>
+                        <label className="block text-sm font-semibold text-slate-300 mb-2">पोस्ट प्रकार</label>
+                        <select value={postType} onChange={(e) => setPostType(e.target.value as any)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all cursor-pointer">
+                          <option value="announcement">📢 घोषणा</option>
+                          <option value="motivation">💪 प्रेरणा</option>
+                          <option value="tip">💡 टिप</option>
+                        </select>
                       </div>
-                      
-                      {errorMsg && <div className="bg-red-500/20 border-2 border-red-500/50 text-red-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
-                      {successMsg && <div className="bg-green-500/20 border-2 border-green-500/50 text-green-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
-                      
-                      <form onSubmit={handleAddPost} className="space-y-5">
-                        <div>
-                          <label className="block text-sm font-bold text-indigo-300 mb-2">पोस्ट प्रकार</label>
-                          <select value={postType} onChange={(e) => setPostType(e.target.value as any)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all cursor-pointer">
-                            <option value="announcement">📢 घोषणा</option>
-                            <option value="motivation">💪 प्रेरणा</option>
-                            <option value="tip">💡 टिप</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-indigo-300 mb-2">शीर्षक *</label>
-                          <input type="text" value={postTitle} onChange={(e) => setPostTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="पोस्ट का शीर्षक" required />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-indigo-300 mb-2">विवरण *</label>
-                          <textarea value={postDesc} onChange={(e) => setPostDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none" rows={4} placeholder="पोस्ट का विस्तृत विवरण..." required />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-indigo-300 mb-2">इमेज (वैकल्पिक)</label>
-                          <input type="file" accept="image/*" onChange={(e) => setPostImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-800/80 border-2 border-slate-600 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" />
-                        </div>
-                        <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30 text-lg">
-                          {uploading ? (<><div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-6 h-6" /> पोस्ट सेव करें</>)}
-                        </button>
-                      </form>
-                    </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-slate-300 mb-2">शीर्षक *</label>
+                        <input type="text" value={postTitle} onChange={(e) => setPostTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="पोस्ट का शीर्षक" required />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-slate-300 mb-2">विवरण *</label>
+                        <textarea value={postDesc} onChange={(e) => setPostDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none" rows={4} placeholder="पोस्ट का विस्तृत विवरण..." required />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-slate-300 mb-2">इमेज (वैकल्पिक)</label>
+                        <input type="file" accept="image/*" onChange={(e) => setPostImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" />
+                      </div>
+                      <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20">
+                        {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> पोस्ट सेव करें</>)}
+                      </button>
+                    </form>
                   </div>
                 </div>
               )}
@@ -515,6 +507,7 @@ export default function AdminDashboardPage() {
             </>
           )}
 
+          {/* Students Tab */}
           {activeTab === "students" && (
             <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl p-8 border border-slate-700/50 shadow-lg text-center">
               <Users className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
