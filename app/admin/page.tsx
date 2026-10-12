@@ -21,69 +21,28 @@ import {
   Legend, CartesianGrid
 } from "recharts";
 
-// 🔥 Reusable Cinematic Background Component
 const CinematicBackground = ({ images }: { images: string[] }) => {
   const [index, setIndex] = useState(0);
-
   useEffect(() => {
     if (images.length <= 1) return;
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
-    }, 6000);
+    const interval = setInterval(() => setIndex((prev) => (prev + 1) % images.length), 6000);
     return () => clearInterval(interval);
   }, [images.length]);
-
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
       {images.map((src, i) => (
-        <div
-          key={src}
-          className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${
-            i === index ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img 
-            src={src} 
-            alt={`Cinematic BG ${i}`} 
-            className="w-full h-full object-cover animate-ken-burns" 
-          />
+        <div key={src} className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${i === index ? 'opacity-100' : 'opacity-0'}`}>
+          <img src={src} alt={`BG ${i}`} className="w-full h-full object-cover animate-ken-burns" />
         </div>
       ))}
     </div>
   );
 };
 
-interface AdminData {
-  fullName: string;
-  email: string;
-  role?: string;
-}
-
-interface CourseData {
-  id: string;
-  title: string;
-  price: string;
-  badge: string;
-  description: string;
-  imageUrl: string;
-  createdAt: any;
-}
-
-interface UpdateData {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl?: string;
-  type: "announcement" | "motivation" | "tip";
-  createdAt: any;
-}
-
-interface ActivityData {
-  id: string;
-  action: string;
-  details: string;
-  timestamp: any;
-}
+interface AdminData { fullName: string; email: string; role?: string; }
+interface CourseData { id: string; title: string; price: string; badge: string; description: string; imageUrl: string; createdAt: any; }
+interface UpdateData { id: string; title: string; description: string; imageUrl?: string; type: "announcement" | "motivation" | "tip"; createdAt: any; }
+interface ActivityData { id: string; action: string; details: string; timestamp: any; }
 
 export default function AdminDashboardPage() {
   const [adminData, setAdminData] = useState<AdminData | null>(null);
@@ -119,41 +78,29 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!firebaseUser) {
-        window.location.replace("/");
-        return;
-      }
+      if (!firebaseUser) { window.location.replace("/"); return; }
       try {
         const userDoc = await getDoc(doc(db, "students", firebaseUser.uid));
         if (userDoc.exists()) {
           const data = userDoc.data() as AdminData;
-          if (data.role?.trim().toLowerCase() !== "admin") {
-            window.location.replace("/dashboard");
-            return;
-          }
+          if (data.role?.trim().toLowerCase() !== "admin") { window.location.replace("/dashboard"); return; }
           setAdminData(data);
           await fetchAllData();
-        } else {
-          window.location.replace("/");
-        }
+        } else { window.location.replace("/"); }
       } catch (error) {
-        console.error("Error fetching admin data:", error);
+        console.error("Error:", error);
         window.location.replace("/");
-      } finally {
-        setLoading(false);
-      }
+      } finally { setLoading(false); }
     });
     return () => unsubscribe();
   }, []);
 
   const fetchAllData = async () => {
     try {
-      const studentsQuery = query(collection(db, "students"));
-      const studentsSnapshot = await getDocs(studentsQuery);
+      const studentsSnapshot = await getDocs(query(collection(db, "students")));
       setTotalStudents(studentsSnapshot.size);
 
-      const coursesQuery = query(collection(db, "courses"), orderBy("createdAt", "desc"));
-      const coursesSnapshot = await getDocs(coursesQuery);
+      const coursesSnapshot = await getDocs(query(collection(db, "courses"), orderBy("createdAt", "desc")));
       const coursesData = coursesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as CourseData[];
       setCourses(coursesData);
       setTotalCourses(coursesData.length);
@@ -164,12 +111,10 @@ export default function AdminDashboardPage() {
       }, 0);
       setTotalRevenue(revenue);
 
-      const updatesQuery = query(collection(db, "updates"), orderBy("createdAt", "desc"), limit(10));
-      const updatesSnapshot = await getDocs(updatesQuery);
+      const updatesSnapshot = await getDocs(query(collection(db, "updates"), orderBy("createdAt", "desc"), limit(10)));
       setUpdates(updatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as UpdateData[]);
 
-      const activitiesQuery = query(collection(db, "activity"), orderBy("timestamp", "desc"), limit(10));
-      const activitiesSnapshot = await getDocs(activitiesQuery);
+      const activitiesSnapshot = await getDocs(query(collection(db, "activity"), orderBy("timestamp", "desc"), limit(10)));
       setRecentActivities(activitiesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ActivityData[]);
 
       setGrowthData([
@@ -180,15 +125,10 @@ export default function AdminDashboardPage() {
         { month: "मई", revenue: 75000, students: 210 },
         { month: "जून", revenue: 92000, students: 285 },
       ]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    } catch (error) { console.error("Error fetching data:", error); }
   };
 
-  const handleLogout = async () => {
-    await auth.signOut();
-    window.location.replace("/");
-  };
+  const handleLogout = async () => { await auth.signOut(); window.location.replace("/"); };
 
   const uploadToCloudinary = async (file: File): Promise<string> => {
     const formData = new FormData();
@@ -201,12 +141,8 @@ export default function AdminDashboardPage() {
       });
       const data = await response.json();
       return data.secure_url;
-    } catch (error) {
-      console.error("Upload error:", error);
-      throw error;
-    } finally {
-      setUploading(false);
-    }
+    } catch (error) { console.error("Upload error:", error); throw error; }
+    finally { setUploading(false); }
   };
 
   const handleAddCourse = async (e: React.FormEvent) => {
@@ -220,34 +156,27 @@ export default function AdminDashboardPage() {
       const imageUrl = await uploadToCloudinary(courseImage);
       await addDoc(collection(db, "courses"), { title: courseTitle, price: coursePrice, badge: courseBadge, description: courseDesc, imageUrl, createdAt: serverTimestamp() });
       await addDoc(collection(db, "activity"), { action: "नया कोर्स जोड़ा गया", details: courseTitle, timestamp: serverTimestamp() });
-      setSuccessMsg("कोर्स सफलतापूर्वक जोड़ा गया!");
+      setSuccessMsg("✅ कोर्स सफलतापूर्वक जोड़ा गया!");
       setCourseTitle(""); setCoursePrice(""); setCourseBadge(""); setCourseDesc(""); setCourseImage(null);
-      setShowCourseForm(false);
+      setTimeout(() => { setShowCourseForm(false); setSuccessMsg(""); }, 2000);
       await fetchAllData();
-    } catch (error) {
-      setErrorMsg("कोर्स जोड़ने में त्रुटि। कृपया पुनः प्रयास करें।");
-    }
+    } catch (error) { setErrorMsg("❌ कोर्स जोड़ने में त्रुटि। कृपया पुनः प्रयास करें।"); }
   };
 
   const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(""); setSuccessMsg("");
-    if (!postTitle || !postDesc) {
-      setErrorMsg("कृपया शीर्षक और विवरण भरें।");
-      return;
-    }
+    if (!postTitle || !postDesc) { setErrorMsg("कृपया शीर्षक और विवरण भरें।"); return; }
     try {
       let imageUrl = "";
       if (postImage) imageUrl = await uploadToCloudinary(postImage);
       await addDoc(collection(db, "updates"), { title: postTitle, description: postDesc, imageUrl, type: postType, createdAt: serverTimestamp() });
       await addDoc(collection(db, "activity"), { action: "नई पोस्ट जोड़ी गई", details: postTitle, timestamp: serverTimestamp() });
-      setSuccessMsg("पोस्ट सफलतापूर्वक जोड़ी गई!");
+      setSuccessMsg("✅ पोस्ट सफलतापूर्वक जोड़ी गई!");
       setPostTitle(""); setPostDesc(""); setPostType("announcement"); setPostImage(null);
-      setShowPostForm(false);
+      setTimeout(() => { setShowPostForm(false); setSuccessMsg(""); }, 2000);
       await fetchAllData();
-    } catch (error) {
-      setErrorMsg("पोस्ट जोड़ने में त्रुटि। कृपया पुनः प्रयास करें।");
-    }
+    } catch (error) { setErrorMsg("❌ पोस्ट जोड़ने में त्रुटि। कृपया पुनः प्रयास करें।"); }
   };
 
   if (loading) {
@@ -271,37 +200,12 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative font-sans w-full overflow-x-hidden">
       <style jsx global>{`
-        @keyframes ken-burns {
-          0% { transform: scale(1) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-2%, -2%); }
-        }
+        @keyframes ken-burns { 0% { transform: scale(1) translate(0, 0); } 100% { transform: scale(1.15) translate(-2%, -2%); } }
         .animate-ken-burns { animation: ken-burns 8s ease-out forwards; }
-        
-        @keyframes gradient-pan {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-living-gradient {
-          background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%);
-          background-size: 200% 200%;
-          animation: gradient-pan 15s ease infinite;
-        }
-
-        /* 🔥 SHIMMERING TEXT ANIMATION FOR LOGO */
-        @keyframes shimmer-text {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .animate-shimmer-text {
-          background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer-text 3s linear infinite;
-        }
-        
+        @keyframes gradient-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .animate-living-gradient { background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%); background-size: 200% 200%; animation: gradient-pan 15s ease infinite; }
+        @keyframes shimmer-text { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        .animate-shimmer-text { background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer-text 3s linear infinite; }
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
       `}</style>
@@ -314,10 +218,7 @@ export default function AdminDashboardPage() {
                 <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:-translate-x-1 group-hover:text-white transition-all" />
               </Link>
               <Logo size="medium" showText={true} />
-              {/* 🔥 SHIMMERING LOGO TEXT */}
-              <span className="hidden sm:block text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">
-                World of Concept
-              </span>
+              <span className="hidden sm:block text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">World of Concept</span>
               <span className="sm:hidden inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-500/10 text-indigo-400 text-xs font-bold rounded-full border border-indigo-500/20">
                 <Sparkles className="w-3 h-3" /> ADMIN
               </span>
@@ -360,21 +261,17 @@ export default function AdminDashboardPage() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => { setActiveTab(tab.id as any); setShowCourseForm(false); setShowPostForm(false); setErrorMsg(""); setSuccessMsg(""); }}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
-                  activeTab === tab.id
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
-                    : "bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-700/50"
+                  activeTab === tab.id ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30" : "bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-700/50"
                 }`}
               >
-                <tab.icon className="w-4 h-4" />
-                {tab.label}
+                <tab.icon className="w-4 h-4" /> {tab.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Overview Tab */}
         {activeTab === "overview" && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -394,7 +291,6 @@ export default function AdminDashboardPage() {
                 </div>
               ))}
             </div>
-
             <div className="bg-slate-800/60 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg mb-8">
               <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-indigo-400" /> राजस्व और छात्र वृद्धि (6 महीने)</h3>
               <div className="h-80 w-full">
@@ -411,7 +307,6 @@ export default function AdminDashboardPage() {
                 </ResponsiveContainer>
               </div>
             </div>
-
             <div className="bg-slate-800/60 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg">
               <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-indigo-400" /> हाल की गतिविधियाँ</h3>
               <div className="space-y-4">
@@ -434,65 +329,56 @@ export default function AdminDashboardPage() {
           </>
         )}
 
-        {/* Courses Tab */}
         {activeTab === "courses" && (
           <>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h2 className="text-2xl font-bold text-white">कोर्सेस प्रबंधन</h2>
-              <button
-                onClick={() => { setShowCourseForm(!showCourseForm); setShowPostForm(false); setErrorMsg(""); setSuccessMsg(""); }}
-                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50"
-              >
+              <button onClick={() => { setShowCourseForm(!showCourseForm); setErrorMsg(""); setSuccessMsg(""); }} className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50">
                 <PlusCircle className="w-5 h-5" /> {showCourseForm ? "फॉर्म बंद करें" : "नया कोर्स जोड़ें"}
               </button>
             </div>
 
-            {/* 🔥 CINEMATIC FORM CANVAS FOR POSTING */}
             {showCourseForm && (
-              <div className="relative overflow-hidden bg-slate-950/60 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-indigo-500/30 shadow-[0_0_50px_rgba(99,102,241,0.15)] mb-8 animate-fade-in-up">
-                {/* Form's own subtle cinematic background */}
-                <div className="absolute inset-0 z-0 animate-living-gradient opacity-50" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-900/80 to-slate-950/90" />
-                
-                <div className="relative z-10">
+              <div className="relative overflow-hidden rounded-2xl mb-8 animate-fade-in-up border-2 border-indigo-500/50 shadow-[0_0_60px_rgba(99,102,241,0.3)]">
+                <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-slate-900/90" />
+                <div className="absolute inset-0 z-0 animate-living-gradient opacity-40" />
+                <div className="relative z-10 bg-slate-950/80 backdrop-blur-xl p-6 sm:p-8">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2"><BookOpen className="w-5 h-5 text-indigo-400" /> नया कोर्स जोड़ें</h3>
                     <button onClick={() => setShowCourseForm(false)} className="p-2 hover:bg-slate-800 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
                   </div>
-                  
-                  {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
-                  {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
-
+                  {errorMsg && <div className="bg-red-500/20 border-2 border-red-500/50 text-red-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
+                  {successMsg && <div className="bg-green-500/20 border-2 border-green-500/50 text-green-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
                   <form onSubmit={handleAddCourse} className="space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">कोर्स शीर्षक</label>
-                        <input type="text" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: गणित मास्टरक्लास" required />
+                        <label className="block text-sm font-bold text-indigo-300 mb-2">कोर्स शीर्षक *</label>
+                        <input type="text" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: गणित मास्टरक्लास" required />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">बैज</label>
-                        <input type="text" value={courseBadge} onChange={(e) => setCourseBadge(e.target.value)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: कक्षा 10" required />
+                        <label className="block text-sm font-bold text-indigo-300 mb-2">बैज *</label>
+                        <input type="text" value={courseBadge} onChange={(e) => setCourseBadge(e.target.value)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: कक्षा 10" required />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">मूल्य</label>
-                        <input type="text" value={coursePrice} onChange={(e) => setCoursePrice(e.target.value)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: ₹499" required />
+                        <label className="block text-sm font-bold text-indigo-300 mb-2">मूल्य *</label>
+                        <input type="text" value={coursePrice} onChange={(e) => setCoursePrice(e.target.value)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: ₹499" required />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">कोर्स इमेज</label>
+                        <label className="block text-sm font-bold text-indigo-300 mb-2">कोर्स इमेज *</label>
                         <div className="relative">
-                          <input type="file" accept="image/*" onChange={(e) => setCourseImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" required />
-                          {courseImage && <ImageIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400" />}
+                          <input type="file" accept="image/*" onChange={(e) => setCourseImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" required />
+                          {courseImage && <ImageIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />}
                         </div>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">विवरण</label>
-                      <textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none" rows={3} placeholder="कोर्स का विस्तृत विवरण..." required />
+                      <label className="block text-sm font-bold text-indigo-300 mb-2">विवरण *</label>
+                      <textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none" rows={3} placeholder="कोर्स का विस्तृत विवरण..." required />
                     </div>
-                    <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20">
-                      {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> कोर्स सेव करें</>)}
+                    <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30 text-lg">
+                      {uploading ? (<><div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-6 h-6" /> कोर्स सेव करें</>)}
                     </button>
                   </form>
                 </div>
@@ -521,61 +407,52 @@ export default function AdminDashboardPage() {
           </>
         )}
 
-        {/* Posts Tab */}
         {activeTab === "posts" && (
           <>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h2 className="text-2xl font-bold text-white">अपडेट्स प्रबंधन</h2>
-              <button
-                onClick={() => { setShowPostForm(!showPostForm); setShowCourseForm(false); setErrorMsg(""); setSuccessMsg(""); }}
-                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50"
-              >
+              <button onClick={() => { setShowPostForm(!showPostForm); setErrorMsg(""); setSuccessMsg(""); }} className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50">
                 <PlusCircle className="w-5 h-5" /> {showPostForm ? "फॉर्म बंद करें" : "नई पोस्ट जोड़ें"}
               </button>
             </div>
 
-            {/* 🔥 CINEMATIC FORM CANVAS FOR POSTING */}
             {showPostForm && (
-              <div className="relative overflow-hidden bg-slate-950/60 backdrop-blur-2xl rounded-2xl p-6 sm:p-8 border border-indigo-500/30 shadow-[0_0_50px_rgba(99,102,241,0.15)] mb-8 animate-fade-in-up">
-                {/* Form's own subtle cinematic background */}
-                <div className="absolute inset-0 z-0 animate-living-gradient opacity-50" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-900/80 to-slate-950/90" />
-                
-                <div className="relative z-10">
+              <div className="relative overflow-hidden rounded-2xl mb-8 animate-fade-in-up border-2 border-indigo-500/50 shadow-[0_0_60px_rgba(99,102,241,0.3)]">
+                <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-slate-900/90" />
+                <div className="absolute inset-0 z-0 animate-living-gradient opacity-40" />
+                <div className="relative z-10 bg-slate-950/80 backdrop-blur-xl p-6 sm:p-8">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-bold text-white flex items-center gap-2"><Sparkles className="w-5 h-5 text-indigo-400" /> नई पोस्ट जोड़ें</h3>
                     <button onClick={() => setShowPostForm(false)} className="p-2 hover:bg-slate-800 rounded-full transition-colors"><X className="w-5 h-5 text-slate-400" /></button>
                   </div>
-                  
-                  {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
-                  {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
-
+                  {errorMsg && <div className="bg-red-500/20 border-2 border-red-500/50 text-red-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
+                  {successMsg && <div className="bg-green-500/20 border-2 border-green-500/50 text-green-200 px-4 py-3 rounded-xl mb-4 flex items-center gap-2 font-semibold"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
                   <form onSubmit={handleAddPost} className="space-y-5">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">पोस्ट प्रकार</label>
-                      <select value={postType} onChange={(e) => setPostType(e.target.value as any)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all cursor-pointer">
+                      <label className="block text-sm font-bold text-indigo-300 mb-2">पोस्ट प्रकार</label>
+                      <select value={postType} onChange={(e) => setPostType(e.target.value as any)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all cursor-pointer">
                         <option value="announcement">📢 घोषणा</option>
                         <option value="motivation">💪 प्रेरणा</option>
                         <option value="tip">💡 टिप</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">शीर्षक</label>
-                      <input type="text" value={postTitle} onChange={(e) => setPostTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="पोस्ट का शीर्षक" required />
+                      <label className="block text-sm font-bold text-indigo-300 mb-2">शीर्षक *</label>
+                      <input type="text" value={postTitle} onChange={(e) => setPostTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" placeholder="पोस्ट का शीर्षक" required />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">विवरण</label>
-                      <textarea value={postDesc} onChange={(e) => setPostDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none" rows={4} placeholder="पोस्ट का विस्तृत विवरण..." required />
+                      <label className="block text-sm font-bold text-indigo-300 mb-2">विवरण *</label>
+                      <textarea value={postDesc} onChange={(e) => setPostDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none" rows={4} placeholder="पोस्ट का विस्तृत विवरण..." required />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-300 mb-2">इमेज (वैकल्पिक)</label>
+                      <label className="block text-sm font-bold text-indigo-300 mb-2">इमेज (वैकल्पिक)</label>
                       <div className="relative">
-                        <input type="file" accept="image/*" onChange={(e) => setPostImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" />
-                        {postImage && <ImageIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400" />}
+                        <input type="file" accept="image/*" onChange={(e) => setPostImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-800 border-2 border-slate-600 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" />
+                        {postImage && <ImageIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />}
                       </div>
                     </div>
-                    <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20">
-                      {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> पोस्ट सेव करें</>)}
+                    <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30 text-lg">
+                      {uploading ? (<><div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-6 h-6" /> पोस्ट सेव करें</>)}
                     </button>
                   </form>
                 </div>
@@ -610,7 +487,6 @@ export default function AdminDashboardPage() {
           </>
         )}
 
-        {/* Students Tab */}
         {activeTab === "students" && (
           <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl p-8 border border-slate-700/50 shadow-lg text-center">
             <Users className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
