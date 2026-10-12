@@ -7,7 +7,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/components/logo";
 import AdPopup from "@/components/AdPopup"; 
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
@@ -284,12 +283,25 @@ export default function DashboardPage() {
           100% { background-position: 200% center; }
         }
         .animate-shimmer-text {
-          background: linear-gradient(90deg, #94a3b8 0%, #ffffff 50%, #94a3b8 100%);
+          background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%);
           background-size: 200% auto;
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
           animation: shimmer-text 3s linear infinite;
+        }
+
+        @keyframes shimmer-orange {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-shimmer-orange {
+          background: linear-gradient(90deg, #fb923c 0%, #ffffff 50%, #fb923c 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer-orange 3s linear infinite;
         }
         
         .animate-marquee { 
@@ -331,38 +343,39 @@ export default function DashboardPage() {
           animation: shimmer-reverse 2.5s infinite linear;
         }
 
-        /* 🔥 KEN BURNS EFFECT - Ultra Smooth Cinematic Background Sliders */
+        /* 🔥 FIXED KEN BURNS EFFECT - Smooth Diagonal Drift */
         @keyframes ken-burns-right {
-          0% { 
-            transform: translateX(0) scale(1.15);
-          }
-          100% { 
-            transform: translateX(-5%) scale(1.2);
-          }
+          0% { transform: translate(0, 0) scale(1.1); }
+          100% { transform: translate(-4%, -2%) scale(1.15); }
         }
         @keyframes ken-burns-left {
-          0% { 
-            transform: translateX(-5%) scale(1.2);
-          }
-          100% { 
-            transform: translateX(0) scale(1.15);
-          }
+          0% { transform: translate(-4%, -2%) scale(1.15); }
+          100% { transform: translate(0, 0) scale(1.1); }
         }
         .bg-slide-right {
-          animation: ken-burns-right 60s ease-in-out infinite alternate;
+          animation: ken-burns-right 30s ease-in-out infinite alternate;
           will-change: transform;
         }
         .bg-slide-left {
-          animation: ken-burns-left 65s ease-in-out infinite alternate;
+          animation: ken-burns-left 30s ease-in-out infinite alternate;
           will-change: transform;
         }
       `}</style>
 
-      {/* 🔥 DARK HEADER */}
+      {/* 🔥 DARK HEADER with SHIMMERING LOGO TEXT */}
       <header className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
-            <Logo size="medium" showText={true} />
+            {/* 🔥 Highlighted & Shimmering Logo Text */}
+            <div className="flex items-center gap-3">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                <Image src="/logo.png" alt="World of Concept" fill className="object-contain" />
+              </div>
+              <span className="text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">
+                World of Concept
+              </span>
+            </div>
+
             <div className="flex items-center gap-3 sm:gap-6">
               <button className="relative p-2 text-slate-400 hover:bg-slate-800 rounded-full transition-colors">
                 <Bell className="w-5 h-5" />
@@ -387,10 +400,10 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. WELCOME CARD - KEN BURNS EFFECT */}
+        {/* 🔥 1. WELCOME CARD - FIXED KEN BURNS EFFECT */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover" />
+            <Image src="/gallery2.jpg" alt="Welcome Cinematic Banner" fill className="object-cover w-full h-full" />
           </div>
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/60 via-indigo-950/60 to-purple-950/60" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-50" />
@@ -409,11 +422,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER - KEN BURNS EFFECT */}
+        {/* 🔥 2. LIVE CLASS BANNER - FIXED KEN BURNS EFFECT */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
             <div className="absolute inset-0 z-0 bg-slide-left">
-              <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover" />
+              <Image src="/gallery4.jpg" alt="Live Class Cinematic Banner" fill className="object-cover w-full h-full" />
             </div>
             
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/70 via-red-900/65 to-orange-900/60" />
@@ -493,7 +506,6 @@ export default function DashboardPage() {
             </a>
           </div>
           
-          {/* 🔥 EDGELESS SCROLLING */}
           <div className="relative w-full overflow-hidden py-4">
             <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
               {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
@@ -528,10 +540,10 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* 🔥 4. AVAILABLE COURSES - KEN BURNS + EDGELESS */}
+        {/* 🔥 4. AVAILABLE COURSES - FIXED KEN BURNS + EDGELESS */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover" />
+            <Image src="/gallery1.jpg" alt="Courses Cinematic Background" fill className="object-cover w-full h-full" />
           </div>
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/60 via-slate-950/65 to-slate-950/70" />
           
@@ -546,7 +558,6 @@ export default function DashboardPage() {
               </Link>
             </div>
             
-            {/* 🔥 EDGELESS SCROLLING */}
             <div className="relative w-full overflow-hidden py-4">
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
                 {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
@@ -581,10 +592,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. CINEMATIC GALLERY - KEN BURNS + EDGELESS */}
+        {/* 🔥 5. CINEMATIC GALLERY - FIXED KEN BURNS + EDGELESS */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <div className="absolute inset-0 z-0 bg-slide-left">
-            <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover" />
+            <Image src="/gallery3.jpg" alt="Gallery Cinematic Background" fill className="object-cover w-full h-full" />
           </div>
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/60 via-slate-950/65 to-slate-950/70" />
 
@@ -594,7 +605,6 @@ export default function DashboardPage() {
               <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
-            {/* 🔥 EDGELESS SCROLLING */}
             <div className="relative w-full overflow-hidden py-4 sm:py-6">
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
                 {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
@@ -633,10 +643,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES - KEN BURNS */}
+        {/* 🔥 6. RK SIR UPDATES - FIXED KEN BURNS */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
           <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover" />
+            <Image src="/gallery5.jpg" alt="Updates Cinematic Background" fill className="object-cover w-full h-full" />
           </div>
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/60 via-slate-950/65 to-slate-950/70" />
 
@@ -693,7 +703,7 @@ export default function DashboardPage() {
 
       </main>
 
-      {/* 🔥 COMPLETE FOOTER with VISIBLE MAP BACKGROUND */}
+      {/* 🔥 COMPLETE FOOTER with PUNCHY ANIMATED MAP LINK */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-slate-800">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
@@ -720,16 +730,30 @@ export default function DashboardPage() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
+          
+          {/* 🔥 SHORT, PUNCHY, ANIMATED & SHIMMERING MAP LINK */}
           <div className="mb-8 flex items-center justify-center">
             <a 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg"
+              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden"
             >
-              <MapPin className="w-4 h-4 text-red-500 group-hover:text-orange-400 transition-colors" />
-              <span className="text-white text-sm font-semibold">आलमनगर पोस्ट ऑफिस चौक, मधेपुरा, बिहार</span>
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-orange-400 transition-colors" />
+              {/* Shine effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              
+              {/* Pulsing Dot */}
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+              </span>
+              
+              {/* Shimmering Text */}
+              <span className="text-sm font-extrabold tracking-wide animate-shimmer-orange">
+                आलमनगर, बिहार
+              </span>
+              
+              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
             </a>
           </div>
 
