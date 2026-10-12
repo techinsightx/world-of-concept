@@ -66,7 +66,6 @@ export default function Home() {
   const [student, setStudent] = useState<StudentData | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // 🔥 Smooth Typing Effect States
   const [typedText, setTypedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const fullText = "World of Concept";
@@ -77,25 +76,20 @@ export default function Home() {
   const courseImages = ["/course1.jpg", "/course2.jpg", "/course3.jpg", "/course4.jpg", "/course5.jpg"];
   const heroBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
 
-  // 🔥 Smooth Typing Effect with useRef for stable intervals
   useEffect(() => {
     const handleType = () => {
       setTypedText(prev => {
         if (!isDeleting) {
-          // Typing forward
           if (prev.length < fullText.length) {
             return fullText.substring(0, prev.length + 1);
           } else {
-            // Finished typing, start deleting after pause
             setTimeout(() => setIsDeleting(true), 2500);
             return prev;
           }
         } else {
-          // Deleting backward
           if (prev.length > 0) {
             return prev.substring(0, prev.length - 1);
           } else {
-            // Finished deleting, start typing after pause
             setTimeout(() => setIsDeleting(false), 500);
             return prev;
           }
@@ -164,7 +158,6 @@ export default function Home() {
     return (
       <main className="relative min-h-[100dvh] bg-slate-950 overflow-x-hidden flex flex-col" itemScope itemType="https://schema.org/WebPage">
         <style jsx global>{`
-          /* 🔥 Tricolor Shimmer - LEFT TO RIGHT */
           @keyframes tricolor-shimmer {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
@@ -178,7 +171,6 @@ export default function Home() {
             animation: tricolor-shimmer 4s linear infinite;
           }
           
-          /* 🔥 Tricolor Shimmer - RIGHT TO LEFT (Opposite) */
           @keyframes tricolor-shimmer-reverse {
             0% { background-position: 200% center; }
             100% { background-position: -200% center; }
@@ -191,21 +183,44 @@ export default function Home() {
             -webkit-text-fill-color: transparent;
             animation: tricolor-shimmer-reverse 4s linear infinite;
           }
-          
-          /* 🔥 Smooth Cinematic Background Sliding */
-          @keyframes slide-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-10%); }
+
+          /* 🔥 WORLD-CLASS CINEMATIC BACKGROUND TECH */
+          .cinematic-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
           }
-          @keyframes slide-right {
-            0% { transform: translateX(-10%); }
-            100% { transform: translateX(0); }
+
+          @keyframes ken-burns-right {
+            0% { transform: scale(1.1) translate(0, 0); }
+            100% { transform: scale(1.25) translate(-4%, -4%); }
           }
-          .bg-slide-left {
-            animation: slide-left 40s ease-in-out infinite alternate;
+          @keyframes ken-burns-left {
+            0% { transform: scale(1.25) translate(-4%, -4%); }
+            100% { transform: scale(1.1) translate(0, 0); }
           }
-          .bg-slide-right {
-            animation: slide-right 45s ease-in-out infinite alternate;
+
+          .bg-ken-burns-right {
+            animation: ken-burns-right 30s ease-in-out infinite alternate;
+          }
+          .bg-ken-burns-left {
+            animation: ken-burns-left 30s ease-in-out infinite alternate;
+          }
+
+          @keyframes gradient-pan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          .animate-living-gradient {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%);
+            background-size: 200% 200%;
+            animation: gradient-pan 15s ease infinite;
           }
           
           @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -230,19 +245,18 @@ export default function Home() {
           }
         `}</style>
 
-        {/* 1. HERO SECTION with Smooth Cinematic Backgrounds */}
+        {/* 1. HERO SECTION with Cinematic Backgrounds */}
         <section className="relative min-h-[100dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
           <div className="absolute inset-0 z-0">
-            {/* Layer 1: Slides Right */}
-            <div className="absolute inset-0 bg-slide-right">
-              <Image src={heroBgImages[0]} alt="Hero Background 1" fill className="object-cover opacity-60" />
-            </div>
-            {/* Layer 2: Slides Left (Opposite) */}
-            <div className="absolute inset-0 bg-slide-left mix-blend-overlay">
-              <Image src={heroBgImages[1]} alt="Hero Background 2" fill className="object-cover opacity-40" />
-            </div>
-            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+            <img 
+              src={heroBgImages[0]} 
+              alt="Hero Background" 
+              className="cinematic-bg bg-ken-burns-right"
+              loading="eager"
+            />
+            <div className="absolute inset-0 z-0 animate-living-gradient" />
+            <div className="absolute inset-0 z-0 bg-slate-950/80 backdrop-blur-[2px]" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
           </div>
 
           <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20 pt-12 lg:pt-0">
@@ -270,13 +284,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. WHY CHOOSE US SECTION with Smooth Cinematic Background */}
+        {/* 2. WHY CHOOSE US SECTION with Cinematic Background */}
         <section className="relative py-24 overflow-hidden border-t border-slate-800">
-          {/* Cinematic Background: Slides Right */}
-          <div className="absolute inset-0 z-0 bg-slide-right">
-            <Image src="/gallery2.jpg" alt="Why Choose Us Background" fill className="object-cover opacity-20" />
-          </div>
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-950" />
+          <img 
+            src="/gallery2.jpg" 
+            alt="Why Choose Us Background" 
+            className="cinematic-bg bg-ken-burns-left"
+          />
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">
@@ -303,12 +319,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. CINEMATIC DUAL ROW SCROLLING with Opposite Cinematic Background */}
+        {/* 3. CINEMATIC DUAL ROW SCROLLING */}
         <section className="relative py-16 overflow-hidden border-y border-slate-800">
-          {/* Cinematic Background: Slides Left (Opposite) */}
-          <div className="absolute inset-0 z-0 bg-slide-left">
-            <Image src="/gallery4.jpg" alt="Dual Row Background" fill className="object-cover opacity-15" />
-          </div>
+          <img 
+            src="/gallery4.jpg" 
+            alt="Dual Row Background" 
+            className="cinematic-bg bg-ken-burns-right"
+          />
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-slate-950/90" />
 
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
@@ -339,7 +357,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. WORLD-CLASS FOOTER */}
+        {/* 4. WORLD-CLASS FOOTER with MORE VISIBLE MAP */}
         <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-slate-900">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
           
@@ -353,8 +371,9 @@ export default function Home() {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                filter: 'invert(92%) hue-rotate(180deg) brightness(0.95) contrast(1.1) saturate(0.4)',
-                opacity: 0.3
+                /* 🔥 Enhanced filter for better visibility while keeping dark matte look */
+                filter: 'invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.3) saturate(0.6)',
+                opacity: 0.6
               }}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -362,14 +381,21 @@ export default function Home() {
               title="World of Concept Location"
               allowFullScreen
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-950" />
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/85" />
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto">
             <div className="mb-8 flex items-center justify-center">
-              <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-800 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg">
-                <MapPin className="w-4 h-4 text-red-500 group-hover:text-orange-400 transition-colors" />
-                <span className="text-white text-sm font-semibold">आलमनगर पोस्ट ऑफिस चौक, मधेपुरा, बिहार</span>
+              <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                </span>
+                <span className="text-sm font-extrabold tracking-wide animate-shimmer-orange text-white">
+                  आलमनगर, बिहार
+                </span>
+                <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
               </a>
             </div>
 
@@ -436,10 +462,10 @@ export default function Home() {
   }
 
   // ==========================================
-  // LOGGED IN VIEW (Student Dashboard)
+  // LOGGED IN VIEW (Matching Cinematic Dashboard)
   // ==========================================
   return (
-    <main className="min-h-[100dvh] bg-slate-50 flex flex-col relative overflow-x-hidden w-full">
+    <main className="min-h-[100dvh] bg-slate-950 text-slate-50 flex flex-col relative overflow-x-hidden w-full">
       <style jsx global>{`
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
@@ -454,25 +480,63 @@ export default function Home() {
           100% { background-position: 200% center; }
         }
         .animate-shimmer-text {
-          background: linear-gradient(90deg, #94a3b8 0%, #ffffff 50%, #94a3b8 100%);
+          background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%);
           background-size: 200% auto;
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
           animation: shimmer-text 3s linear infinite;
         }
+        
+        .cinematic-bg {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          will-change: transform;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+        }
+        @keyframes ken-burns-right {
+          0% { transform: scale(1.1) translate(0, 0); }
+          100% { transform: scale(1.25) translate(-4%, -4%); }
+        }
+        @keyframes ken-burns-left {
+          0% { transform: scale(1.25) translate(-4%, -4%); }
+          100% { transform: scale(1.1) translate(0, 0); }
+        }
+        .bg-ken-burns-right { animation: ken-burns-right 30s ease-in-out infinite alternate; }
+        .bg-ken-burns-left { animation: ken-burns-left 30s ease-in-out infinite alternate; }
+        @keyframes gradient-pan {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-living-gradient {
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%);
+          background-size: 200% 200%;
+          animation: gradient-pan 15s ease infinite;
+        }
       `}</style>
 
-      <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+      <header className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
-            <Logo size="medium" showText={true} />
+            <div className="flex items-center gap-3">
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+                <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
+              </div>
+              <span className="text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">
+                World of Concept
+              </span>
+            </div>
             <div className="flex items-center gap-2 sm:gap-4">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-slate-900">{student?.fullName || "छात्र"}</p>
-                <p className="text-xs text-slate-500">{student?.email || user.email}</p>
+                <p className="text-sm font-bold text-white">{student?.fullName || "छात्र"}</p>
+                <p className="text-xs text-slate-400">{student?.email || user?.email}</p>
               </div>
-              <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300 border border-red-200 hover:border-red-300 hover:shadow-md">
+              <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-300 border border-red-500/30 hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20">
                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
               </button>
             </div>
@@ -481,52 +545,53 @@ export default function Home() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 relative w-full">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <Image src="/dashboard-bg.jpg" alt="Dashboard Background" fill className="object-cover opacity-20" />
-        </div>
-
         <div className="relative z-10 space-y-8 sm:space-y-12 lg:space-y-16 w-full">
           <div className="animate-fade-in-up">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">
-              वापसी पर स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{student?.fullName?.split(" ")[0] || "छात्र"}</span> 👋
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-2">
+              वापसी पर स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">{student?.fullName?.split(" ")[0] || "छात्र"}</span> 👋
             </h1>
-            <p className="text-slate-600 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
+            <p className="text-slate-400 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
           </div>
 
-          {/* LIVE CLASS CARD */}
-          <div className="animate-fade-in-up w-full">
-            <div className="card-interactive border-2 border-red-100 bg-gradient-to-br from-red-50 to-white relative overflow-hidden group rounded-2xl w-full hover:shadow-2xl hover:shadow-red-500/10 hover:-translate-y-1 transition-all duration-500 ease-out">
-              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-10">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full"></span> LIVE
+          {/* LIVE CLASS CARD with Cinematic Background */}
+          <div className="animate-fade-in-up w-full relative overflow-hidden rounded-2xl border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
+            <img src="/gallery4.jpg" alt="Live Class Banner" className="cinematic-bg bg-ken-burns-left" />
+            <div className="absolute inset-0 z-0 animate-living-gradient" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/80 via-red-900/75 to-orange-900/70" />
+            
+            <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
+              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white/20">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-ping"></span>
+                LIVE NOW
               </div>
-              <div className="p-4 sm:p-8 flex flex-col items-center text-center w-full">
-                <div className="w-14 h-14 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center text-2xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 mb-3 sm:mb-4">▶️</div>
-                <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-2 w-full leading-tight">RK Sir के साथ दैनिक लाइव क्लास</h3>
-                <p className="text-slate-600 text-xs sm:text-base mb-4 sm:mb-6 w-full max-w-xl">दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें, और हमारे आधिकारिक YouTube चैनल पर सीधे विशेष बोर्ड परीक्षा टिप्स प्राप्त करें।</p>
-                
-                <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-bold hover:bg-red-700 transition-all duration-300 hover:scale-105 shadow-lg shadow-red-500/20 mx-auto min-w-[200px]">
-                  <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                  अभी लाइव क्लास में शामिल हों
-                </a>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 flex-shrink-0 shadow-2xl shadow-black/40">
+                <span className="text-red-700">▶️</span>
               </div>
+              <div className="flex-1">
+                <h3 className="text-lg sm:text-2xl font-extrabold text-white mb-2 w-full leading-tight drop-shadow-lg">RK Sir के साथ दैनिक लाइव क्लास</h3>
+                <p className="text-orange-100/95 text-xs sm:text-base w-full max-w-xl font-medium drop-shadow">दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।</p>
+              </div>
+              <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-white/50 hover:border-orange-300">
+                <PlayCircle className="w-5 h-5" /> अभी जुड़ें
+              </a>
             </div>
           </div>
 
           {/* STATS CARDS */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 w-full">
             {[
-              { icon: "📚", label: "कुल कोर्सेस", value: "0", color: "bg-blue-100 text-blue-600", delay: "0s" },
-              { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-100 text-green-600", delay: "0.1s" },
-              { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-100 text-purple-600", delay: "0.2s" },
+              { icon: "📚", label: "कुल कोर्सेस", value: "0", color: "bg-blue-500/10 text-blue-400 border-blue-500/20", delay: "0s" },
+              { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-500/10 text-green-400 border-green-500/20", delay: "0.1s" },
+              { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", delay: "0.2s" },
             ].map((stat, i) => (
-              <div key={i} className="card bg-white border border-slate-100 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:scale-[1.02] hover:shadow-xl transition-all duration-300" style={{ animationDelay: stat.delay }}>
+              <div key={i} className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} rounded-xl flex items-center justify-center shadow-sm`}>
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} border rounded-xl flex items-center justify-center shadow-sm`}>
                     <span className="text-xl sm:text-2xl">{stat.icon}</span>
                   </div>
                   <div>
-                    <p className="text-xs sm:text-sm text-slate-500 font-medium">{stat.label}</p>
-                    <p className="text-xl sm:text-3xl font-extrabold text-slate-900">{stat.value}</p>
+                    <p className="text-xs sm:text-sm text-slate-400 font-medium">{stat.label}</p>
+                    <p className="text-xl sm:text-2xl font-extrabold text-white">{stat.value}</p>
                   </div>
                 </div>
               </div>
@@ -535,112 +600,126 @@ export default function Home() {
 
           {/* MY COURSES */}
           <div className="w-full">
-            <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 mb-3 sm:mb-6">मेरे कोर्सेस</h2>
-            <div className="card bg-white border border-slate-100 rounded-2xl text-center py-8 sm:py-10 px-3 sm:px-4 w-full hover:shadow-lg transition-all duration-300">
+            <h2 className="text-lg sm:text-2xl font-extrabold text-white mb-3 sm:mb-6">मेरे कोर्सेस</h2>
+            <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl text-center py-8 sm:py-10 px-3 sm:px-4 w-full hover:shadow-xl hover:border-slate-600 transition-all duration-300">
               <span className="text-4xl sm:text-5xl mb-3 sm:mb-4 block">📚</span>
-              <h3 className="text-base sm:text-xl font-bold text-slate-900 mb-2">अभी तक कोई कोर्स नहीं</h3>
-              <p className="text-slate-600 text-xs sm:text-sm mb-4 sm:mb-6 max-w-md mx-auto">बिहार बोर्ड के लिए बनाए गए कोर्स में नामांकन करके अपनी शिक्षा यात्रा शुरू करें।</p>
-              
-              <a href="#available-courses" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm mx-auto min-w-[200px]">
+              <h3 className="text-base sm:text-xl font-bold text-white mb-2">अभी तक कोई कोर्स नहीं</h3>
+              <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6 max-w-md mx-auto">बिहार बोर्ड के लिए बनाए गए कोर्स में नामांकन करके अपनी शिक्षा यात्रा शुरू करें।</p>
+              <a href="#available-courses" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-sm mx-auto min-w-[200px]">
                 कोर्सेस देखें
               </a>
             </div>
           </div>
 
-          {/* AVAILABLE COURSES RAIL */}
-          <div id="available-courses" className="animate-fade-in-up w-full" style={{ animationDelay: "0.4s" }}>
-            <div className="text-center mb-6 sm:mb-8 px-2">
-              <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">उपलब्ध कोर्सेस</h2>
-              <p className="text-slate-500 text-xs sm:text-base">बिहार बोर्ड परीक्षाओं के लिए RK Sir के साथ पूर्ण तैयारी</p>
-            </div>
+          {/* AVAILABLE COURSES RAIL with Cinematic Background */}
+          <div id="available-courses" className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.4s" }}>
+            <img src="/gallery1.jpg" alt="Courses Background" className="cinematic-bg bg-ken-burns-right" />
+            <div className="absolute inset-0 z-0 animate-living-gradient" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
             
-            <div className="relative w-full overflow-hidden py-4 sm:py-6">
-              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-24 lg:w-40 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-24 lg:w-40 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
-
-              <div className="flex gap-4 w-max animate-marquee-reverse touch-pan-y">
-                {[...courseImages, ...courseImages, ...courseImages].map((src, i) => {
-                  const courses: CourseItem[] = [
-                    { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।" },
-                    { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन विज्ञान, जीव विज्ञान का पूर्ण कवरेज।" },
-                    { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय शामिल।" },
-                    { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी भाषा में आसानी से महारत हासिल करें।" },
-                    { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।" },
-                  ];
-                  const course = courses[i % 5];
-                  
-                  return (
-                    <div key={`course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 lg:w-96 flex-shrink-0 group" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
-                      <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 border border-slate-100 hover:border-blue-300 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
-                        <div className="relative h-40 sm:h-56 overflow-hidden">
-                          <Image src={src} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                          <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
-                            <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
-                              {course.badge}
-                            </span>
+            <div className="relative z-10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
+                <div>
+                  <h2 className="text-xl sm:text-3xl font-extrabold text-white mb-2">उपलब्ध कोर्सेस</h2>
+                  <p className="text-slate-400 text-xs sm:text-base">बिहार बोर्ड परीक्षाओं के लिए RK Sir के साथ पूर्ण तैयारी</p>
+                </div>
+                <Link href="/courses" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group">
+                  सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+              
+              <div className="relative w-full overflow-hidden py-4">
+                <div className="flex gap-4 w-max animate-marquee-reverse touch-pan-y">
+                  {[...courseImages, ...courseImages, ...courseImages].map((src, i) => {
+                    const courses: CourseItem[] = [
+                      { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।" },
+                      { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन विज्ञान, जीव विज्ञान का पूर्ण कवरेज।" },
+                      { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय शामिल।" },
+                      { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी भाषा में आसानी से महारत हासिल करें।" },
+                      { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।" },
+                    ];
+                    const course = courses[i % 5];
+                    
+                    return (
+                      <div key={`course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 lg:w-96 flex-shrink-0 group" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
+                        <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                          <div className="relative h-40 sm:h-56 overflow-hidden">
+                            <Image src={src} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                            <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
+                              <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
+                                {course.badge}
+                              </span>
+                            </div>
+                            <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3">
+                              <h3 className="text-white font-bold text-sm sm:text-lg drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
+                            </div>
                           </div>
-                          <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3">
-                            <h3 className="text-white font-bold text-sm sm:text-lg drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
-                          </div>
-                        </div>
-                        <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-white to-slate-50">
-                          <p className="text-slate-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
-                          <div className="flex items-center justify-between mt-auto">
-                            <span className="text-lg sm:text-2xl font-extrabold text-slate-900">{course.price}</span>
-                            <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2 px-4 sm:py-2.5 sm:px-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
-                              अभी नामांकन करें
-                            </button>
+                          <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-800/50 to-slate-900/50">
+                            <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
+                            <div className="flex items-center justify-between mt-auto">
+                              <span className="text-lg sm:text-2xl font-extrabold text-white">{course.price}</span>
+                              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 sm:py-2.5 sm:px-5 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
+                                अभी नामांकन करें
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* CINEMATIC GALLERY */}
-          <div className="animate-fade-in-up w-full" style={{ animationDelay: "0.6s" }}>
-            <div className="text-center mb-6 sm:mb-8 px-2">
-              <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 mb-2">World of Concept में जीवन</h2>
-              <p className="text-slate-500 text-xs sm:text-base">हमारी कक्षाओं, सत्रों और छात्रों की सफलता की झलकियां</p>
-            </div>
+          {/* CINEMATIC GALLERY with Cinematic Background */}
+          <div className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
+            <img src="/gallery3.jpg" alt="Gallery Background" className="cinematic-bg bg-ken-burns-left" />
+            <div className="absolute inset-0 z-0 animate-living-gradient" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
-            <div className="relative w-full overflow-hidden py-4 sm:py-6">
-              <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-24 lg:w-40 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-24 lg:w-40 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
-
-              <div className="flex gap-4 w-max animate-marquee touch-pan-y mb-4 sm:mb-6">
-                {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
-                  <div key={`row1-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 ease-out hover:-translate-y-2">
-                    <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">World of Concept क्लास</span>
-                    </div>
-                  </div>
-                ))}
+            <div className="relative z-10">
+              <div className="text-center mb-6 sm:mb-8 px-2 pt-4">
+                <h2 className="text-xl sm:text-3xl font-extrabold text-white mb-2">World of Concept में जीवन</h2>
+                <p className="text-slate-400 text-xs sm:text-base max-w-xl mx-auto">हमारी कक्षाओं, सत्रों और छात्रों की सफलता की झलकियां</p>
               </div>
 
-              <div className="flex gap-4 w-max animate-marquee-reverse touch-pan-y">
-                {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
-                  <div key={`row2-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-white/60 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 ease-out hover:-translate-y-2">
-                    <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                      <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md">छात्र सफलता की कहानी</span>
+              <div className="relative w-full overflow-hidden py-4 sm:py-6">
+                <div className="flex gap-4 w-max animate-marquee touch-pan-y mb-4 sm:mb-6">
+                  {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
+                    <div key={`row1-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
+                      <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
+                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md flex items-center gap-2">
+                          <PlayCircle className="w-4 h-4" /> World of Concept क्लास
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
+                <div className="flex gap-4 w-max animate-marquee-reverse touch-pan-y">
+                  {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
+                    <div key={`row2-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
+                      <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
+                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md flex items-center gap-2">
+                          <Trophy className="w-4 h-4 text-yellow-400" /> छात्र सफलता की कहानी
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* WORLD-CLASS FOOTER */}
+      {/* WORLD-CLASS FOOTER (Same as public view) */}
       <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-slate-900">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
         
@@ -654,8 +733,8 @@ export default function Home() {
               position: 'absolute',
               top: 0,
               left: 0,
-              filter: 'invert(92%) hue-rotate(180deg) brightness(0.95) contrast(1.1) saturate(0.4)',
-              opacity: 0.3
+              filter: 'invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.3) saturate(0.6)',
+              opacity: 0.6
             }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -663,14 +742,21 @@ export default function Home() {
             title="World of Concept Location"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/80 to-slate-950" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/85" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
-            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-800 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 group shadow-lg">
-              <MapPin className="w-4 h-4 text-red-500 group-hover:text-orange-400 transition-colors" />
-              <span className="text-white text-sm font-semibold">आलमनगर पोस्ट ऑफिस चौक, मधेपुरा, बिहार</span>
+            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+              </span>
+              <span className="text-sm font-extrabold tracking-wide animate-shimmer-orange text-white">
+                आलमनगर, बिहार
+              </span>
+              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
             </a>
           </div>
 
