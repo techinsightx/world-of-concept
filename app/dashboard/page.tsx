@@ -341,40 +341,44 @@ export default function DashboardPage() {
           animation: shimmer-reverse 2.5s infinite linear;
         }
 
-        /* 🔥 GPU-ACCELERATED KEN BURNS EFFECT - NOW WORKING PERFECTLY */
-        @keyframes ken-burns-right {
-          0% { 
-            transform: translate3d(0, 0, 0) scale(1);
-          }
-          100% { 
-            transform: translate3d(-5%, -3%, 0) scale(1.15);
-          }
-        }
-        @keyframes ken-burns-left {
-          0% { 
-            transform: translate3d(-5%, -3%, 0) scale(1.15);
-          }
-          100% { 
-            transform: translate3d(0, 0, 0) scale(1);
-          }
-        }
-        
+        /* 🔥 WORLD-CLASS CINEMATIC BACKGROUND TECH */
         .cinematic-bg {
           position: absolute;
-          inset: -10%; /* Extra padding so edges don't show during movement */
-          width: 120%;
-          height: 120%;
+          inset: 0;
+          width: 100%;
+          height: 100%;
           object-fit: cover;
           will-change: transform;
+          transform: translateZ(0); /* Force GPU acceleration */
           backface-visibility: hidden;
-          transform: translateZ(0); /* Force GPU compositing layer */
         }
-        
-        .bg-slide-right {
-          animation: ken-burns-right 25s ease-in-out infinite alternate;
+
+        @keyframes ken-burns-right {
+          0% { transform: scale(1.1) translate(0, 0); }
+          100% { transform: scale(1.25) translate(-4%, -4%); }
         }
-        .bg-slide-left {
-          animation: ken-burns-left 25s ease-in-out infinite alternate;
+        @keyframes ken-burns-left {
+          0% { transform: scale(1.25) translate(-4%, -4%); }
+          100% { transform: scale(1.1) translate(0, 0); }
+        }
+
+        .bg-ken-burns-right {
+          animation: ken-burns-right 30s ease-in-out infinite alternate;
+        }
+        .bg-ken-burns-left {
+          animation: ken-burns-left 30s ease-in-out infinite alternate;
+        }
+
+        /* 🔥 LIVING GRADIENT OVERLAY (Makes it feel like it's constantly changing) */
+        @keyframes gradient-pan {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-living-gradient {
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%);
+          background-size: 200% 200%;
+          animation: gradient-pan 15s ease infinite;
         }
       `}</style>
 
@@ -415,17 +419,18 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. WELCOME CARD - NOW WITH WORKING KEN BURNS */}
+        {/* 🔥 1. WELCOME CARD - PERFECT FILL + LIVING EFFECT */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
-          {/* Pure img tag with cinematic-bg class - GUARANTEED TO ANIMATE */}
           <img 
             src="/gallery2.jpg" 
             alt="Welcome Banner" 
-            className="cinematic-bg bg-slide-right"
+            className="cinematic-bg bg-ken-burns-right"
             loading="eager"
           />
+          {/* Living Gradient Overlay */}
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/70 via-indigo-950/70 to-purple-950/70" />
-          <div className="absolute inset-0 z-0 shimmer-effect opacity-50" />
+          <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
           
           <div className="relative z-10 p-6 sm:p-10 text-white">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-sm font-semibold mb-4 border border-white/20">
@@ -441,16 +446,16 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER - WORKING KEN BURNS */}
+        {/* 🔥 2. LIVE CLASS BANNER - PERFECT FILL + LIVING EFFECT */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
             <img 
               src="/gallery4.jpg" 
               alt="Live Class Banner" 
-              className="cinematic-bg bg-slide-left"
+              className="cinematic-bg bg-ken-burns-left"
               loading="eager"
             />
-            
+            <div className="absolute inset-0 z-0 animate-living-gradient" />
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/75 via-red-900/70 to-orange-900/65" />
             <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40" />
             <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
@@ -562,14 +567,15 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* 🔥 4. AVAILABLE COURSES - WORKING KEN BURNS */}
+        {/* 🔥 4. AVAILABLE COURSES - PERFECT FILL + LIVING EFFECT */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <img 
             src="/gallery1.jpg" 
             alt="Courses Background" 
-            className="cinematic-bg bg-slide-right"
+            className="cinematic-bg bg-ken-burns-right"
           />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
           
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
@@ -616,14 +622,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. CINEMATIC GALLERY - WORKING KEN BURNS */}
+        {/* 🔥 5. CINEMATIC GALLERY - PERFECT FILL + LIVING EFFECT */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <img 
             src="/gallery3.jpg" 
             alt="Gallery Background" 
-            className="cinematic-bg bg-slide-left"
+            className="cinematic-bg bg-ken-burns-left"
           />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
@@ -669,14 +676,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES - WORKING KEN BURNS */}
+        {/* 🔥 6. RK SIR UPDATES - PERFECT FILL + LIVING EFFECT */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
           <img 
             src="/gallery5.jpg" 
             alt="Updates Background" 
-            className="cinematic-bg bg-slide-right"
+            className="cinematic-bg bg-ken-burns-right"
           />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/70 via-slate-950/75 to-slate-950/80" />
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
