@@ -21,6 +21,38 @@ import {
   Legend, CartesianGrid
 } from "recharts";
 
+// 🔥 Reusable Cinematic Background Component
+const CinematicBackground = ({ images }: { images: string[] }) => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 6000); // Change every 6 seconds
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden">
+      {images.map((src, i) => (
+        <div
+          key={src}
+          className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${
+            i === index ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <img 
+            src={src} 
+            alt={`Cinematic BG ${i}`} 
+            className="w-full h-full object-cover animate-ken-burns" 
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
 interface AdminData {
   fullName: string;
   email: string;
@@ -86,6 +118,9 @@ export default function AdminDashboardPage() {
   const [postDesc, setPostDesc] = useState("");
   const [postType, setPostType] = useState<"announcement" | "motivation" | "tip">("announcement");
   const [postImage, setPostImage] = useState<File | null>(null);
+
+  // 🔥 Dedicated Image Array for Admin Cinematic Background
+  const adminBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg", "/gallery7.jpg"];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -294,21 +329,23 @@ export default function AdminDashboardPage() {
     <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative font-sans w-full overflow-x-hidden">
       
       <style jsx global>{`
-        @keyframes ken-burns-right {
-          0% { transform: translateX(0) scale(1.15); }
-          100% { transform: translateX(-5%) scale(1.2); }
+        @keyframes ken-burns {
+          0% { transform: scale(1) translate(0, 0); }
+          100% { transform: scale(1.15) translate(-2%, -2%); }
         }
-        @keyframes ken-burns-left {
-          0% { transform: translateX(-5%) scale(1.2); }
-          100% { transform: translateX(0) scale(1.15); }
+        .animate-ken-burns {
+          animation: ken-burns 8s ease-out forwards;
         }
-        .bg-slide-right {
-          animation: ken-burns-right 60s ease-in-out infinite alternate;
-          will-change: transform;
+        
+        @keyframes gradient-pan {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
-        .bg-slide-left {
-          animation: ken-burns-left 65s ease-in-out infinite alternate;
-          will-change: transform;
+        .animate-living-gradient {
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(236, 72, 153, 0.1) 100%);
+          background-size: 200% 200%;
+          animation: gradient-pan 15s ease infinite;
         }
       `}</style>
 
@@ -343,16 +380,15 @@ export default function AdminDashboardPage() {
         </div>
       </header>
 
-      {/* 🔥 MAIN CONTENT with CINEMATIC BACKGROUND */}
+      {/* 🔥 MAIN CONTENT with DYNAMIC CINEMATIC BACKGROUND */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        {/* Subtle Ken Burns Background for Main Area */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-3xl">
-          <div className="absolute inset-0 bg-slide-right">
-            <Image src="/gallery2.jpg" alt="Admin Background" fill className="object-cover opacity-30" />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/95" />
-        </div>
+        {/* Dynamic Cinematic Background */}
+        <CinematicBackground images={adminBgImages} />
+        
+        {/* Living Gradient & Dark Overlays for readability */}
+        <div className="absolute inset-0 z-0 animate-living-gradient pointer-events-none" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 pointer-events-none" />
 
         {/* Welcome & Tabs */}
         <div className="relative z-10 mb-8">
@@ -466,7 +502,6 @@ export default function AdminDashboardPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h2 className="text-2xl font-bold text-white">कोर्सेस प्रबंधन</h2>
               
-              {/* 🔥 HIGHLY VISIBLE GLOWING BUTTON */}
               <button
                 onClick={() => setShowCourseForm(true)}
                 className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50"
@@ -594,7 +629,6 @@ export default function AdminDashboardPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h2 className="text-2xl font-bold text-white">अपडेट्स प्रबंधन</h2>
               
-              {/* 🔥 HIGHLY VISIBLE GLOWING BUTTON */}
               <button
                 onClick={() => setShowPostForm(true)}
                 className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50"
