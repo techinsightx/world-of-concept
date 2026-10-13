@@ -612,9 +612,14 @@ export default function DashboardPage() {
                         <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
                         <div className="flex items-center justify-between mt-auto">
                           <span className="text-lg sm:text-xl font-extrabold text-white">{course.price}</span>
-                          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
+                          
+                          {/* 🔥 PAYMENT INTEGRATION LINK */}
+                          <Link 
+                            href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
+                            className="block w-full text-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap"
+                          >
                             नामांकन करें
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
