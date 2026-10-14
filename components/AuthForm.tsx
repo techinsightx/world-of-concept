@@ -10,7 +10,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
 
 export default function AuthForm() {
   const [email, setEmail] = useState("");
@@ -90,7 +90,7 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-slate-950">
+    <div className="relative w-full h-full flex items-center justify-center">
       <style jsx global>{`
         @keyframes tricolor-shimmer {
           0% { background-position: -200% center; }
@@ -111,54 +111,50 @@ export default function AuthForm() {
         .animate-fade-in-up { 
           animation: fade-in-up 0.6s ease-out forwards; 
         }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
       `}</style>
 
-      {/* 🔥 CINEMATIC BACKGROUND (RK Sir Image) */}
-      <div className="absolute inset-0 z-0">
-        <Image 
-          src="/rk-sir.jpg" 
-          alt="RK Sir Background" 
-          fill 
-          className="object-cover opacity-60" 
-          priority
-        />
-        {/* Dark Overlay for Readability */}
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
-      </div>
-
-      {/* 🔥 AUTH FORM CARD */}
+      {/* 🔥 AUTH FORM CARD - World Class Glassmorphism */}
       <div className="relative z-10 w-full max-w-md mx-4 animate-fade-in-up">
-        <div className="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 p-6 sm:p-8 relative overflow-hidden">
-          {/* Subtle decorative glow */}
-          <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/10 p-6 sm:p-8 relative overflow-hidden">
+          
+          {/* Subtle decorative glows */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-float" />
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
           
           <div className="relative z-10">
-            {/* 🔥 UPGRADED LOGO: Bigger size, no unnecessary white space */}
-            <div className="text-center mb-6">
-              <div className="relative w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden shadow-2xl shadow-blue-500/30 ring-2 ring-white/20 bg-white/10 backdrop-blur-md">
-                <Image src="/logo.png" alt="World of Concept" fill className="object-contain p-2" priority />
+            {/* 🔥 UPGRADED LOGO: Bigger, cleaner, no heavy overlay box */}
+            <div className="text-center mb-8">
+              <div className="relative w-32 h-32 sm:w-36 sm:h-36 mx-auto mb-6 drop-shadow-2xl">
+                <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
               </div>
-              <h2 className="text-2xl font-extrabold tracking-tight mb-1">
+              <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">
                 <span className="tricolor-text">World of Concept</span>
               </h2>
-              <p className="text-blue-200/80 text-sm">
+              <p className="text-slate-300 text-base sm:text-lg font-medium max-w-xs mx-auto flex items-center justify-center gap-2">
+                <Sparkles className="w-4 h-4 text-yellow-400" />
                 {isLogin ? "अपने डैशबोर्ड तक पहुँचने के लिए लॉगिन करें" : "बिहार बोर्ड परीक्षाओं में टॉप करने की यात्रा शुरू करें"}
               </p>
             </div>
 
-            {/* Smooth Tab Switcher */}
-            <div className="relative flex bg-white/10 backdrop-blur-sm p-1.5 rounded-xl mb-6 border border-white/10">
+            {/* Smooth Premium Tab Switcher */}
+            <div className="relative flex bg-slate-800/50 p-1.5 rounded-2xl mb-8 border border-white/5">
               <div 
-                className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-lg shadow-lg transition-all duration-300 ease-out ${
+                className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-to-b from-blue-500 to-indigo-600 rounded-xl shadow-lg transition-all duration-300 ease-out ${
                   isLogin ? "left-1.5" : "left-[calc(50%+3px)]"
                 }`} 
               />
               <button
                 type="button"
                 onClick={() => { if (!isLogin) switchMode(); }}
-                className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${
-                  isLogin ? "text-blue-600" : "text-white/70 hover:text-white"
+                className={`relative z-10 flex-1 py-3 text-sm font-bold transition-colors duration-300 rounded-xl ${
+                  isLogin ? "text-white" : "text-slate-400 hover:text-white"
                 }`}
               >
                 साइन इन
@@ -166,8 +162,8 @@ export default function AuthForm() {
               <button
                 type="button"
                 onClick={() => { if (isLogin) switchMode(); }}
-                className={`relative z-10 flex-1 py-2.5 text-sm font-bold transition-colors duration-300 ${
-                  !isLogin ? "text-blue-600" : "text-white/70 hover:text-white"
+                className={`relative z-10 flex-1 py-3 text-sm font-bold transition-colors duration-300 rounded-xl ${
+                  !isLogin ? "text-white" : "text-slate-400 hover:text-white"
                 }`}
               >
                 साइन अप
@@ -175,74 +171,74 @@ export default function AuthForm() {
             </div>
 
             {/* Form Fields */}
-            <form onSubmit={handleEmailAuth} className="space-y-4" noValidate>
+            <form onSubmit={handleEmailAuth} className="space-y-5" noValidate>
               {!isLogin && (
-                <div className="space-y-1.5 animate-fade-in-up">
-                  <label className="block text-sm font-semibold text-white/90">
+                <div className="space-y-2 animate-fade-in-up">
+                  <label className="block text-sm font-semibold text-slate-200">
                     पूरा नाम <span className="text-red-400">*</span>
                   </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                  <div className="relative group">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
                     <input
                       type="text"
                       placeholder="शुभम कुमार"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all"
+                      className="w-full pl-12 pr-4 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                       required
                     />
                   </div>
                 </div>
               )}
 
-              <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-white/90">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-slate-200">
                   ईमेल पता <span className="text-red-400">*</span>
                 </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type="email"
                     placeholder="students@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all"
+                    className="w-full pl-12 pr-4 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-white/90">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-slate-200">
                   पासवर्ड <span className="text-red-400">*</span>
                 </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="कम से कम 6 अक्षर"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-all"
+                    className="w-full pl-12 pr-12 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     required
                     minLength={6}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
                 
                 {isLogin && (
-                  <div className="flex justify-end mt-2">
+                  <div className="flex justify-end mt-1">
                     <button
                       type="button"
                       onClick={handleForgotPassword}
                       disabled={loading}
-                      className="text-xs text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors disabled:opacity-50"
+                      className="text-xs text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors disabled:opacity-50"
                     >
                       पासवर्ड भूल गए?
                     </button>
@@ -252,16 +248,16 @@ export default function AuthForm() {
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-500/20 backdrop-blur-sm border border-red-400/50 text-red-100 px-4 py-3 rounded-xl text-sm flex items-start gap-2 animate-fade-in-up">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <div className="bg-red-500/10 border border-red-500/30 text-red-200 px-4 py-3 rounded-xl text-sm flex items-start gap-3 animate-fade-in-up">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-400" />
                   <span>{error}</span>
                 </div>
               )}
 
               {/* Success Message */}
               {successMsg && (
-                <div className="bg-green-500/20 backdrop-blur-sm border border-green-400/50 text-green-100 px-4 py-3 rounded-xl text-sm flex items-start gap-2 animate-fade-in-up">
-                  <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <div className="bg-green-500/10 border border-green-500/30 text-green-200 px-4 py-3 rounded-xl text-sm flex items-start gap-3 animate-fade-in-up">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-green-400" />
                   <span>{successMsg}</span>
                 </div>
               )}
@@ -270,7 +266,7 @@ export default function AuthForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-6 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-xl shadow-blue-500/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 text-base"
               >
                 {loading ? (
                   <>
@@ -287,11 +283,11 @@ export default function AuthForm() {
             </form>
 
             {/* Footer Links */}
-            <p className="text-center text-xs text-white/60 mt-6 leading-relaxed">
+            <p className="text-center text-xs text-slate-400 mt-8 leading-relaxed">
               जारी रखकर, आप हमारी{" "}
-              <a href="/terms" className="text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors">शर्तों</a>
+              <a href="/terms" className="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors">शर्तों</a>
               {" और "}
-              <a href="/privacy" className="text-blue-300 hover:text-blue-200 hover:underline font-semibold transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
+              <a href="/privacy" className="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
             </p>
           </div>
         </div>
