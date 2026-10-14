@@ -249,8 +249,16 @@ export default function Home() {
                 2027 बैच के लिए एडमिशन खुले
               </div>
               
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white" itemProp="name">
-                <span className="tricolor-text-reverse">{typedText}</span>
+              {/* 🔥 FIXED: No more page jumping during typing effect */}
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white flex items-center" itemProp="name">
+                <span className="inline-block relative">
+                  <span className="tricolor-text-reverse absolute top-0 left-0 whitespace-nowrap">
+                    {typedText}
+                  </span>
+                  <span className="invisible whitespace-nowrap">
+                    {fullText}
+                  </span>
+                </span>
               </h1>
               
               <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium" itemProp="description">
