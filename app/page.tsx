@@ -27,8 +27,8 @@ interface CourseItem {
   desc: string;
 }
 
-// 🔥 Reusable Cinematic Background Component (Changes images every 6s with Ken Burns)
-const CinematicBackground = ({ images }: { images: string[] }) => {
+// 🔥 Reusable Cinematic Background Component with Alternating Zoom
+const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const CinematicBackground = ({ images }: { images: string[] }) => {
           <img 
             src={src} 
             alt={`Cinematic BG ${i}`} 
-            className="w-full h-full object-cover animate-ken-burns" 
+            className={`w-full h-full object-cover ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
           />
         </div>
       ))}
@@ -206,12 +206,20 @@ export default function Home() {
             animation: tricolor-shimmer-reverse 4s linear infinite;
           }
 
-          @keyframes ken-burns {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.15) translate(-2%, -2%); }
+          /* 🔥 DEEP ALTERNATING KEN BURNS EFFECT */
+          @keyframes ken-burns-zoom-in {
+            0% { transform: scale(1.0) translate(0, 0); }
+            100% { transform: scale(1.25) translate(-4%, -4%); }
           }
-          .animate-ken-burns {
-            animation: ken-burns 8s ease-out forwards;
+          @keyframes ken-burns-zoom-out {
+            0% { transform: scale(1.25) translate(4%, 4%); }
+            100% { transform: scale(1.0) translate(0, 0); }
+          }
+          .animate-ken-burns-in {
+            animation: ken-burns-zoom-in 15s ease-in-out infinite alternate;
+          }
+          .animate-ken-burns-out {
+            animation: ken-burns-zoom-out 15s ease-in-out infinite alternate;
           }
           
           @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -236,9 +244,9 @@ export default function Home() {
           }
         `}</style>
 
-        {/* 1. HERO SECTION with Dynamic Cinematic Background */}
+        {/* 1. HERO SECTION (ZOOM IN) */}
         <section className="relative min-h-[100dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
-          <CinematicBackground images={heroBgImages} />
+          <CinematicBackground images={heroBgImages} zoomType="in" />
           <div className="absolute inset-0 z-10 bg-slate-950/80 backdrop-blur-[2px]" />
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
@@ -249,7 +257,6 @@ export default function Home() {
                 2027 बैच के लिए एडमिशन खुले
               </div>
               
-              {/* 🔥 FIXED: No more page jumping during typing effect */}
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white flex items-center" itemProp="name">
                 <span className="inline-block relative">
                   <span className="tricolor-text-reverse absolute top-0 left-0 whitespace-nowrap">
@@ -275,9 +282,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. WHY CHOOSE US SECTION with Dynamic Cinematic Background */}
+        {/* 2. WHY CHOOSE US SECTION (ZOOM OUT) */}
         <section className="relative py-24 overflow-hidden border-t border-slate-800">
-          <CinematicBackground images={whyChooseBgImages} />
+          <CinematicBackground images={whyChooseBgImages} zoomType="out" />
           <div className="absolute inset-0 z-10 bg-slate-950/90" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -305,9 +312,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. CINEMATIC DUAL ROW SCROLLING with Dynamic Cinematic Background */}
+        {/* 3. CINEMATIC DUAL ROW SCROLLING (ZOOM IN) */}
         <section className="relative py-16 overflow-hidden border-y border-slate-800">
-          <CinematicBackground images={scrollingBgImages} />
+          <CinematicBackground images={scrollingBgImages} zoomType="in" />
           <div className="absolute inset-0 z-10 bg-slate-950/90" />
 
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
@@ -466,12 +473,21 @@ export default function Home() {
           -webkit-text-fill-color: transparent;
           animation: shimmer-text 3s linear infinite;
         }
-        @keyframes ken-burns {
-          0% { transform: scale(1) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-2%, -2%); }
+        
+        /* 🔥 DEEP ALTERNATING KEN BURNS EFFECT */
+        @keyframes ken-burns-zoom-in {
+          0% { transform: scale(1.0) translate(0, 0); }
+          100% { transform: scale(1.25) translate(-4%, -4%); }
         }
-        .animate-ken-burns {
-          animation: ken-burns 8s ease-out forwards;
+        @keyframes ken-burns-zoom-out {
+          0% { transform: scale(1.25) translate(4%, 4%); }
+          100% { transform: scale(1.0) translate(0, 0); }
+        }
+        .animate-ken-burns-in {
+          animation: ken-burns-zoom-in 15s ease-in-out infinite alternate;
+        }
+        .animate-ken-burns-out {
+          animation: ken-burns-zoom-out 15s ease-in-out infinite alternate;
         }
       `}</style>
 
@@ -508,9 +524,9 @@ export default function Home() {
             <p className="text-slate-400 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
           </div>
 
-          {/* LIVE CLASS CARD with Dynamic Cinematic Background */}
+          {/* LIVE CLASS CARD (ZOOM OUT) */}
           <div className="animate-fade-in-up w-full relative overflow-hidden rounded-2xl border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
-            <CinematicBackground images={liveClassBgImages} />
+            <CinematicBackground images={liveClassBgImages} zoomType="out" />
             <div className="absolute inset-0 z-10 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75" />
             
             <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
@@ -565,9 +581,9 @@ export default function Home() {
             </div>
           </div>
 
-          {/* AVAILABLE COURSES RAIL with Dynamic Cinematic Background */}
+          {/* AVAILABLE COURSES RAIL (ZOOM IN) */}
           <div id="available-courses" className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.4s" }}>
-            <CinematicBackground images={coursesBgImages} />
+            <CinematicBackground images={coursesBgImages} zoomType="in" />
             <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
             
             <div className="relative z-10">
@@ -626,9 +642,9 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CINEMATIC GALLERY with Dynamic Cinematic Background */}
+          {/* CINEMATIC GALLERY (ZOOM OUT) */}
           <div className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
-            <CinematicBackground images={gallerySectionBgImages} />
+            <CinematicBackground images={gallerySectionBgImages} zoomType="out" />
             <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
             <div className="relative z-10">
