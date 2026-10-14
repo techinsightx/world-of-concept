@@ -90,7 +90,7 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-slate-950">
       <style jsx global>{`
         @keyframes tricolor-shimmer {
           0% { background-position: -200% center; }
@@ -120,11 +120,25 @@ export default function AuthForm() {
         }
       `}</style>
 
+      {/* 🔥 CINEMATIC BACKGROUND (RK Sir Image) */}
+      <div className="absolute inset-0 z-0">
+        <Image 
+          src="/rk-sir.jpg" 
+          alt="RK Sir Background" 
+          fill 
+          className="object-cover opacity-40" 
+          priority
+        />
+        {/* Dark Overlay for Perfect Readability */}
+        <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+      </div>
+
       {/* 🔥 AUTH FORM CARD - World Class Glassmorphism */}
       <div className="relative z-10 w-full max-w-md mx-4 animate-fade-in-up">
         <div className="bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/10 p-6 sm:p-8 relative overflow-hidden">
           
-          {/* Subtle decorative glows */}
+          {/* Subtle decorative glows inside the card */}
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-float" />
           <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
           
