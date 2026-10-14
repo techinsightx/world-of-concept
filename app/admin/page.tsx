@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { 
@@ -21,13 +21,46 @@ import {
   Legend, CartesianGrid
 } from "recharts";
 
+// 🔥 Magnetic Button Component for World-Class Interaction
+const MagneticButton = ({ children, className, onClick, href, ...props }: any) => {
+  const ref = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    (ref.current as HTMLElement).style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.03)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!ref.current) return;
+    (ref.current as HTMLElement).style.transform = `translate(0px, 0px) scale(1)`;
+  };
+
+  const baseClass = "transition-transform duration-200 ease-out relative overflow-hidden group";
+  
+  if (href) {
+    return (
+      <Link href={href} className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} {...props}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <button className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
+};
+
 // 🔥 Optimized Cinematic Background Component (Large Display Friendly)
 const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
   
   useEffect(() => {
     if (images.length <= 1) return;
-    const interval = setInterval(() => setIndex((prev) => (prev + 1) % images.length), 8000); // Slower transition
+    const interval = setInterval(() => setIndex((prev) => (prev + 1) % images.length), 8000);
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -211,7 +244,40 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative font-sans w-full overflow-x-hidden">
       <style jsx global>{`
-        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS (Slower & Smoother with Hardware Acceleration) */
+        /* 🔥 RAINBOW SHIMMER ANIMATION */
+        @keyframes rainbow-shimmer {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        .rainbow-shimmer-bg {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+        .rainbow-shimmer-bg:hover {
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+        }
+        .rainbow-shimmer-bg::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transform: translateX(-100%);
+          transition: transform 0.7s;
+        }
+        .rainbow-shimmer-bg:hover::after {
+          transform: translateX(100%);
+        }
+        .rainbow-shimmer-text {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+
+        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS */
         @keyframes ken-burns-zoom-in {
           0% { transform: translate3d(0, 0, 0) scale(1.0); }
           100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
@@ -220,7 +286,6 @@ export default function AdminDashboardPage() {
           0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
           100% { transform: translate3d(0, 0, 0) scale(1.0); }
         }
-        
         .animate-ken-burns-in {
           animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
           will-change: transform;
@@ -229,7 +294,6 @@ export default function AdminDashboardPage() {
           animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
           will-change: transform;
         }
-        
         @media (max-width: 768px) {
           .animate-ken-burns-in { animation-duration: 40s; }
           .animate-ken-burns-out { animation-duration: 40s; }
@@ -245,14 +309,14 @@ export default function AdminDashboardPage() {
         .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
       `}</style>
 
-      {/* 🔥 HEADER - Optimized for large displays (removed heavy blur) */}
+      {/* 🔥 HEADER */}
       <header className="relative z-50 bg-slate-950/90 border-b border-slate-800 sticky top-0 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <div className="flex items-center gap-3">
-              <Link href="/dashboard" className="p-2 hover:bg-slate-800 rounded-full transition-colors group" title="Student View">
+              <MagneticButton href="/dashboard" className="p-2 hover:bg-slate-800 rounded-full transition-colors group" title="Student View">
                 <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:-translate-x-1 group-hover:text-white transition-all" />
-              </Link>
+              </MagneticButton>
               <Logo size="medium" showText={false} />
               <span className="text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">
                 World of Concept
@@ -268,9 +332,9 @@ export default function AdminDashboardPage() {
                   {adminData.fullName.charAt(0).toUpperCase()}
                 </div>
               </div>
-              <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all border border-red-500/30 hover:border-red-400/50">
+              <MagneticButton onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all border border-red-500/30 hover:border-red-400/50">
                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
-              </button>
+              </MagneticButton>
             </div>
           </div>
         </div>
@@ -298,15 +362,15 @@ export default function AdminDashboardPage() {
                 { id: "posts", label: "अपडेट्स", icon: Sparkles },
                 { id: "students", label: "छात्र", icon: Users },
               ].map((tab) => (
-                <button
+                <MagneticButton
                   key={tab.id}
                   onClick={() => { setActiveTab(tab.id as any); setShowCourseForm(false); setShowPostForm(false); setErrorMsg(""); setSuccessMsg(""); }}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
-                    activeTab === tab.id ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30" : "bg-slate-800/80 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-700/50"
+                    activeTab === tab.id ? "rainbow-shimmer-bg text-white shadow-lg" : "bg-slate-800/80 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-700/50"
                   }`}
                 >
                   <tab.icon className="w-4 h-4" /> {tab.label}
-                </button>
+                </MagneticButton>
               ))}
             </div>
           </div>
@@ -332,7 +396,7 @@ export default function AdminDashboardPage() {
                 ))}
               </div>
               <div className="bg-slate-800/80 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg mb-8">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-indigo-400" /> राजस्व और छात्र वृद्धि (6 महीने)</h3>
+                <h3 className="text-xl font-bold rainbow-shimmer-text mb-6 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-indigo-400" /> राजस्व और छात्र वृद्धि (6 महीने)</h3>
                 <div className="h-80 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={growthData}>
@@ -348,7 +412,7 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
               <div className="bg-slate-800/80 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-indigo-400" /> हाल की गतिविधियाँ</h3>
+                <h3 className="text-xl font-bold rainbow-shimmer-text mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-indigo-400" /> हाल की गतिविधियाँ</h3>
                 <div className="space-y-4">
                   {recentActivities.length === 0 ? (
                     <p className="text-slate-400 text-center py-8">कोई गतिविधि नहीं</p>
@@ -369,14 +433,17 @@ export default function AdminDashboardPage() {
             </>
           )}
 
-          {/* 🔥 COURSES TAB - INLINE FORM */}
+          {/* 🔥 COURSES TAB */}
           {activeTab === "courses" && (
             <>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <h2 className="text-2xl font-bold text-white">कोर्सेस प्रबंधन</h2>
-                <button onClick={() => { setShowCourseForm(!showCourseForm); setErrorMsg(""); setSuccessMsg(""); }} className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50">
+                <h2 className="text-2xl font-bold rainbow-shimmer-text">कोर्सेस प्रबंधन</h2>
+                <MagneticButton 
+                  onClick={() => { setShowCourseForm(!showCourseForm); setErrorMsg(""); setSuccessMsg(""); }} 
+                  className="flex items-center gap-2 px-6 py-3 rainbow-shimmer-bg text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl border border-indigo-400/50"
+                >
                   <PlusCircle className="w-5 h-5" /> {showCourseForm ? "फॉर्म बंद करें" : "नया कोर्स जोड़ें"}
-                </button>
+                </MagneticButton>
               </div>
 
               {showCourseForm && (
@@ -387,12 +454,12 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="relative z-10 bg-slate-800/80 p-6 sm:p-8">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                      <h3 className="text-xl font-bold rainbow-shimmer-text flex items-center gap-2">
                         <BookOpen className="w-5 h-5 text-indigo-400" /> नया कोर्स जोड़ें
                       </h3>
-                      <button onClick={() => setShowCourseForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
+                      <MagneticButton onClick={() => setShowCourseForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
                         <X className="w-5 h-5 text-slate-400" />
-                      </button>
+                      </MagneticButton>
                     </div>
                     
                     {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
@@ -423,9 +490,13 @@ export default function AdminDashboardPage() {
                         <label className="block text-sm font-semibold text-slate-300 mb-2">विवरण *</label>
                         <textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none" rows={3} placeholder="कोर्स का विस्तृत विवरण..." required />
                       </div>
-                      <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20">
+                      <MagneticButton 
+                        type="submit" 
+                        disabled={uploading} 
+                        className="w-full flex items-center justify-center gap-2 rainbow-shimmer-bg text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
                         {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> कोर्स सेव करें</>)}
-                      </button>
+                      </MagneticButton>
                     </form>
                   </div>
                 </div>
@@ -444,7 +515,7 @@ export default function AdminDashboardPage() {
                       <p className="text-sm text-slate-400 mb-4 line-clamp-2">{course.description}</p>
                       <div className="flex items-center justify-between">
                         <p className="text-xl font-extrabold text-indigo-400">{course.price}</p>
-                        <button className="text-xs text-slate-400 hover:text-white transition-colors">Edit</button>
+                        <MagneticButton className="text-xs text-slate-400 hover:text-white transition-colors">Edit</MagneticButton>
                       </div>
                     </div>
                   </div>
@@ -453,14 +524,17 @@ export default function AdminDashboardPage() {
             </>
           )}
 
-          {/* 🔥 POSTS TAB - INLINE FORM */}
+          {/* 🔥 POSTS TAB */}
           {activeTab === "posts" && (
             <>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <h2 className="text-2xl font-bold text-white">अपडेट्स प्रबंधन</h2>
-                <button onClick={() => { setShowPostForm(!showPostForm); setErrorMsg(""); setSuccessMsg(""); }} className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] hover:scale-105 active:scale-95 border border-indigo-400/50">
+                <h2 className="text-2xl font-bold rainbow-shimmer-text">अपडेट्स प्रबंधन</h2>
+                <MagneticButton 
+                  onClick={() => { setShowPostForm(!showPostForm); setErrorMsg(""); setSuccessMsg(""); }} 
+                  className="flex items-center gap-2 px-6 py-3 rainbow-shimmer-bg text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl border border-indigo-400/50"
+                >
                   <PlusCircle className="w-5 h-5" /> {showPostForm ? "फॉर्म बंद करें" : "नई पोस्ट जोड़ें"}
-                </button>
+                </MagneticButton>
               </div>
 
               {showPostForm && (
@@ -471,12 +545,12 @@ export default function AdminDashboardPage() {
                   </div>
                   <div className="relative z-10 bg-slate-800/80 p-6 sm:p-8">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                      <h3 className="text-xl font-bold rainbow-shimmer-text flex items-center gap-2">
                         <Sparkles className="w-5 h-5 text-indigo-400" /> नई पोस्ट जोड़ें
                       </h3>
-                      <button onClick={() => setShowPostForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
+                      <MagneticButton onClick={() => setShowPostForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
                         <X className="w-5 h-5 text-slate-400" />
-                      </button>
+                      </MagneticButton>
                     </div>
                     
                     {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
@@ -503,9 +577,13 @@ export default function AdminDashboardPage() {
                         <label className="block text-sm font-semibold text-slate-300 mb-2">इमेज (वैकल्पिक)</label>
                         <input type="file" accept="image/*" onChange={(e) => setPostImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" />
                       </div>
-                      <button type="submit" disabled={uploading} className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/20">
+                      <MagneticButton 
+                        type="submit" 
+                        disabled={uploading} 
+                        className="w-full flex items-center justify-center gap-2 rainbow-shimmer-bg text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
                         {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> पोस्ट सेव करें</>)}
-                      </button>
+                      </MagneticButton>
                     </form>
                   </div>
                 </div>
@@ -543,7 +621,7 @@ export default function AdminDashboardPage() {
           {activeTab === "students" && (
             <div className="bg-slate-800/80 rounded-2xl p-8 border border-slate-700/50 shadow-lg text-center">
               <Users className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-2">कुल छात्र: <span className="text-indigo-400">{totalStudents}</span></h2>
+              <h2 className="text-2xl font-bold rainbow-shimmer-text mb-2">कुल छात्र: <span className="text-indigo-400">{totalStudents}</span></h2>
               <p className="text-slate-400">विस्तृत छात्र प्रबंधन system जल्द ही उपलब्ध होगा।</p>
             </div>
           )}
