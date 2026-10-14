@@ -115,7 +115,6 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
   }, []);
 
   return (
-    // 🔥 MATCHED GALLERY RAIL STYLING EXACTLY
     <div ref={cardRef} className="relative w-[85vw] max-w-[300px] sm:w-80 flex-shrink-0 group">
       <div className="bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 transition-all duration-500 hover:-translate-y-2">
         <div className="relative aspect-video bg-slate-900">
@@ -557,14 +556,14 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) - MATCHED GALLERY RAIL STYLING */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) - FIXED TO MATCH GALLERY/COURSES RAIL */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
           <CinematicBackground images={videosBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/90" />
           
-          <div className="relative z-10 p-6 sm:p-8">
-            <div className="flex items-center justify-between mb-6 px-2">
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-6 px-2 pt-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30">
                   <YoutubeIcon className="w-7 h-7" />
