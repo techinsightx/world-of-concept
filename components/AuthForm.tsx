@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef, MouseEvent } from "react";
 import Image from "next/image";
 import { auth, db } from "@/lib/firebase";
 import {
@@ -21,6 +21,25 @@ export default function AuthForm() {
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  // 🔥 Magnetic Button Ref
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
+
+  // 🔥 Magnetic Effect Logic
+  const handleMouseMove = (e: MouseEvent<HTMLButtonElement>) => {
+    if (!submitBtnRef.current) return;
+    const rect = submitBtnRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    // Subtle magnetic pull towards cursor
+    submitBtnRef.current.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.03)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!submitBtnRef.current) return;
+    submitBtnRef.current.style.transform = `translate(0px, 0px) scale(1)`;
+  };
 
   const handleEmailAuth = async (e: FormEvent) => {
     e.preventDefault();
@@ -118,42 +137,60 @@ export default function AuthForm() {
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
+        /* 🔥 RAINBOW SHIMMER ANIMATION */
+        @keyframes rainbow-shimmer {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        .rainbow-shimmer-btn {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+        .rainbow-shimmer-btn:hover {
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+        }
+        .rainbow-tab-active {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
       `}</style>
 
-      {/* 🔥 AUTH FORM CARD - World Class Glassmorphism */}
-      <div className="relative z-10 w-full max-w-md mx-4 animate-fade-in-up">
-        <div className="bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/10 p-6 sm:p-8 relative overflow-hidden">
+      {/* 🔥 COMPACT AUTH FORM CARD */}
+      <div className="relative z-10 w-full max-w-sm mx-4 animate-fade-in-up">
+        <div className="bg-slate-900/70 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/10 p-5 sm:p-6 relative overflow-hidden">
           
           {/* Subtle decorative glows */}
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-float" />
-          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
+          <div className="absolute -top-16 -right-16 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-float" />
+          <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
           
           <div className="relative z-10">
-            {/* 🔥 UPGRADED LOGO: Bigger, cleaner, no heavy overlay box */}
-            <div className="text-center mb-8">
-              <div className="relative w-32 h-32 sm:w-36 sm:h-36 mx-auto mb-6 drop-shadow-2xl">
+            {/* 🔥 COMPACT LOGO */}
+            <div className="text-center mb-6">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4 drop-shadow-2xl">
                 <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
                 <span className="tricolor-text">World of Concept</span>
               </h2>
-              <p className="text-slate-300 text-base sm:text-lg font-medium max-w-xs mx-auto flex items-center justify-center gap-2">
-                <Sparkles className="w-4 h-4 text-yellow-400" />
-                {isLogin ? "अपने डैशबोर्ड तक पहुँचने के लिए लॉगिन करें" : "बिहार बोर्ड परीक्षाओं में टॉप करने की यात्रा शुरू करें"}
+              <p className="text-slate-300 text-sm sm:text-base font-medium max-w-[16rem] mx-auto flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+                {isLogin ? "अपने डैशबोर्ड में लॉगिन करें" : "टॉप करने की यात्रा शुरू करें"}
               </p>
             </div>
 
-            {/* Smooth Premium Tab Switcher */}
-            <div className="relative flex bg-slate-800/50 p-1.5 rounded-2xl mb-8 border border-white/5">
+            {/* Smooth Premium Rainbow Tab Switcher */}
+            <div className="relative flex bg-slate-800/50 p-1 rounded-xl mb-6 border border-white/5">
               <div 
-                className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-to-b from-blue-500 to-indigo-600 rounded-xl shadow-lg transition-all duration-300 ease-out ${
-                  isLogin ? "left-1.5" : "left-[calc(50%+3px)]"
+                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg shadow-lg transition-all duration-300 ease-out rainbow-tab-active ${
+                  isLogin ? "left-1" : "left-[calc(50%+2px)]"
                 }`} 
               />
               <button
                 type="button"
                 onClick={() => { if (!isLogin) switchMode(); }}
-                className={`relative z-10 flex-1 py-3 text-sm font-bold transition-colors duration-300 rounded-xl ${
+                className={`relative z-10 flex-1 py-2.5 text-xs sm:text-sm font-bold transition-colors duration-300 rounded-lg ${
                   isLogin ? "text-white" : "text-slate-400 hover:text-white"
                 }`}
               >
@@ -162,7 +199,7 @@ export default function AuthForm() {
               <button
                 type="button"
                 onClick={() => { if (isLogin) switchMode(); }}
-                className={`relative z-10 flex-1 py-3 text-sm font-bold transition-colors duration-300 rounded-xl ${
+                className={`relative z-10 flex-1 py-2.5 text-xs sm:text-sm font-bold transition-colors duration-300 rounded-lg ${
                   !isLogin ? "text-white" : "text-slate-400 hover:text-white"
                 }`}
               >
@@ -171,64 +208,64 @@ export default function AuthForm() {
             </div>
 
             {/* Form Fields */}
-            <form onSubmit={handleEmailAuth} className="space-y-5" noValidate>
+            <form onSubmit={handleEmailAuth} className="space-y-4" noValidate>
               {!isLogin && (
-                <div className="space-y-2 animate-fade-in-up">
-                  <label className="block text-sm font-semibold text-slate-200">
+                <div className="space-y-1.5 animate-fade-in-up">
+                  <label className="block text-xs font-semibold text-slate-200">
                     पूरा नाम <span className="text-red-400">*</span>
                   </label>
                   <div className="relative group">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
                     <input
                       type="text"
                       placeholder="शुभम कुमार"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                       required
                     />
                   </div>
                 </div>
               )}
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-slate-200">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-slate-200">
                   ईमेल पता <span className="text-red-400">*</span>
                 </label>
                 <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type="email"
                     placeholder="students@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-slate-200">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-slate-200">
                   पासवर्ड <span className="text-red-400">*</span>
                 </label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="कम से कम 6 अक्षर"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-12 py-3.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     required
                     minLength={6}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
                 
@@ -238,7 +275,7 @@ export default function AuthForm() {
                       type="button"
                       onClick={handleForgotPassword}
                       disabled={loading}
-                      className="text-xs text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors disabled:opacity-50"
+                      className="text-[11px] text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors disabled:opacity-50"
                     >
                       पासवर्ड भूल गए?
                     </button>
@@ -248,42 +285,46 @@ export default function AuthForm() {
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-500/10 border border-red-500/30 text-red-200 px-4 py-3 rounded-xl text-sm flex items-start gap-3 animate-fade-in-up">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-400" />
+                <div className="bg-red-500/10 border border-red-500/30 text-red-200 px-3 py-2 rounded-lg text-xs flex items-start gap-2 animate-fade-in-up">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
                   <span>{error}</span>
                 </div>
               )}
 
               {/* Success Message */}
               {successMsg && (
-                <div className="bg-green-500/10 border border-green-500/30 text-green-200 px-4 py-3 rounded-xl text-sm flex items-start gap-3 animate-fade-in-up">
-                  <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-green-400" />
+                <div className="bg-green-500/10 border border-green-500/30 text-green-200 px-3 py-2 rounded-lg text-xs flex items-start gap-2 animate-fade-in-up">
+                  <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-green-400" />
                   <span>{successMsg}</span>
                 </div>
               )}
 
-              {/* Submit Button */}
+              {/* 🔥 MAGNETIC RAINBOW SUBMIT BUTTON */}
               <button
+                ref={submitBtnRef}
                 type="submit"
                 disabled={loading}
-                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 text-base"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className="w-full mt-5 rainbow-shimmer-btn text-white font-bold py-3 rounded-xl shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                style={{ transform: 'translate(0px, 0px) scale(1)', transition: 'transform 0.2s ease-out, box-shadow 0.2s ease-out' }}
               >
                 {loading ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     प्रोसेसिंग...
                   </>
                 ) : (
                   <>
                     {isLogin ? "डैशबोर्ड में प्रवेश करें" : "मुफ्त अकाउंट बनाएं"}
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
             </form>
 
             {/* Footer Links */}
-            <p className="text-center text-xs text-slate-400 mt-8 leading-relaxed">
+            <p className="text-center text-[11px] text-slate-400 mt-6 leading-relaxed">
               जारी रखकर, आप हमारी{" "}
               <a href="/terms" className="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors">शर्तों</a>
               {" और "}
