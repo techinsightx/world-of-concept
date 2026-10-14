@@ -14,7 +14,7 @@ import {
   Calendar, MessageCircle, MapPin
 } from "lucide-react";
 
-// 🔥 Optimized Cinematic Background Component (Mobile Friendly)
+// 🔥 Optimized Cinematic Background Component (Large Display Friendly)
 const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
@@ -22,7 +22,7 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 6000);
+    }, 8000); // Slower transition for large screens
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -35,7 +35,7 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
           alt={`Cinematic BG ${i}`} 
           loading={i === 0 ? "eager" : "lazy"}
           decoding="async"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms] ease-in-out ${
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
             i === index ? 'opacity-100' : 'opacity-0'
           } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
         />
@@ -293,26 +293,65 @@ export default function DashboardPage() {
       <AdPopup />
 
       <style jsx global>{`
-        /* 🔥 WORLD-CLASS MOBILE GLITCH FIX: Force GPU Acceleration */
+        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS (Slower & Smoother) */
+        @keyframes ken-burns-zoom-in {
+          0% { transform: translate3d(0, 0, 0) scale(1.0); }
+          100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
+        }
+        @keyframes ken-burns-zoom-out {
+          0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
+          100% { transform: translate3d(0, 0, 0) scale(1.0); }
+        }
+        
+        .animate-ken-burns-in {
+          animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        .animate-ken-burns-out {
+          animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        
+        @media (max-width: 768px) {
+          .animate-ken-burns-in { animation-duration: 40s; }
+          .animate-ken-burns-out { animation-duration: 40s; }
+        }
+        
+        /* 🔥 GPU-ACCELERATED MARQUEE (ZERO GLITCH) */
         @keyframes marquee { 
           0% { transform: translate3d(0, 0, 0); } 
-          100% { transform: translate3d(-33.333333%, 0, 0); } 
+          100% { transform: translate3d(-50%, 0, 0); } 
         }
         @keyframes marquee-reverse { 
-          0% { transform: translate3d(-33.333333%, 0, 0); } 
+          0% { transform: translate3d(-50%, 0, 0); } 
           100% { transform: translate3d(0, 0, 0); } 
         }
+        
+        .animate-marquee { 
+          animation: marquee 60s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee-reverse { 
+          animation: marquee-reverse 60s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee:hover, .animate-marquee-reverse:hover { 
+          animation-play-state: paused; 
+        }
+        
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
         
         @keyframes shimmer {
           0% { background-position: -1000px 0; }
           100% { background-position: 1000px 0; }
         }
-        
         @keyframes shimmer-reverse {
           0% { background-position: 1000px 0; }
           100% { background-position: -1000px 0; }
         }
-
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-15px) rotate(5deg); }
@@ -320,7 +359,6 @@ export default function DashboardPage() {
         .animate-float {
           animation: float 4s ease-in-out infinite;
         }
-
         @keyframes shimmer-text {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -333,7 +371,6 @@ export default function DashboardPage() {
           -webkit-text-fill-color: transparent;
           animation: shimmer-text 3s linear infinite;
         }
-
         @keyframes shimmer-orange {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -346,7 +383,6 @@ export default function DashboardPage() {
           -webkit-text-fill-color: transparent;
           animation: shimmer-orange 3s linear infinite;
         }
-        
         @keyframes shimmer-heading {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -360,71 +396,15 @@ export default function DashboardPage() {
           animation: shimmer-heading 4s linear infinite;
         }
         
-        .animate-marquee { 
-          animation: marquee 50s linear infinite; 
-          will-change: transform; 
-          touch-action: pan-y; 
-        }
-        .animate-marquee-reverse { 
-          animation: marquee-reverse 50s linear infinite; 
-          will-change: transform; 
-          touch-action: pan-y; 
-        }
-        .animate-marquee:hover, .animate-marquee-reverse:hover { 
-          animation-play-state: paused; 
-        }
-        
-        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
-        
         .shimmer-effect {
           background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
           background-size: 1000px 100%;
           animation: shimmer 2s infinite linear;
         }
-        
         .shimmer-effect-reverse {
           background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
           background-size: 1000px 100%;
           animation: shimmer-reverse 2.5s infinite linear;
-        }
-
-        /* 🔥 MOBILE-OPTIMIZED DEEP ALTERNATING KEN BURNS EFFECT */
-        @keyframes ken-burns-zoom-in-mobile {
-          0% { transform: scale(1.0) translate(0, 0); }
-          100% { transform: scale(1.05) translate(-1%, -1%); }
-        }
-        @keyframes ken-burns-zoom-out-mobile {
-          0% { transform: scale(1.05) translate(1%, 1%); }
-          100% { transform: scale(1.0) translate(0, 0); }
-        }
-        @keyframes ken-burns-zoom-in-desktop {
-          0% { transform: scale(1.0) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-3%, -3%); }
-        }
-        @keyframes ken-burns-zoom-out-desktop {
-          0% { transform: scale(1.15) translate(3%, 3%); }
-          100% { transform: scale(1.0) translate(0, 0); }
-        }
-        
-        .animate-ken-burns-in {
-          animation: ken-burns-zoom-in-mobile 30s ease-in-out infinite alternate;
-          will-change: transform;
-        }
-        .animate-ken-burns-out {
-          animation: ken-burns-zoom-out-mobile 30s ease-in-out infinite alternate;
-          will-change: transform;
-        }
-        
-        @media (min-width: 768px) {
-          .animate-ken-burns-in {
-            animation-name: ken-burns-zoom-in-desktop;
-            animation-duration: 20s;
-          }
-          .animate-ken-burns-out {
-            animation-name: ken-burns-zoom-out-desktop;
-            animation-duration: 20s;
-          }
         }
 
         @keyframes gradient-pan {
@@ -439,8 +419,8 @@ export default function DashboardPage() {
         }
       `}</style>
 
-      {/* 🔥 DARK HEADER */}
-      <header className="bg-slate-950/80 sm:backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+      {/* 🔥 DARK HEADER - Optimized for large displays (removed heavy blur) */}
+      <header className="bg-slate-950/90 border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <div className="flex items-center gap-3">
@@ -480,11 +460,11 @@ export default function DashboardPage() {
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
           <CinematicBackground images={welcomeBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/70 via-indigo-950/70 to-purple-950/70" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-purple-950/80" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
           
           <div className="relative z-10 p-6 sm:p-10 text-white">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 sm:backdrop-blur-md rounded-full text-sm font-semibold mb-4 border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full text-sm font-semibold mb-4 border border-white/20">
               <Sparkles className="w-4 h-4" />
               <span>छात्र डैशबोर्ड</span>
             </div>
@@ -502,7 +482,7 @@ export default function DashboardPage() {
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
             <CinematicBackground images={liveClassBgImages} zoomType="out" />
             <div className="absolute inset-0 z-0 animate-living-gradient" />
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/75 via-red-900/70 to-orange-900/65" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75" />
             <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40" />
             <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
 
@@ -556,11 +536,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) - FIXED TO MATCH GALLERY/COURSES RAIL */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
           <CinematicBackground images={videosBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/90" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
           
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
@@ -594,7 +574,7 @@ export default function DashboardPage() {
         <div className="mb-12 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.3s" }}>
           <CinematicBackground images={statsBgImages} zoomType="out" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/90" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
           
           <div className="relative z-10 p-6 sm:p-8">
             <h2 className="text-2xl font-extrabold text-white mb-6 animate-shimmer-heading px-2">आपकी प्रगति</h2>
@@ -606,7 +586,7 @@ export default function DashboardPage() {
               ].map((stat, i) => (
                 <div 
                   key={i} 
-                  className="bg-slate-800/60 sm:backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
+                  className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
                   style={{ animationDelay: stat.delay }}
                 >
                   <div className="flex items-center gap-4">
@@ -628,7 +608,7 @@ export default function DashboardPage() {
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <CinematicBackground images={coursesBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
           
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
@@ -645,12 +625,12 @@ export default function DashboardPage() {
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
                 {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-slate-800/60 sm:backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                    <div className="bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                       <div className="relative h-40 sm:h-48 overflow-hidden">
                         <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                         <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
-                          <span className="bg-blue-600/90 sm:backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
+                          <span className="bg-blue-600/90 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
                             {course.badge}
                           </span>
                         </div>
@@ -682,7 +662,7 @@ export default function DashboardPage() {
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <CinematicBackground images={gallerySectionBgImages} zoomType="out" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
@@ -732,7 +712,7 @@ export default function DashboardPage() {
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
           <CinematicBackground images={updatesBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
@@ -743,13 +723,13 @@ export default function DashboardPage() {
             </div>
             
             {updates.length === 0 ? (
-              <div className="bg-slate-800/50 sm:backdrop-blur-md rounded-2xl p-8 text-center border border-slate-700/50">
+              <div className="bg-slate-800/60 rounded-2xl p-8 text-center border border-slate-700/50">
                 <p className="text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="group bg-slate-800/60 sm:backdrop-blur-md rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
+                  <div key={update.id} className="group bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
                     {update.imageUrl && (
                       <div className="relative h-48 overflow-hidden">
                         <Image 
@@ -760,7 +740,7 @@ export default function DashboardPage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                         <div className="absolute top-3 left-3">
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold text-white sm:backdrop-blur-md ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${
                             update.type === "announcement" ? "bg-blue-500/80" :
                             update.type === "motivation" ? "bg-purple-500/80" :
                             "bg-green-500/80"
@@ -801,32 +781,27 @@ export default function DashboardPage() {
               position: 'absolute',
               top: 0,
               left: 0,
-              filter: 'invert(92%) hue-rotate(180deg) brightness(0.95) contrast(1.1) saturate(0.4)',
-              opacity: 0.5
+              filter: 'invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.3) saturate(0.6)',
+              opacity: 0.6
             }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             sandbox="allow-scripts allow-same-origin allow-popups"
-            title="World of Concept Location - Alamnagar, Bihar"
+            title="World of Concept Location"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/70 to-slate-950/85" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/85" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
-            <a 
-              href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 sm:backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden"
-            >
+            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
               </span>
-              <span className="text-sm font-extrabold tracking-wide animate-shimmer-orange">
+              <span className="text-sm font-extrabold tracking-wide animate-shimmer-text text-white">
                 आलमनगर, बिहार
               </span>
               <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
@@ -841,22 +816,12 @@ export default function DashboardPage() {
                 </div>
                 <span className="font-extrabold text-lg sm:text-xl tracking-tight">World of Concept</span>
               </div>
-              <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">
-                बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
-              </p>
+              <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="YouTube">
-                  <YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
-                <a href="https://instagram.com/join_world_of_concept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="Instagram">
-                  <InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
-                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="Facebook">
-                  <FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
-                <a href="https://t.me/JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110" aria-label="Telegram">
-                  <TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-                </a>
+                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <a href="https://instagram.com/join_world_of_concept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <a href="https://t.me/JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
               </div>
             </div>
 
