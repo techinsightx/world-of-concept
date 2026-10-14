@@ -14,6 +14,39 @@ import {
   Calendar, MessageCircle, MapPin
 } from "lucide-react";
 
+// 🔥 Magnetic Button Component for World-Class Interaction
+const MagneticButton = ({ children, className, onClick, href, ...props }: any) => {
+  const ref = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    (ref.current as HTMLElement).style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.03)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!ref.current) return;
+    (ref.current as HTMLElement).style.transform = `translate(0px, 0px) scale(1)`;
+  };
+
+  const baseClass = "transition-transform duration-200 ease-out relative overflow-hidden group";
+  
+  if (href) {
+    return (
+      <Link href={href} className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} {...props}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <button className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
+};
+
 // 🔥 Optimized Cinematic Background Component (Large Display Friendly)
 const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
@@ -22,7 +55,7 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 8000); // Slower transition for large screens
+    }, 8000);
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -277,12 +310,12 @@ export default function DashboardPage() {
             <span className="text-4xl">⚠️</span>
           </div>
           <p className="text-slate-300 text-lg font-medium">छात्र डेटा लोड करने में असमर्थ</p>
-          <button 
+          <MagneticButton 
             onClick={() => window.location.replace("/")} 
-            className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 hover:scale-105 active:scale-95"
+            className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
           >
             होम पर जाएं
-          </button>
+          </MagneticButton>
         </div>
       </div>
     );
@@ -293,7 +326,40 @@ export default function DashboardPage() {
       <AdPopup />
 
       <style jsx global>{`
-        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS (Slower & Smoother) */
+        /* 🔥 RAINBOW SHIMMER ANIMATION */
+        @keyframes rainbow-shimmer {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        .rainbow-shimmer-bg {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+        .rainbow-shimmer-bg:hover {
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+        }
+        .rainbow-shimmer-bg::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transform: translateX(-100%);
+          transition: transform 0.7s;
+        }
+        .rainbow-shimmer-bg:hover::after {
+          transform: translateX(100%);
+        }
+        .rainbow-shimmer-text {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+
+        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS */
         @keyframes ken-burns-zoom-in {
           0% { transform: translate3d(0, 0, 0) scale(1.0); }
           100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
@@ -302,7 +368,6 @@ export default function DashboardPage() {
           0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
           100% { transform: translate3d(0, 0, 0) scale(1.0); }
         }
-        
         .animate-ken-burns-in {
           animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
           will-change: transform;
@@ -311,13 +376,12 @@ export default function DashboardPage() {
           animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
           will-change: transform;
         }
-        
         @media (max-width: 768px) {
           .animate-ken-burns-in { animation-duration: 40s; }
           .animate-ken-burns-out { animation-duration: 40s; }
         }
         
-        /* 🔥 GPU-ACCELERATED MARQUEE (ZERO GLITCH) */
+        /* 🔥 GPU-ACCELERATED MARQUEE */
         @keyframes marquee { 
           0% { transform: translate3d(0, 0, 0); } 
           100% { transform: translate3d(-50%, 0, 0); } 
@@ -326,7 +390,6 @@ export default function DashboardPage() {
           0% { transform: translate3d(-50%, 0, 0); } 
           100% { transform: translate3d(0, 0, 0); } 
         }
-        
         .animate-marquee { 
           animation: marquee 60s linear infinite; 
           will-change: transform; 
@@ -383,19 +446,6 @@ export default function DashboardPage() {
           -webkit-text-fill-color: transparent;
           animation: shimmer-orange 3s linear infinite;
         }
-        @keyframes shimmer-heading {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .animate-shimmer-heading {
-          background: linear-gradient(90deg, #ffffff 0%, #60a5fa 25%, #ffffff 50%, #818cf8 75%, #ffffff 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer-heading 4s linear infinite;
-        }
-        
         .shimmer-effect {
           background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
           background-size: 1000px 100%;
@@ -406,7 +456,6 @@ export default function DashboardPage() {
           background-size: 1000px 100%;
           animation: shimmer-reverse 2.5s infinite linear;
         }
-
         @keyframes gradient-pan {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -419,7 +468,7 @@ export default function DashboardPage() {
         }
       `}</style>
 
-      {/* 🔥 DARK HEADER - Optimized for large displays (removed heavy blur) */}
+      {/* 🔥 DARK HEADER */}
       <header className="bg-slate-950/90 border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
@@ -446,9 +495,12 @@ export default function DashboardPage() {
                   {student.fullName.charAt(0).toUpperCase()}
                 </div>
               </div>
-              <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-300 border border-red-500/30 hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20">
+              <MagneticButton 
+                onClick={handleLogout} 
+                className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-300 border border-red-500/30 hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20"
+              >
                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
-              </button>
+              </MagneticButton>
             </div>
           </div>
         </div>
@@ -523,15 +575,13 @@ export default function DashboardPage() {
                   दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।
                 </p>
               </div>
-              <a 
+              <MagneticButton 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-white/50 hover:border-orange-300"
+                className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-white/50 hover:border-orange-300"
               >
                 <PlayCircle className="w-5 h-5" />
                 अभी जुड़ें
-              </a>
+              </MagneticButton>
             </div>
           </div>
         </div>
@@ -549,15 +599,18 @@ export default function DashboardPage() {
                   <YoutubeIcon className="w-7 h-7" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-extrabold flex items-center gap-2 animate-shimmer-heading">
+                  <h2 className="text-2xl font-extrabold flex items-center gap-2 rainbow-shimmer-text">
                     RK Sir के लेटेस्ट वीडियो
                   </h2>
                   <p className="text-sm text-slate-400 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
                 </div>
               </div>
-              <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-semibold text-sm transition-colors group">
+              <MagneticButton 
+                href="https://www.youtube.com/@JoinWorldofConcept" 
+                className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-semibold text-sm transition-colors group"
+              >
                 चैनल देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </MagneticButton>
             </div>
             
             <div className="relative w-full overflow-hidden py-4">
@@ -577,7 +630,7 @@ export default function DashboardPage() {
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
           
           <div className="relative z-10 p-6 sm:p-8">
-            <h2 className="text-2xl font-extrabold text-white mb-6 animate-shimmer-heading px-2">आपकी प्रगति</h2>
+            <h2 className="text-2xl font-extrabold text-white mb-6 rainbow-shimmer-text px-2">आपकी प्रगति</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               {[
                 { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-500/10 text-blue-400 border-blue-500/20", delay: "0.3s" },
@@ -613,12 +666,15 @@ export default function DashboardPage() {
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
               <div>
-                <h2 className="text-2xl font-extrabold text-white animate-shimmer-heading">उपलब्ध कोर्सेस</h2>
+                <h2 className="text-2xl font-extrabold text-white rainbow-shimmer-text">उपलब्ध कोर्सेस</h2>
                 <p className="text-slate-400 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
               </div>
-              <Link href="/courses" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group">
+              <MagneticButton 
+                href="/courses" 
+                className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group"
+              >
                 सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </MagneticButton>
             </div>
             
             <div className="relative w-full overflow-hidden py-4">
@@ -642,12 +698,14 @@ export default function DashboardPage() {
                         <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
                         <div className="flex items-center justify-between mt-auto">
                           <span className="text-lg sm:text-xl font-extrabold text-white">{course.price}</span>
-                          <Link 
+                          <MagneticButton 
                             href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
-                            className="block w-full text-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap"
+                            className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xs sm:text-sm whitespace-nowrap"
                           >
-                            नामांकन करें
-                          </Link>
+                            <span className="relative z-10 flex items-center justify-center gap-1">
+                              नामांकन करें <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                            </span>
+                          </MagneticButton>
                         </div>
                       </div>
                     </div>
@@ -666,7 +724,7 @@ export default function DashboardPage() {
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 animate-shimmer-heading">World of Concept में जीवन</h2>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 rainbow-shimmer-text">World of Concept में जीवन</h2>
               <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
@@ -716,7 +774,7 @@ export default function DashboardPage() {
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
-              <h2 className="text-2xl font-extrabold text-white flex items-center gap-2 animate-shimmer-heading">
+              <h2 className="text-2xl font-extrabold text-white flex items-center gap-2 rainbow-shimmer-text">
                 <MessageCircle className="w-6 h-6 text-indigo-400" />
                 RK Sir के अपडेट्स
               </h2>
@@ -795,7 +853,10 @@ export default function DashboardPage() {
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
-            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
+            <MagneticButton 
+              href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
+              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -805,7 +866,7 @@ export default function DashboardPage() {
                 आलमनगर, बिहार
               </span>
               <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
-            </a>
+            </MagneticButton>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
@@ -818,10 +879,10 @@ export default function DashboardPage() {
               </div>
               <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                <a href="https://instagram.com/join_world_of_concept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                <a href="https://t.me/JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
               </div>
             </div>
 
@@ -856,13 +917,17 @@ export default function DashboardPage() {
 
           <div className="pt-6 sm:pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
-            <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
+            <MagneticButton 
+              href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
+              className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" 
+              title="Designed and Developed by Mukesh Kumar Malakar"
+            >
               <span>निर्मित</span>
               <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
               <span>द्वारा <span className="font-bold animate-shimmer-text">Mukesh Kumar Malakar</span></span>
-            </a>
+            </MagneticButton>
           </div>
         </div>
       </footer>
