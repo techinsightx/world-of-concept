@@ -14,7 +14,7 @@ import {
   Calendar, MessageCircle, MapPin
 } from "lucide-react";
 
-// 🔥 Reusable Cinematic Background Component (Changes images every 6s with Ken Burns)
+// 🔥 Reusable Cinematic Background Component
 const CinematicBackground = ({ images }: { images: string[] }) => {
   const [index, setIndex] = useState(0);
 
@@ -22,7 +22,7 @@ const CinematicBackground = ({ images }: { images: string[] }) => {
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 6000); // Change every 6 seconds
+    }, 6000);
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -168,7 +168,6 @@ export default function DashboardPage() {
   const [authChecked, setAuthChecked] = useState(false);
   const [updates, setUpdates] = useState<UpdateData[]>([]);
 
-  // 🔥 Dedicated Image Arrays for Every Section's Cinematic Background
   const welcomeBgImages = ["/gallery2.jpg", "/gallery4.jpg", "/gallery6.jpg"];
   const liveClassBgImages = ["/gallery4.jpg", "/gallery2.jpg", "/gallery5.jpg"];
   const coursesBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
@@ -294,19 +293,51 @@ export default function DashboardPage() {
       <AdPopup />
 
       <style jsx global>{`
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+        /* 🔥 BUTTERY SMOOTH MARQUEE (Zero Jhatka/Jump) */
+        @keyframes marquee { 
+          0% { transform: translateX(0); } 
+          100% { transform: translateX(-33.333333%); } 
+        }
+        @keyframes marquee-reverse { 
+          0% { transform: translateX(-33.333333%); } 
+          100% { transform: translateX(0); } 
+        }
+        .animate-marquee { 
+          animation: marquee 50s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee-reverse { 
+          animation: marquee-reverse 50s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee:hover, .animate-marquee-reverse:hover { 
+          animation-play-state: paused; 
+        }
         
+        /* 🔥 SHIMMERING HEADLINES */
+        @keyframes shimmer-heading {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-shimmer-heading {
+          background: linear-gradient(90deg, #ffffff 0%, #60a5fa 25%, #ffffff 50%, #818cf8 75%, #ffffff 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer-heading 4s linear infinite;
+        }
+
         @keyframes shimmer {
           0% { background-position: -1000px 0; }
           100% { background-position: 1000px 0; }
         }
-        
         @keyframes shimmer-reverse {
           0% { background-position: 1000px 0; }
           100% { background-position: -1000px 0; }
         }
-
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-15px) rotate(5deg); }
@@ -314,7 +345,6 @@ export default function DashboardPage() {
         .animate-float {
           animation: float 4s ease-in-out infinite;
         }
-
         @keyframes shimmer-text {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -327,7 +357,6 @@ export default function DashboardPage() {
           -webkit-text-fill-color: transparent;
           animation: shimmer-text 3s linear infinite;
         }
-
         @keyframes shimmer-orange {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -340,46 +369,19 @@ export default function DashboardPage() {
           -webkit-text-fill-color: transparent;
           animation: shimmer-orange 3s linear infinite;
         }
-        
-        .animate-marquee { 
-          animation: marquee 45s linear infinite; 
-          will-change: transform; 
-          touch-action: pan-y; 
-        }
-        .animate-marquee-reverse { 
-          animation: marquee-reverse 45s linear infinite; 
-          will-change: transform; 
-          touch-action: pan-y; 
-        }
-        .animate-marquee:hover, .animate-marquee-reverse:hover { 
-          animation-play-state: paused; 
-        }
-        
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
         
         .shimmer-effect {
-          background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.4) 50%,
-            rgba(255, 255, 255, 0) 100%
-          );
+          background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
           background-size: 1000px 100%;
           animation: shimmer 2s infinite linear;
         }
-        
         .shimmer-effect-reverse {
-          background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.5) 50%,
-            rgba(255, 255, 255, 0) 100%
-          );
+          background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
           background-size: 1000px 100%;
           animation: shimmer-reverse 2.5s infinite linear;
         }
-
         @keyframes ken-burns {
           0% { transform: scale(1) translate(0, 0); }
           100% { transform: scale(1.15) translate(-2%, -2%); }
@@ -387,7 +389,6 @@ export default function DashboardPage() {
         .animate-ken-burns {
           animation: ken-burns 8s ease-out forwards;
         }
-
         @keyframes gradient-pan {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -437,7 +438,7 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. WELCOME CARD - DYNAMIC CINEMATIC BACKGROUND */}
+        {/* 🔥 1. WELCOME CARD */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
           <CinematicBackground images={welcomeBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
@@ -458,7 +459,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER - DYNAMIC CINEMATIC BACKGROUND */}
+        {/* 🔥 2. LIVE CLASS BANNER */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
             <CinematicBackground images={liveClassBgImages} />
@@ -477,7 +478,6 @@ export default function DashboardPage() {
               <div className="absolute bottom-12 left-1/4 text-red-300/30 animate-float" style={{ animationDelay: '2s' }}>
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               </div>
-              
               <div className="absolute top-1/2 left-8 text-white/20 animate-float" style={{ animationDelay: '0.5s' }}>
                 <BookOpen className="w-12 h-12" />
               </div>
@@ -494,11 +494,9 @@ export default function DashboardPage() {
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-ping"></span>
                 LIVE NOW
               </div>
-              
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex-shrink-0 shadow-2xl shadow-black/40">
                 <span className="text-red-700">▶️</span>
               </div>
-              
               <div className="flex-1">
                 <h3 className="text-lg sm:text-2xl font-extrabold text-white mb-2 w-full leading-tight drop-shadow-lg">
                   RK Sir के साथ दैनिक लाइव क्लास
@@ -507,7 +505,6 @@ export default function DashboardPage() {
                   दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।
                 </p>
               </div>
-              
               <a 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
                 target="_blank" 
@@ -521,7 +518,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (Buttery Smooth) */}
         <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="flex items-center justify-between mb-6 px-2">
             <div className="flex items-center gap-3">
@@ -529,7 +526,8 @@ export default function DashboardPage() {
                 <YoutubeIcon className="w-7 h-7" />
               </div>
               <div>
-                <h2 className="text-2xl font-extrabold text-white flex items-center gap-2">
+                {/* 🔥 SHIMMERING HEADLINE */}
+                <h2 className="text-2xl font-extrabold flex items-center gap-2 animate-shimmer-heading">
                   RK Sir के लेटेस्ट वीडियो
                 </h2>
                 <p className="text-sm text-slate-400 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
@@ -574,7 +572,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* 🔥 4. AVAILABLE COURSES - DYNAMIC CINEMATIC BACKGROUND */}
+        {/* 🔥 4. AVAILABLE COURSES (Buttery Smooth) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <CinematicBackground images={coursesBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
@@ -583,7 +581,8 @@ export default function DashboardPage() {
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
               <div>
-                <h2 className="text-2xl font-extrabold text-white">उपलब्ध कोर्सेस</h2>
+                {/* 🔥 SHIMMERING HEADLINE */}
+                <h2 className="text-2xl font-extrabold text-white animate-shimmer-heading">उपलब्ध कोर्सेस</h2>
                 <p className="text-slate-400 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
               </div>
               <Link href="/courses" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group">
@@ -612,8 +611,6 @@ export default function DashboardPage() {
                         <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
                         <div className="flex items-center justify-between mt-auto">
                           <span className="text-lg sm:text-xl font-extrabold text-white">{course.price}</span>
-                          
-                          {/* 🔥 PAYMENT INTEGRATION LINK */}
                           <Link 
                             href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
                             className="block w-full text-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap"
@@ -630,7 +627,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. CINEMATIC GALLERY - DYNAMIC CINEMATIC BACKGROUND */}
+        {/* 🔥 5. CINEMATIC GALLERY (Buttery Smooth) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <CinematicBackground images={gallerySectionBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
@@ -638,7 +635,8 @@ export default function DashboardPage() {
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">World of Concept में जीवन</h2>
+              {/* 🔥 SHIMMERING HEADLINE */}
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 animate-shimmer-heading">World of Concept में जीवन</h2>
               <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
@@ -680,7 +678,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES - DYNAMIC CINEMATIC BACKGROUND */}
+        {/* 🔥 6. RK SIR UPDATES */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
           <CinematicBackground images={updatesBgImages} />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
@@ -688,7 +686,8 @@ export default function DashboardPage() {
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
-              <h2 className="text-2xl font-extrabold text-white flex items-center gap-2">
+              {/* 🔥 SHIMMERING HEADLINE */}
+              <h2 className="text-2xl font-extrabold text-white flex items-center gap-2 animate-shimmer-heading">
                 <MessageCircle className="w-6 h-6 text-indigo-400" />
                 RK Sir के अपडेट्स
               </h2>
@@ -766,7 +765,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
-          
           <div className="mb-8 flex items-center justify-center">
             <a 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
@@ -775,16 +773,13 @@ export default function DashboardPage() {
               className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
               </span>
-              
               <span className="text-sm font-extrabold tracking-wide animate-shimmer-orange">
                 आलमनगर, बिहार
               </span>
-              
               <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
             </a>
           </div>
