@@ -27,7 +27,7 @@ interface CourseItem {
   desc: string;
 }
 
-// 🔥 Reusable Cinematic Background Component with Alternating Zoom
+// 🔥 Optimized Cinematic Background Component (Mobile Friendly)
 const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
@@ -35,25 +35,23 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 6000); // Change every 6 seconds
+    }, 6000);
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
       {images.map((src, i) => (
-        <div
+        <img 
           key={src}
-          className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${
+          src={src} 
+          alt={`Cinematic BG ${i}`} 
+          loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms] ease-in-out ${
             i === index ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img 
-            src={src} 
-            alt={`Cinematic BG ${i}`} 
-            className={`w-full h-full object-cover ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
-          />
-        </div>
+          } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
+        />
       ))}
     </div>
   );
@@ -102,7 +100,6 @@ export default function Home() {
   const fullText = "World of Concept";
   const typingRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 🔥 Dedicated Image Arrays for Every Section's Cinematic Background
   const heroBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
   const whyChooseBgImages = ["/gallery2.jpg", "/gallery4.jpg", "/gallery6.jpg"];
   const scrollingBgImages = ["/gallery4.jpg", "/gallery7.jpg", "/gallery9.jpg"];
@@ -206,30 +203,69 @@ export default function Home() {
             animation: tricolor-shimmer-reverse 4s linear infinite;
           }
 
-          /* 🔥 DEEP ALTERNATING KEN BURNS EFFECT */
-          @keyframes ken-burns-zoom-in {
+          /* 🔥 MOBILE-OPTIMIZED DEEP ALTERNATING KEN BURNS EFFECT */
+          @keyframes ken-burns-zoom-in-mobile {
             0% { transform: scale(1.0) translate(0, 0); }
-            100% { transform: scale(1.25) translate(-4%, -4%); }
+            100% { transform: scale(1.05) translate(-1%, -1%); }
           }
-          @keyframes ken-burns-zoom-out {
-            0% { transform: scale(1.25) translate(4%, 4%); }
+          @keyframes ken-burns-zoom-out-mobile {
+            0% { transform: scale(1.05) translate(1%, 1%); }
             100% { transform: scale(1.0) translate(0, 0); }
           }
-          .animate-ken-burns-in {
-            animation: ken-burns-zoom-in 15s ease-in-out infinite alternate;
+          @keyframes ken-burns-zoom-in-desktop {
+            0% { transform: scale(1.0) translate(0, 0); }
+            100% { transform: scale(1.15) translate(-3%, -3%); }
           }
-          .animate-ken-burns-out {
-            animation: ken-burns-zoom-out 15s ease-in-out infinite alternate;
+          @keyframes ken-burns-zoom-out-desktop {
+            0% { transform: scale(1.15) translate(3%, 3%); }
+            100% { transform: scale(1.0) translate(0, 0); }
           }
           
-          @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-          @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+          .animate-ken-burns-in {
+            animation: ken-burns-zoom-in-mobile 30s ease-in-out infinite alternate;
+            will-change: transform;
+          }
+          .animate-ken-burns-out {
+            animation: ken-burns-zoom-out-mobile 30s ease-in-out infinite alternate;
+            will-change: transform;
+          }
+          
+          @media (min-width: 768px) {
+            .animate-ken-burns-in {
+              animation-name: ken-burns-zoom-in-desktop;
+              animation-duration: 20s;
+            }
+            .animate-ken-burns-out {
+              animation-name: ken-burns-zoom-out-desktop;
+              animation-duration: 20s;
+            }
+          }
+          
+          /* 🔥 GPU-ACCELERATED MARQUEE (ZERO GLITCH) */
+          @keyframes marquee { 
+            0% { transform: translate3d(0, 0, 0); } 
+            100% { transform: translate3d(-50%, 0, 0); } 
+          }
+          @keyframes marquee-reverse { 
+            0% { transform: translate3d(-50%, 0, 0); } 
+            100% { transform: translate3d(0, 0, 0); } 
+          }
           @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
-          .animate-marquee { animation: marquee 40s linear infinite; will-change: transform; }
-          .animate-marquee-reverse { animation: marquee-reverse 40s linear infinite; will-change: transform; }
+          .animate-marquee { 
+            animation: marquee 40s linear infinite; 
+            will-change: transform; 
+            touch-action: pan-y; 
+          }
+          .animate-marquee-reverse { 
+            animation: marquee-reverse 40s linear infinite; 
+            will-change: transform; 
+            touch-action: pan-y; 
+          }
           .animate-marquee:hover, .animate-marquee-reverse:hover { animation-play-state: paused; }
+          
           @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
           .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+          
           @keyframes shimmer-text {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
@@ -397,9 +433,9 @@ export default function Home() {
                 </p>
                 <div className="flex gap-3 sm:gap-4 pt-2">
                   <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                  <a href="https://instagram.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                  <a href="https://instagram.com/join_world_of_concept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
                   <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                  <a href="https://t.me/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                  <a href="https://t.me/JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
                 </div>
               </div>
 
@@ -454,13 +490,30 @@ export default function Home() {
   return (
     <main className="min-h-[100dvh] bg-slate-950 text-slate-50 flex flex-col relative overflow-x-hidden w-full">
       <style jsx global>{`
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-        .animate-marquee { animation: marquee 40s linear infinite; will-change: transform; touch-action: pan-y; }
-        .animate-marquee-reverse { animation: marquee-reverse 40s linear infinite; will-change: transform; touch-action: pan-y; }
+        /* 🔥 GPU-ACCELERATED MARQUEE (ZERO GLITCH) */
+        @keyframes marquee { 
+          0% { transform: translate3d(0, 0, 0); } 
+          100% { transform: translate3d(-50%, 0, 0); } 
+        }
+        @keyframes marquee-reverse { 
+          0% { transform: translate3d(-50%, 0, 0); } 
+          100% { transform: translate3d(0, 0, 0); } 
+        }
+        .animate-marquee { 
+          animation: marquee 40s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee-reverse { 
+          animation: marquee-reverse 40s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
         .animate-marquee:hover, .animate-marquee-reverse:hover { animation-play-state: paused; }
+        
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+        
         @keyframes shimmer-text {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
@@ -474,20 +527,42 @@ export default function Home() {
           animation: shimmer-text 3s linear infinite;
         }
         
-        /* 🔥 DEEP ALTERNATING KEN BURNS EFFECT */
-        @keyframes ken-burns-zoom-in {
+        /* 🔥 MOBILE-OPTIMIZED DEEP ALTERNATING KEN BURNS EFFECT */
+        @keyframes ken-burns-zoom-in-mobile {
           0% { transform: scale(1.0) translate(0, 0); }
-          100% { transform: scale(1.25) translate(-4%, -4%); }
+          100% { transform: scale(1.05) translate(-1%, -1%); }
         }
-        @keyframes ken-burns-zoom-out {
-          0% { transform: scale(1.25) translate(4%, 4%); }
+        @keyframes ken-burns-zoom-out-mobile {
+          0% { transform: scale(1.05) translate(1%, 1%); }
           100% { transform: scale(1.0) translate(0, 0); }
         }
+        @keyframes ken-burns-zoom-in-desktop {
+          0% { transform: scale(1.0) translate(0, 0); }
+          100% { transform: scale(1.15) translate(-3%, -3%); }
+        }
+        @keyframes ken-burns-zoom-out-desktop {
+          0% { transform: scale(1.15) translate(3%, 3%); }
+          100% { transform: scale(1.0) translate(0, 0); }
+        }
+        
         .animate-ken-burns-in {
-          animation: ken-burns-zoom-in 15s ease-in-out infinite alternate;
+          animation: ken-burns-zoom-in-mobile 30s ease-in-out infinite alternate;
+          will-change: transform;
         }
         .animate-ken-burns-out {
-          animation: ken-burns-zoom-out 15s ease-in-out infinite alternate;
+          animation: ken-burns-zoom-out-mobile 30s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        
+        @media (min-width: 768px) {
+          .animate-ken-burns-in {
+            animation-name: ken-burns-zoom-in-desktop;
+            animation-duration: 20s;
+          }
+          .animate-ken-burns-out {
+            animation-name: ken-burns-zoom-out-desktop;
+            animation-duration: 20s;
+          }
         }
       `}</style>
 
