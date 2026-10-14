@@ -1,40 +1,71 @@
 /* eslint-disable */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, PlayCircle } from "lucide-react";
 
-// 🔥 Cinematic Background Component
-const CinematicBackground = ({ images }: { images: string[] }) => {
+// 🔥 Magnetic Button Component for World-Class Interaction
+const MagneticButton = ({ children, className, onClick, href, ...props }: any) => {
+  const ref = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    (ref.current as HTMLElement).style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.03)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!ref.current) return;
+    (ref.current as HTMLElement).style.transform = `translate(0px, 0px) scale(1)`;
+  };
+
+  const baseClass = "transition-transform duration-200 ease-out relative overflow-hidden group";
+  
+  if (href) {
+    return (
+      <Link href={href} className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} {...props}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <button className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
+};
+
+// 🔥 Optimized Cinematic Background Component (Large Display Friendly)
+const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
       {images.map((src, i) => (
-        <div
+        <img 
           key={src}
-          className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${
+          src={src} 
+          alt={`Cinematic BG ${i}`} 
+          loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
             i === index ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img 
-            src={src} 
-            alt={`Cinematic BG ${i}`} 
-            className="w-full h-full object-cover animate-ken-burns" 
-          />
-        </div>
+          } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
+        />
       ))}
     </div>
   );
@@ -129,13 +160,61 @@ export default function CoursesPage() {
   return (
     <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative font-sans w-full overflow-x-hidden">
       <style jsx global>{`
-        @keyframes ken-burns {
-          0% { transform: scale(1) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-2%, -2%); }
+        /* 🔥 RAINBOW SHIMMER ANIMATION */
+        @keyframes rainbow-shimmer {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
         }
-        .animate-ken-burns {
-          animation: ken-burns 8s ease-out forwards;
+        .rainbow-shimmer-bg {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          animation: rainbow-shimmer 3s linear infinite;
         }
+        .rainbow-shimmer-bg:hover {
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+        }
+        .rainbow-shimmer-bg::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transform: translateX(-100%);
+          transition: transform 0.7s;
+        }
+        .rainbow-shimmer-bg:hover::after {
+          transform: translateX(100%);
+        }
+        .rainbow-shimmer-text {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+
+        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS */
+        @keyframes ken-burns-zoom-in {
+          0% { transform: translate3d(0, 0, 0) scale(1.0); }
+          100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
+        }
+        @keyframes ken-burns-zoom-out {
+          0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
+          100% { transform: translate3d(0, 0, 0) scale(1.0); }
+        }
+        .animate-ken-burns-in {
+          animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        .animate-ken-burns-out {
+          animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        @media (max-width: 768px) {
+          .animate-ken-burns-in { animation-duration: 40s; }
+          .animate-ken-burns-out { animation-duration: 40s; }
+        }
+
         @keyframes gradient-pan {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -168,13 +247,13 @@ export default function CoursesPage() {
       `}</style>
 
       {/* 🔥 HEADER */}
-      <header className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+      <header className="bg-slate-950/90 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <div className="flex items-center gap-3">
-              <Link href="/dashboard" className="p-2 hover:bg-slate-800 rounded-full transition-colors group">
+              <MagneticButton href="/dashboard" className="p-2 hover:bg-slate-800 rounded-full transition-colors group">
                 <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:-translate-x-1 group-hover:text-white transition-all" />
-              </Link>
+              </MagneticButton>
               <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
                 <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
               </div>
@@ -189,14 +268,14 @@ export default function CoursesPage() {
       {/* 🔥 MAIN CONTENT */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Cinematic Background */}
-        <CinematicBackground images={coursesBgImages} />
+        <CinematicBackground images={coursesBgImages} zoomType="in" />
         <div className="absolute inset-0 z-0 animate-living-gradient pointer-events-none" />
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 pointer-events-none" />
 
         <div className="relative z-10">
           {/* Page Title */}
           <div className="mb-12 animate-fade-in-up">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+            <h1 className="text-4xl sm:text-5xl font-extrabold rainbow-shimmer-text tracking-tight mb-4">
               सभी उपलब्ध कोर्सेस
             </h1>
             <p className="text-slate-400 text-lg max-w-2xl">
@@ -249,12 +328,14 @@ export default function CoursesPage() {
                     
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-700/50">
                       <span className="text-2xl font-extrabold text-white">{course.price}</span>
-                      <Link 
+                      <MagneticButton 
                         href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
-                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2.5 px-5 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-sm whitespace-nowrap"
+                        className="rainbow-shimmer-bg text-white font-bold py-2.5 px-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm whitespace-nowrap"
                       >
-                        नामांकन करें
-                      </Link>
+                        <span className="relative z-10 flex items-center gap-1">
+                          नामांकन करें <ArrowLeft className="w-3 h-3 rotate-180 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                      </MagneticButton>
                     </div>
                   </div>
                 </div>
@@ -264,13 +345,13 @@ export default function CoursesPage() {
 
           {/* Back to Dashboard */}
           <div className="text-center pb-8 animate-fade-in-up">
-            <Link 
+            <MagneticButton 
               href="/dashboard" 
               className="inline-flex items-center gap-2 bg-slate-800/60 hover:bg-slate-700/60 text-white font-bold py-3 px-8 rounded-xl border border-slate-700/50 hover:border-slate-600 transition-all duration-300"
             >
               <ArrowLeft className="w-5 h-5" />
               डैशबोर्ड पर वापस जाएं
-            </Link>
+            </MagneticButton>
           </div>
         </div>
       </main>
