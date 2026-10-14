@@ -14,8 +14,8 @@ import {
   Calendar, MessageCircle, MapPin
 } from "lucide-react";
 
-// 🔥 Reusable Cinematic Background Component
-const CinematicBackground = ({ images }: { images: string[] }) => {
+// 🔥 Reusable Cinematic Background Component with Alternating Zoom
+const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const CinematicBackground = ({ images }: { images: string[] }) => {
           <img 
             src={src} 
             alt={`Cinematic BG ${i}`} 
-            className="w-full h-full object-cover animate-ken-burns" 
+            className={`w-full h-full object-cover ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
           />
         </div>
       ))}
@@ -168,8 +168,11 @@ export default function DashboardPage() {
   const [authChecked, setAuthChecked] = useState(false);
   const [updates, setUpdates] = useState<UpdateData[]>([]);
 
+  // 🔥 Dedicated Image Arrays for Every Section's Cinematic Background
   const welcomeBgImages = ["/gallery2.jpg", "/gallery4.jpg", "/gallery6.jpg"];
   const liveClassBgImages = ["/gallery4.jpg", "/gallery2.jpg", "/gallery5.jpg"];
+  const videosBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"]; // New for Videos
+  const statsBgImages = ["/gallery6.jpg", "/gallery8.jpg", "/gallery10.jpg"]; // New for Stats
   const coursesBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
   const gallerySectionBgImages = ["/gallery3.jpg", "/gallery6.jpg", "/gallery8.jpg"];
   const updatesBgImages = ["/gallery5.jpg", "/gallery7.jpg", "/gallery9.jpg"];
@@ -293,15 +296,66 @@ export default function DashboardPage() {
       <AdPopup />
 
       <style jsx global>{`
-        /* 🔥 BUTTERY SMOOTH MARQUEE (Zero Jhatka/Jump) */
-        @keyframes marquee { 
-          0% { transform: translateX(0); } 
-          100% { transform: translateX(-33.333333%); } 
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333333%); } }
+        @keyframes marquee-reverse { 0% { transform: translateX(-33.333333%); } 100% { transform: translateX(0); } }
+        
+        @keyframes shimmer {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
         }
-        @keyframes marquee-reverse { 
-          0% { transform: translateX(-33.333333%); } 
-          100% { transform: translateX(0); } 
+        
+        @keyframes shimmer-reverse {
+          0% { background-position: 1000px 0; }
+          100% { background-position: -1000px 0; }
         }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer-text {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-shimmer-text {
+          background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer-text 3s linear infinite;
+        }
+
+        @keyframes shimmer-orange {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-shimmer-orange {
+          background: linear-gradient(90deg, #fb923c 0%, #ffffff 50%, #fb923c 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer-orange 3s linear infinite;
+        }
+        
+        @keyframes shimmer-heading {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-shimmer-heading {
+          background: linear-gradient(90deg, #ffffff 0%, #60a5fa 25%, #ffffff 50%, #818cf8 75%, #ffffff 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer-heading 4s linear infinite;
+        }
+        
         .animate-marquee { 
           animation: marquee 50s linear infinite; 
           will-change: transform; 
@@ -316,79 +370,47 @@ export default function DashboardPage() {
           animation-play-state: paused; 
         }
         
-        /* 🔥 SHIMMERING HEADLINES */
-        @keyframes shimmer-heading {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .animate-shimmer-heading {
-          background: linear-gradient(90deg, #ffffff 0%, #60a5fa 25%, #ffffff 50%, #818cf8 75%, #ffffff 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer-heading 4s linear infinite;
-        }
-
-        @keyframes shimmer {
-          0% { background-position: -1000px 0; }
-          100% { background-position: 1000px 0; }
-        }
-        @keyframes shimmer-reverse {
-          0% { background-position: 1000px 0; }
-          100% { background-position: -1000px 0; }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(5deg); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-        @keyframes shimmer-text {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .animate-shimmer-text {
-          background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer-text 3s linear infinite;
-        }
-        @keyframes shimmer-orange {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .animate-shimmer-orange {
-          background: linear-gradient(90deg, #fb923c 0%, #ffffff 50%, #fb923c 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer-orange 3s linear infinite;
-        }
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
         
         .shimmer-effect {
-          background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0) 100%
+          );
           background-size: 1000px 100%;
           animation: shimmer 2s infinite linear;
         }
+        
         .shimmer-effect-reverse {
-          background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.5) 50%,
+            rgba(255, 255, 255, 0) 100%
+          );
           background-size: 1000px 100%;
           animation: shimmer-reverse 2.5s infinite linear;
         }
-        @keyframes ken-burns {
-          0% { transform: scale(1) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-2%, -2%); }
+
+        /* 🔥 DEEP ALTERNATING KEN BURNS EFFECT */
+        @keyframes ken-burns-zoom-in {
+          0% { transform: scale(1.0) translate(0, 0); }
+          100% { transform: scale(1.25) translate(-4%, -4%); }
         }
-        .animate-ken-burns {
-          animation: ken-burns 8s ease-out forwards;
+        @keyframes ken-burns-zoom-out {
+          0% { transform: scale(1.25) translate(4%, 4%); }
+          100% { transform: scale(1.0) translate(0, 0); }
         }
+        .animate-ken-burns-in {
+          animation: ken-burns-zoom-in 15s ease-in-out infinite alternate;
+        }
+        .animate-ken-burns-out {
+          animation: ken-burns-zoom-out 15s ease-in-out infinite alternate;
+        }
+
         @keyframes gradient-pan {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -438,9 +460,9 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. WELCOME CARD */}
+        {/* 🔥 1. WELCOME CARD (ZOOM IN) */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
-          <CinematicBackground images={welcomeBgImages} />
+          <CinematicBackground images={welcomeBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/70 via-indigo-950/70 to-purple-950/70" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
@@ -459,10 +481,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER */}
+        {/* 🔥 2. LIVE CLASS BANNER (ZOOM OUT) */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
-            <CinematicBackground images={liveClassBgImages} />
+            <CinematicBackground images={liveClassBgImages} zoomType="out" />
             <div className="absolute inset-0 z-0 animate-living-gradient" />
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/75 via-red-900/70 to-orange-900/65" />
             <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40" />
@@ -518,70 +540,83 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION (Buttery Smooth) */}
-        <div className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          <div className="flex items-center justify-between mb-6 px-2">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30">
-                <YoutubeIcon className="w-7 h-7" />
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) - NEW CINEMATIC BG */}
+        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
+          <CinematicBackground images={videosBgImages} zoomType="in" />
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/90" />
+          
+          <div className="relative z-10 p-6 sm:p-8">
+            <div className="flex items-center justify-between mb-6 px-2">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30">
+                  <YoutubeIcon className="w-7 h-7" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-extrabold flex items-center gap-2 animate-shimmer-heading">
+                    RK Sir के लेटेस्ट वीडियो
+                  </h2>
+                  <p className="text-sm text-slate-400 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
+                </div>
               </div>
-              <div>
-                {/* 🔥 SHIMMERING HEADLINE */}
-                <h2 className="text-2xl font-extrabold flex items-center gap-2 animate-shimmer-heading">
-                  RK Sir के लेटेस्ट वीडियो
-                </h2>
-                <p className="text-sm text-slate-400 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
+              <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-semibold text-sm transition-colors group">
+                चैनल देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </div>
+            
+            <div className="relative w-full overflow-hidden py-4">
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
+                {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
+                  <YouTubeVideoCard key={`yt-${i}`} video={video} />
+                ))}
               </div>
             </div>
-            <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-semibold text-sm transition-colors group">
-              चैनल देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </a>
           </div>
+        </div>
+
+        {/* 🔥 4. STATS CARDS (ZOOM OUT) - NEW CINEMATIC BG */}
+        <div className="mb-12 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.3s" }}>
+          <CinematicBackground images={statsBgImages} zoomType="out" />
+          <div className="absolute inset-0 z-0 animate-living-gradient" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/80 via-slate-950/85 to-slate-950/90" />
           
-          <div className="relative w-full overflow-hidden py-4">
-            <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
-              {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
-                <YouTubeVideoCard key={`yt-${i}`} video={video} />
+          <div className="relative z-10 p-6 sm:p-8">
+            <h2 className="text-2xl font-extrabold text-white mb-6 animate-shimmer-heading px-2">आपकी प्रगति</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              {[
+                { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-500/10 text-blue-400 border-blue-500/20", delay: "0.3s" },
+                { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-500/10 text-green-400 border-green-500/20", delay: "0.4s" },
+                { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", delay: "0.5s" },
+              ].map((stat, i) => (
+                <div 
+                  key={i} 
+                  className="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
+                  style={{ animationDelay: stat.delay }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 ${stat.color} border rounded-2xl flex items-center justify-center shadow-sm`}>
+                      <stat.icon className="w-6 h-6 sm:w-7 sm:h-7" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-slate-400 font-medium mb-1">{stat.label}</p>
+                      <p className="text-2xl sm:text-3xl font-extrabold text-white">{stat.value}</p>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* 🔥 STATS CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12">
-          {[
-            { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-500/10 text-blue-400 border-blue-500/20", delay: "0.3s" },
-            { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-500/10 text-green-400 border-green-500/20", delay: "0.4s" },
-            { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", delay: "0.5s" },
-          ].map((stat, i) => (
-            <div 
-              key={i} 
-              className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300 animate-fade-in-up" 
-              style={{ animationDelay: stat.delay }}
-            >
-              <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 sm:w-14 sm:h-14 ${stat.color} border rounded-2xl flex items-center justify-center shadow-sm`}>
-                  <stat.icon className="w-6 h-6 sm:w-7 sm:h-7" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400 font-medium mb-1">{stat.label}</p>
-                  <p className="text-2xl sm:text-3xl font-extrabold text-white">{stat.value}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 🔥 4. AVAILABLE COURSES (Buttery Smooth) */}
+        {/* 🔥 5. AVAILABLE COURSES (ZOOM IN) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
-          <CinematicBackground images={coursesBgImages} />
+          <CinematicBackground images={coursesBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
           
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
               <div>
-                {/* 🔥 SHIMMERING HEADLINE */}
                 <h2 className="text-2xl font-extrabold text-white animate-shimmer-heading">उपलब्ध कोर्सेस</h2>
                 <p className="text-slate-400 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
               </div>
@@ -627,15 +662,14 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. CINEMATIC GALLERY (Buttery Smooth) */}
+        {/* 🔥 6. CINEMATIC GALLERY (ZOOM OUT) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
-          <CinematicBackground images={gallerySectionBgImages} />
+          <CinematicBackground images={gallerySectionBgImages} zoomType="out" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
-              {/* 🔥 SHIMMERING HEADLINE */}
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 animate-shimmer-heading">World of Concept में जीवन</h2>
               <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
@@ -678,15 +712,14 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES */}
+        {/* 🔥 7. RK SIR UPDATES (ZOOM IN) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
-          <CinematicBackground images={updatesBgImages} />
+          <CinematicBackground images={updatesBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
-              {/* 🔥 SHIMMERING HEADLINE */}
               <h2 className="text-2xl font-extrabold text-white flex items-center gap-2 animate-shimmer-heading">
                 <MessageCircle className="w-6 h-6 text-indigo-400" />
                 RK Sir के अपडेट्स
