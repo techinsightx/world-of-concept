@@ -14,6 +14,39 @@ import {
   LogOut, Sparkles, Trophy, Clock, ArrowRight, MapPin
 } from "lucide-react";
 
+// 🔥 Magnetic Button Component for World-Class Interaction
+const MagneticButton = ({ children, className, onClick, href, ...props }: any) => {
+  const ref = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    (ref.current as HTMLElement).style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.03)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!ref.current) return;
+    (ref.current as HTMLElement).style.transform = `translate(0px, 0px) scale(1)`;
+  };
+
+  const baseClass = "transition-transform duration-200 ease-out relative overflow-hidden group";
+  
+  if (href) {
+    return (
+      <Link href={href} className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} {...props}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <button className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
+};
+
 interface StudentData {
   fullName: string;
   email: string;
@@ -35,7 +68,7 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 8000); // Slower transition for large screens
+    }, 8000);
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -203,7 +236,40 @@ export default function Home() {
             animation: tricolor-shimmer-reverse 4s linear infinite;
           }
 
-          /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS (Slower & Smoother) */
+          /* 🔥 RAINBOW SHIMMER ANIMATION */
+          @keyframes rainbow-shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+          }
+          .rainbow-shimmer-bg {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+            background-size: 200% auto;
+            animation: rainbow-shimmer 3s linear infinite;
+          }
+          .rainbow-shimmer-bg:hover {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+          }
+          .rainbow-shimmer-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.7s;
+          }
+          .rainbow-shimmer-bg:hover::after {
+            transform: translateX(100%);
+          }
+          .rainbow-shimmer-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow-shimmer 3s linear infinite;
+          }
+
+          /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS */
           @keyframes ken-burns-zoom-in {
             0% { transform: translate3d(0, 0, 0) scale(1.0); }
             100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
@@ -212,7 +278,6 @@ export default function Home() {
             0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
             100% { transform: translate3d(0, 0, 0) scale(1.0); }
           }
-          
           .animate-ken-burns-in {
             animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
             will-change: transform;
@@ -221,13 +286,12 @@ export default function Home() {
             animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
             will-change: transform;
           }
-          
           @media (max-width: 768px) {
             .animate-ken-burns-in { animation-duration: 40s; }
             .animate-ken-burns-out { animation-duration: 40s; }
           }
           
-          /* 🔥 GPU-ACCELERATED MARQUEE (ZERO GLITCH) */
+          /* 🔥 GPU-ACCELERATED MARQUEE */
           @keyframes marquee { 
             0% { transform: translate3d(0, 0, 0); } 
             100% { transform: translate3d(-50%, 0, 0); } 
@@ -270,7 +334,6 @@ export default function Home() {
         {/* 1. HERO SECTION (ZOOM IN) */}
         <section className="relative min-h-[100dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
           <CinematicBackground images={heroBgImages} zoomType="in" />
-          {/* Optimized Overlay: Removed heavy blur, using solid dark overlay for large screens */}
           <div className="absolute inset-0 z-10 bg-slate-950/80" />
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
@@ -313,7 +376,7 @@ export default function Home() {
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">
-              World of Concept <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-green-500">क्यों चुनें?</span>
+              <span className="rainbow-shimmer-text">World of Concept</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-green-500">क्यों चुनें?</span>
             </h2>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-12">बिहार बोर्ड परीक्षाओं में टॉप करने के लिए RK Sir द्वारा तैयार किया गया सब कुछ।</p>
             
@@ -397,7 +460,10 @@ export default function Home() {
 
           <div className="relative z-10 max-w-7xl mx-auto">
             <div className="mb-8 flex items-center justify-center">
-              <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
+              <MagneticButton 
+                href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
+                className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
+              >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -407,7 +473,7 @@ export default function Home() {
                   आलमनगर, बिहार
                 </span>
                 <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
-              </a>
+              </MagneticButton>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
@@ -420,10 +486,10 @@ export default function Home() {
                   बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
                 </p>
                 <div className="flex gap-3 sm:gap-4 pt-2">
-                  <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                  <a href="https://instagram.com/join_world_of_concept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                  <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                  <a href="https://t.me/JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                  <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                  <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                  <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                  <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
                 </div>
               </div>
 
@@ -458,13 +524,17 @@ export default function Home() {
 
             <div className="pt-6 sm:pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
               <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
-              <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
+              <MagneticButton 
+                href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
+                className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" 
+                title="Designed and Developed by Mukesh Kumar Malakar"
+              >
                 <span>निर्मित</span>
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
                 <span>द्वारा <span className="font-bold animate-shimmer-text">Mukesh Kumar Malakar</span></span>
-              </a>
+              </MagneticButton>
             </div>
           </div>
         </footer>
@@ -478,7 +548,40 @@ export default function Home() {
   return (
     <main className="min-h-[100dvh] bg-slate-950 text-slate-50 flex flex-col relative overflow-x-hidden w-full">
       <style jsx global>{`
-        /* 🔥 GPU-ACCELERATED MARQUEE (ZERO GLITCH) */
+        /* 🔥 RAINBOW SHIMMER ANIMATION */
+        @keyframes rainbow-shimmer {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        .rainbow-shimmer-bg {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+        .rainbow-shimmer-bg:hover {
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+        }
+        .rainbow-shimmer-bg::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+          transform: translateX(-100%);
+          transition: transform 0.7s;
+        }
+        .rainbow-shimmer-bg:hover::after {
+          transform: translateX(100%);
+        }
+        .rainbow-shimmer-text {
+          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: rainbow-shimmer 3s linear infinite;
+        }
+
+        /* 🔥 GPU-ACCELERATED MARQUEE */
         @keyframes marquee { 
           0% { transform: translate3d(0, 0, 0); } 
           100% { transform: translate3d(-50%, 0, 0); } 
@@ -524,7 +627,6 @@ export default function Home() {
           0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
           100% { transform: translate3d(0, 0, 0) scale(1.0); }
         }
-        
         .animate-ken-burns-in {
           animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
           will-change: transform;
@@ -533,7 +635,6 @@ export default function Home() {
           animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
           will-change: transform;
         }
-        
         @media (max-width: 768px) {
           .animate-ken-burns-in { animation-duration: 40s; }
           .animate-ken-burns-out { animation-duration: 40s; }
@@ -556,9 +657,12 @@ export default function Home() {
                 <p className="text-sm font-bold text-white">{student?.fullName || "छात्र"}</p>
                 <p className="text-xs text-slate-400">{student?.email || user?.email}</p>
               </div>
-              <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-300 border border-red-500/30 hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20">
+              <MagneticButton 
+                onClick={handleLogout} 
+                className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-300 border border-red-500/30 hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20"
+              >
                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
-              </button>
+              </MagneticButton>
             </div>
           </div>
         </div>
@@ -590,9 +694,12 @@ export default function Home() {
                 <h3 className="text-lg sm:text-2xl font-extrabold text-white mb-2 w-full leading-tight drop-shadow-lg">RK Sir के साथ दैनिक लाइव क्लास</h3>
                 <p className="text-orange-100/95 text-xs sm:text-base w-full max-w-xl font-medium drop-shadow">दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।</p>
               </div>
-              <a href="https://www.youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 hover:scale-105 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-white/50 hover:border-orange-300">
+              <MagneticButton 
+                href="https://www.youtube.com/@JoinWorldofConcept" 
+                className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-white/50 hover:border-orange-300"
+              >
                 <PlayCircle className="w-5 h-5" /> अभी जुड़ें
-              </a>
+              </MagneticButton>
             </div>
           </div>
 
@@ -617,19 +724,6 @@ export default function Home() {
             ))}
           </div>
 
-          {/* MY COURSES */}
-          <div className="w-full">
-            <h2 className="text-lg sm:text-2xl font-extrabold text-white mb-3 sm:mb-6">मेरे कोर्सेस</h2>
-            <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl text-center py-8 sm:py-10 px-3 sm:px-4 w-full hover:shadow-xl hover:border-slate-600 transition-all duration-300">
-              <span className="text-4xl sm:text-5xl mb-3 sm:mb-4 block">📚</span>
-              <h3 className="text-base sm:text-xl font-bold text-white mb-2">अभी तक कोई कोर्स नहीं</h3>
-              <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6 max-w-md mx-auto">बिहार बोर्ड के लिए बनाए गए कोर्स में नामांकन करके अपनी शिक्षा यात्रा शुरू करें।</p>
-              <a href="#available-courses" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-sm mx-auto min-w-[200px]">
-                कोर्सेस देखें
-              </a>
-            </div>
-          </div>
-
           {/* AVAILABLE COURSES RAIL (ZOOM IN) */}
           <div id="available-courses" className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.4s" }}>
             <CinematicBackground images={coursesBgImages} zoomType="in" />
@@ -638,12 +732,15 @@ export default function Home() {
             <div className="relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
                 <div>
-                  <h2 className="text-xl sm:text-3xl font-extrabold text-white mb-2">उपलब्ध कोर्सेस</h2>
+                  <h2 className="text-xl sm:text-3xl font-extrabold rainbow-shimmer-text mb-2">उपलब्ध कोर्सेस</h2>
                   <p className="text-slate-400 text-xs sm:text-base">बिहार बोर्ड परीक्षाओं के लिए RK Sir के साथ पूर्ण तैयारी</p>
                 </div>
-                <Link href="/courses" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group">
+                <MagneticButton 
+                  href="/courses" 
+                  className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group"
+                >
                   सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                </MagneticButton>
               </div>
               
               <div className="relative w-full overflow-hidden py-4">
@@ -677,9 +774,14 @@ export default function Home() {
                             <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
                             <div className="flex items-center justify-between mt-auto">
                               <span className="text-lg sm:text-2xl font-extrabold text-white">{course.price}</span>
-                              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2 px-4 sm:py-2.5 sm:px-5 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap">
-                                अभी नामांकन करें
-                              </button>
+                              <MagneticButton 
+                                href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
+                                className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xs sm:text-sm whitespace-nowrap"
+                              >
+                                <span className="relative z-10 flex items-center justify-center gap-1">
+                                  अभी नामांकन करें <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                </span>
+                              </MagneticButton>
                             </div>
                           </div>
                         </div>
@@ -698,7 +800,7 @@ export default function Home() {
 
             <div className="relative z-10">
               <div className="text-center mb-6 sm:mb-8 px-2 pt-4">
-                <h2 className="text-xl sm:text-3xl font-extrabold text-white mb-2">World of Concept में जीवन</h2>
+                <h2 className="text-xl sm:text-3xl font-extrabold rainbow-shimmer-text mb-2">World of Concept में जीवन</h2>
                 <p className="text-slate-400 text-xs sm:text-base max-w-xl mx-auto">हमारी कक्षाओं, सत्रों और छात्रों की सफलता की झलकियां</p>
               </div>
 
@@ -764,7 +866,10 @@ export default function Home() {
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
-            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
+            <MagneticButton 
+              href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
+              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -774,7 +879,7 @@ export default function Home() {
                 आलमनगर, बिहार
               </span>
               <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
-            </a>
+            </MagneticButton>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
@@ -785,10 +890,10 @@ export default function Home() {
               </div>
               <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <a href="https://youtube.com/@JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                <a href="https://instagram.com/join_world_of_concept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                <a href="https://facebook.com/worldofconcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
-                <a href="https://t.me/JoinWorldofConcept" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></a>
+                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
               </div>
             </div>
 
@@ -823,13 +928,17 @@ export default function Home() {
 
           <div className="pt-6 sm:pt-8 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
-            <a href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" target="_blank" rel="noopener noreferrer author" className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" title="Designed and Developed by Mukesh Kumar Malakar">
+            <MagneticButton 
+              href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
+              className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" 
+              title="Designed and Developed by Mukesh Kumar Malakar"
+            >
               <span>निर्मित</span>
               <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
               <span>द्वारा <span className="font-bold animate-shimmer-text">Mukesh Kumar Malakar</span></span>
-            </a>
+            </MagneticButton>
           </div>
         </div>
       </footer>
