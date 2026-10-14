@@ -88,10 +88,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  // 🔥 FIXED: Next.js expects ONLY the token here, it generates the meta tag automatically
   verification: {
-    google: "google-site-verification=xr-ArXnA04yqFGsCP_jRANW1dxSQsw1TjExCYoCktXI", 
-    // yandex: "your-yandex-verification-code", // Add later if needed
-    // bing: "your-bing-verification-code",     // Add later if needed
+    google: "xr-ArXnA04yqFGsCP_jRANW1dxSQsw1TjExCYoCktXI", 
   },
   category: "education",
   classification: "Educational Platform",
@@ -127,7 +126,6 @@ export const viewport: Viewport = {
 };
 
 // ==================== WORLD-CLASS SCHEMA.ORG (JSON-LD @graph) ====================
-// Combining Organization, Person, WebSite, and FAQ for maximum Rich Snippets in Google
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -138,8 +136,8 @@ const structuredData = {
       "jobTitle": "Founder & Tech Visionary",
       "url": "https://www.google.com/search?q=Mukesh+Kumar+Malakar",
       "sameAs": [
-        "https://www.linkedin.com/in/mukesh-kumar-malakar-one", // Update with actual link
-        "https://github.com/techinsightx" // Update with actual link
+        "https://www.linkedin.com/in/mukesh-kumar-malakar-one",
+        "https://github.com/techinsightx"
       ]
     },
     {
@@ -156,7 +154,7 @@ const structuredData = {
         "streetAddress": "Alamnagar",
         "addressLocality": "Patna",
         "addressRegion": "Bihar",
-        "postalCode": "852219/10",
+        "postalCode": "852219",
         "addressCountry": "IN"
       },
       "contactPoint": {
@@ -226,11 +224,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* 🔥 CRITICAL: Native Hindi Language Declaration (Enables Browser Translation) */}
+        {/* 🔥 CRITICAL: Native Hindi Language Declaration */}
         <meta httpEquiv="Content-Language" content="hi" />
         <meta name="language" content="Hindi" />
 
-        {/* 🔥 Performance Optimizations (Preconnect & DNS Prefetch) */}
+        {/* 🔥 Performance Optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
@@ -246,16 +244,14 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
-
+        
         {/* 🔥 Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.json" />
         
-        {/* 🔥 World-Class Structured Data Injection (@graph) */}
+        {/* 🔥 World-Class Structured Data Injection */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
