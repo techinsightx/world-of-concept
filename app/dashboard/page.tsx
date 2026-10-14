@@ -115,8 +115,9 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
   }, []);
 
   return (
-    <div ref={cardRef} className="relative w-[85vw] max-w-[400px] sm:w-96 flex-shrink-0 group">
-      <div className="bg-slate-800/60 sm:backdrop-blur-md rounded-2xl overflow-hidden shadow-md sm:shadow-lg hover:shadow-2xl border border-slate-700/50 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/50">
+    // 🔥 MATCHED GALLERY RAIL STYLING EXACTLY
+    <div ref={cardRef} className="relative w-[85vw] max-w-[300px] sm:w-80 flex-shrink-0 group">
+      <div className="bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 transition-all duration-500 hover:-translate-y-2">
         <div className="relative aspect-video bg-slate-900">
           {!isIntersecting ? (
             <>
@@ -293,8 +294,15 @@ export default function DashboardPage() {
       <AdPopup />
 
       <style jsx global>{`
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.333333%); } }
-        @keyframes marquee-reverse { 0% { transform: translateX(-33.333333%); } 100% { transform: translateX(0); } }
+        /* 🔥 WORLD-CLASS MOBILE GLITCH FIX: Force GPU Acceleration */
+        @keyframes marquee { 
+          0% { transform: translate3d(0, 0, 0); } 
+          100% { transform: translate3d(-33.333333%, 0, 0); } 
+        }
+        @keyframes marquee-reverse { 
+          0% { transform: translate3d(-33.333333%, 0, 0); } 
+          100% { transform: translate3d(0, 0, 0); } 
+        }
         
         @keyframes shimmer {
           0% { background-position: -1000px 0; }
@@ -549,7 +557,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) - MATCHED GALLERY RAIL STYLING */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
           <CinematicBackground images={videosBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
