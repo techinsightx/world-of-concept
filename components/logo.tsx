@@ -18,7 +18,8 @@ export default function Logo({ size = "medium", showText = true }: LogoProps) {
 
   return (
     <Link href="/" className="flex items-center gap-3 group">
-      <div className="relative overflow-hidden rounded-full shadow-lg group-hover:shadow-2xl transition-all duration-300">
+      {/* 🔥 Clean Thin Circle Border Only (No Shadow, No Extra Background) */}
+      <div className="relative rounded-full border border-slate-300 dark:border-slate-600 group-hover:border-blue-500 transition-all duration-300 overflow-hidden bg-white dark:bg-slate-950">
         <Image
           src="/logo.png"
           alt="World of Concept Logo"
@@ -28,12 +29,13 @@ export default function Logo({ size = "medium", showText = true }: LogoProps) {
           priority
         />
       </div>
+      
       {showText && (
         <div className="flex flex-col">
-          <span className={`font-extrabold text-slate-900 ${text} tracking-tight`}>
+          <span className={`font-extrabold text-slate-900 dark:text-white ${text} tracking-tight`}>
             World of Concept
           </span>
-          <span className="text-xs text-slate-500 font-medium">
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
             By RK Sir
           </span>
         </div>
