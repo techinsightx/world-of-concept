@@ -27,7 +27,7 @@ interface CourseItem {
   desc: string;
 }
 
-// 🔥 Optimized Cinematic Background Component (Mobile Friendly)
+// 🔥 Optimized Cinematic Background Component (Large Display Friendly)
 const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
@@ -35,7 +35,7 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
     if (images.length <= 1) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 6000);
+    }, 8000); // Slower transition for large screens
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -48,7 +48,7 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
           alt={`Cinematic BG ${i}`} 
           loading={i === 0 ? "eager" : "lazy"}
           decoding="async"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms] ease-in-out ${
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
             i === index ? 'opacity-100' : 'opacity-0'
           } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
         />
@@ -203,42 +203,28 @@ export default function Home() {
             animation: tricolor-shimmer-reverse 4s linear infinite;
           }
 
-          /* 🔥 MOBILE-OPTIMIZED DEEP ALTERNATING KEN BURNS EFFECT */
-          @keyframes ken-burns-zoom-in-mobile {
-            0% { transform: scale(1.0) translate(0, 0); }
-            100% { transform: scale(1.05) translate(-1%, -1%); }
+          /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS (Slower & Smoother) */
+          @keyframes ken-burns-zoom-in {
+            0% { transform: translate3d(0, 0, 0) scale(1.0); }
+            100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
           }
-          @keyframes ken-burns-zoom-out-mobile {
-            0% { transform: scale(1.05) translate(1%, 1%); }
-            100% { transform: scale(1.0) translate(0, 0); }
-          }
-          @keyframes ken-burns-zoom-in-desktop {
-            0% { transform: scale(1.0) translate(0, 0); }
-            100% { transform: scale(1.15) translate(-3%, -3%); }
-          }
-          @keyframes ken-burns-zoom-out-desktop {
-            0% { transform: scale(1.15) translate(3%, 3%); }
-            100% { transform: scale(1.0) translate(0, 0); }
+          @keyframes ken-burns-zoom-out {
+            0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
+            100% { transform: translate3d(0, 0, 0) scale(1.0); }
           }
           
           .animate-ken-burns-in {
-            animation: ken-burns-zoom-in-mobile 30s ease-in-out infinite alternate;
+            animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
             will-change: transform;
           }
           .animate-ken-burns-out {
-            animation: ken-burns-zoom-out-mobile 30s ease-in-out infinite alternate;
+            animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
             will-change: transform;
           }
           
-          @media (min-width: 768px) {
-            .animate-ken-burns-in {
-              animation-name: ken-burns-zoom-in-desktop;
-              animation-duration: 20s;
-            }
-            .animate-ken-burns-out {
-              animation-name: ken-burns-zoom-out-desktop;
-              animation-duration: 20s;
-            }
+          @media (max-width: 768px) {
+            .animate-ken-burns-in { animation-duration: 40s; }
+            .animate-ken-burns-out { animation-duration: 40s; }
           }
           
           /* 🔥 GPU-ACCELERATED MARQUEE (ZERO GLITCH) */
@@ -251,13 +237,14 @@ export default function Home() {
             100% { transform: translate3d(0, 0, 0); } 
           }
           @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+          
           .animate-marquee { 
-            animation: marquee 40s linear infinite; 
+            animation: marquee 60s linear infinite; 
             will-change: transform; 
             touch-action: pan-y; 
           }
           .animate-marquee-reverse { 
-            animation: marquee-reverse 40s linear infinite; 
+            animation: marquee-reverse 60s linear infinite; 
             will-change: transform; 
             touch-action: pan-y; 
           }
@@ -283,12 +270,13 @@ export default function Home() {
         {/* 1. HERO SECTION (ZOOM IN) */}
         <section className="relative min-h-[100dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
           <CinematicBackground images={heroBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-10 bg-slate-950/80 backdrop-blur-[2px]" />
+          {/* Optimized Overlay: Removed heavy blur, using solid dark overlay for large screens */}
+          <div className="absolute inset-0 z-10 bg-slate-950/80" />
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
           <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20 pt-12 lg:pt-0">
             <div className="flex-1 text-center lg:text-left space-y-6 animate-fade-in-up">
-              <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-sm font-semibold backdrop-blur-sm shadow-sm mx-auto lg:mx-0">
+              <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-sm font-semibold shadow-sm mx-auto lg:mx-0">
                 <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
                 2027 बैच के लिए एडमिशन खुले
               </div>
@@ -336,7 +324,7 @@ export default function Home() {
                 { icon: "📊", title: "टेस्ट सीरीज", desc: "विस्तृत प्रदर्शन विश्लेषण के साथ अध्याय-वार और पूर्ण मॉक टेस्ट।" },
                 { icon: "💬", title: "डाउट सपोर्ट", desc: "RK Sir और उनकी समर्पित मेंटर टीम से सीधी और त्वरित सहायता।" },
               ].map((feature, i) => (
-                <div key={i} className="group bg-slate-800/40 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6 text-center hover:bg-slate-800/80 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300">
+                <div key={i} className="group bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 text-center hover:bg-slate-800/80 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300">
                   <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
                     {feature.icon}
                   </div>
@@ -409,7 +397,7 @@ export default function Home() {
 
           <div className="relative z-10 max-w-7xl mx-auto">
             <div className="mb-8 flex items-center justify-center">
-              <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
+              <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -500,12 +488,12 @@ export default function Home() {
           100% { transform: translate3d(0, 0, 0); } 
         }
         .animate-marquee { 
-          animation: marquee 40s linear infinite; 
+          animation: marquee 60s linear infinite; 
           will-change: transform; 
           touch-action: pan-y; 
         }
         .animate-marquee-reverse { 
-          animation: marquee-reverse 40s linear infinite; 
+          animation: marquee-reverse 60s linear infinite; 
           will-change: transform; 
           touch-action: pan-y; 
         }
@@ -527,46 +515,32 @@ export default function Home() {
           animation: shimmer-text 3s linear infinite;
         }
         
-        /* 🔥 MOBILE-OPTIMIZED DEEP ALTERNATING KEN BURNS EFFECT */
-        @keyframes ken-burns-zoom-in-mobile {
-          0% { transform: scale(1.0) translate(0, 0); }
-          100% { transform: scale(1.05) translate(-1%, -1%); }
+        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS */
+        @keyframes ken-burns-zoom-in {
+          0% { transform: translate3d(0, 0, 0) scale(1.0); }
+          100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
         }
-        @keyframes ken-burns-zoom-out-mobile {
-          0% { transform: scale(1.05) translate(1%, 1%); }
-          100% { transform: scale(1.0) translate(0, 0); }
-        }
-        @keyframes ken-burns-zoom-in-desktop {
-          0% { transform: scale(1.0) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-3%, -3%); }
-        }
-        @keyframes ken-burns-zoom-out-desktop {
-          0% { transform: scale(1.15) translate(3%, 3%); }
-          100% { transform: scale(1.0) translate(0, 0); }
+        @keyframes ken-burns-zoom-out {
+          0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
+          100% { transform: translate3d(0, 0, 0) scale(1.0); }
         }
         
         .animate-ken-burns-in {
-          animation: ken-burns-zoom-in-mobile 30s ease-in-out infinite alternate;
+          animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
           will-change: transform;
         }
         .animate-ken-burns-out {
-          animation: ken-burns-zoom-out-mobile 30s ease-in-out infinite alternate;
+          animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
           will-change: transform;
         }
         
-        @media (min-width: 768px) {
-          .animate-ken-burns-in {
-            animation-name: ken-burns-zoom-in-desktop;
-            animation-duration: 20s;
-          }
-          .animate-ken-burns-out {
-            animation-name: ken-burns-zoom-out-desktop;
-            animation-duration: 20s;
-          }
+        @media (max-width: 768px) {
+          .animate-ken-burns-in { animation-duration: 40s; }
+          .animate-ken-burns-out { animation-duration: 40s; }
         }
       `}</style>
 
-      <header className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+      <header className="bg-slate-950/90 border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <div className="flex items-center gap-3">
@@ -602,7 +576,7 @@ export default function Home() {
           {/* LIVE CLASS CARD (ZOOM OUT) */}
           <div className="animate-fade-in-up w-full relative overflow-hidden rounded-2xl border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
             <CinematicBackground images={liveClassBgImages} zoomType="out" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-br from-red-950/90 via-red-900/85 to-orange-900/80" />
             
             <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
               <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white/20">
@@ -629,7 +603,7 @@ export default function Home() {
               { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-500/10 text-green-400 border-green-500/20", delay: "0.1s" },
               { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", delay: "0.2s" },
             ].map((stat, i) => (
-              <div key={i} className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" style={{ animationDelay: stat.delay }}>
+              <div key={i} className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} border rounded-xl flex items-center justify-center shadow-sm`}>
                     <span className="text-xl sm:text-2xl">{stat.icon}</span>
@@ -646,7 +620,7 @@ export default function Home() {
           {/* MY COURSES */}
           <div className="w-full">
             <h2 className="text-lg sm:text-2xl font-extrabold text-white mb-3 sm:mb-6">मेरे कोर्सेस</h2>
-            <div className="bg-slate-800/50 backdrop-blur-md border border-slate-700/50 rounded-2xl text-center py-8 sm:py-10 px-3 sm:px-4 w-full hover:shadow-xl hover:border-slate-600 transition-all duration-300">
+            <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl text-center py-8 sm:py-10 px-3 sm:px-4 w-full hover:shadow-xl hover:border-slate-600 transition-all duration-300">
               <span className="text-4xl sm:text-5xl mb-3 sm:mb-4 block">📚</span>
               <h3 className="text-base sm:text-xl font-bold text-white mb-2">अभी तक कोई कोर्स नहीं</h3>
               <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6 max-w-md mx-auto">बिहार बोर्ड के लिए बनाए गए कोर्स में नामांकन करके अपनी शिक्षा यात्रा शुरू करें।</p>
@@ -659,7 +633,7 @@ export default function Home() {
           {/* AVAILABLE COURSES RAIL (ZOOM IN) */}
           <div id="available-courses" className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.4s" }}>
             <CinematicBackground images={coursesBgImages} zoomType="in" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
             
             <div className="relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
@@ -673,7 +647,7 @@ export default function Home() {
               </div>
               
               <div className="relative w-full overflow-hidden py-4">
-                <div className="flex gap-4 w-max animate-marquee-reverse touch-pan-y">
+                <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
                   {[...courseImages, ...courseImages, ...courseImages].map((src, i) => {
                     const courses: CourseItem[] = [
                       { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।" },
@@ -686,12 +660,12 @@ export default function Home() {
                     
                     return (
                       <div key={`course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 lg:w-96 flex-shrink-0 group" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
-                        <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                        <div className="bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                           <div className="relative h-40 sm:h-56 overflow-hidden">
                             <Image src={src} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                             <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
-                              <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
+                              <span className="bg-blue-600/90 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
                                 {course.badge}
                               </span>
                             </div>
@@ -720,7 +694,7 @@ export default function Home() {
           {/* CINEMATIC GALLERY (ZOOM OUT) */}
           <div className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
             <CinematicBackground images={gallerySectionBgImages} zoomType="out" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/75 via-slate-950/80 to-slate-950/85" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
 
             <div className="relative z-10">
               <div className="text-center mb-6 sm:mb-8 px-2 pt-4">
@@ -790,7 +764,7 @@ export default function Home() {
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
-            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
+            <a href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" target="_blank" rel="noopener noreferrer" className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
