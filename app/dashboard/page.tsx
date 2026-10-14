@@ -14,7 +14,7 @@ import {
   Calendar, MessageCircle, MapPin
 } from "lucide-react";
 
-// 🔥 Reusable Cinematic Background Component with Alternating Zoom
+// 🔥 Optimized Cinematic Background Component (Mobile Friendly)
 const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
@@ -29,18 +29,16 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
       {images.map((src, i) => (
-        <div
+        <img 
           key={src}
-          className={`absolute inset-0 transition-opacity duration-[2500ms] ease-in-out ${
+          src={src} 
+          alt={`Cinematic BG ${i}`} 
+          loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms] ease-in-out ${
             i === index ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img 
-            src={src} 
-            alt={`Cinematic BG ${i}`} 
-            className={`w-full h-full object-cover ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
-          />
-        </div>
+          } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
+        />
       ))}
     </div>
   );
@@ -118,7 +116,7 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
 
   return (
     <div ref={cardRef} className="relative w-[85vw] max-w-[400px] sm:w-96 flex-shrink-0 group">
-      <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl border border-slate-700/50 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/50">
+      <div className="bg-slate-800/60 sm:backdrop-blur-md rounded-2xl overflow-hidden shadow-md sm:shadow-lg hover:shadow-2xl border border-slate-700/50 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/50">
         <div className="relative aspect-video bg-slate-900">
           {!isIntersecting ? (
             <>
@@ -168,11 +166,10 @@ export default function DashboardPage() {
   const [authChecked, setAuthChecked] = useState(false);
   const [updates, setUpdates] = useState<UpdateData[]>([]);
 
-  // 🔥 Dedicated Image Arrays for Every Section's Cinematic Background
   const welcomeBgImages = ["/gallery2.jpg", "/gallery4.jpg", "/gallery6.jpg"];
   const liveClassBgImages = ["/gallery4.jpg", "/gallery2.jpg", "/gallery5.jpg"];
-  const videosBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"]; // New for Videos
-  const statsBgImages = ["/gallery6.jpg", "/gallery8.jpg", "/gallery10.jpg"]; // New for Stats
+  const videosBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
+  const statsBgImages = ["/gallery6.jpg", "/gallery8.jpg", "/gallery10.jpg"];
   const coursesBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
   const gallerySectionBgImages = ["/gallery3.jpg", "/gallery6.jpg", "/gallery8.jpg"];
   const updatesBgImages = ["/gallery5.jpg", "/gallery7.jpg", "/gallery9.jpg"];
@@ -374,41 +371,53 @@ export default function DashboardPage() {
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
         
         .shimmer-effect {
-          background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.4) 50%,
-            rgba(255, 255, 255, 0) 100%
-          );
+          background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
           background-size: 1000px 100%;
           animation: shimmer 2s infinite linear;
         }
         
         .shimmer-effect-reverse {
-          background: linear-gradient(
-            90deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0.5) 50%,
-            rgba(255, 255, 255, 0) 100%
-          );
+          background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
           background-size: 1000px 100%;
           animation: shimmer-reverse 2.5s infinite linear;
         }
 
-        /* 🔥 DEEP ALTERNATING KEN BURNS EFFECT */
-        @keyframes ken-burns-zoom-in {
+        /* 🔥 MOBILE-OPTIMIZED DEEP ALTERNATING KEN BURNS EFFECT */
+        @keyframes ken-burns-zoom-in-mobile {
           0% { transform: scale(1.0) translate(0, 0); }
-          100% { transform: scale(1.25) translate(-4%, -4%); }
+          100% { transform: scale(1.05) translate(-1%, -1%); }
         }
-        @keyframes ken-burns-zoom-out {
-          0% { transform: scale(1.25) translate(4%, 4%); }
+        @keyframes ken-burns-zoom-out-mobile {
+          0% { transform: scale(1.05) translate(1%, 1%); }
           100% { transform: scale(1.0) translate(0, 0); }
         }
+        @keyframes ken-burns-zoom-in-desktop {
+          0% { transform: scale(1.0) translate(0, 0); }
+          100% { transform: scale(1.15) translate(-3%, -3%); }
+        }
+        @keyframes ken-burns-zoom-out-desktop {
+          0% { transform: scale(1.15) translate(3%, 3%); }
+          100% { transform: scale(1.0) translate(0, 0); }
+        }
+        
         .animate-ken-burns-in {
-          animation: ken-burns-zoom-in 15s ease-in-out infinite alternate;
+          animation: ken-burns-zoom-in-mobile 30s ease-in-out infinite alternate;
+          will-change: transform;
         }
         .animate-ken-burns-out {
-          animation: ken-burns-zoom-out 15s ease-in-out infinite alternate;
+          animation: ken-burns-zoom-out-mobile 30s ease-in-out infinite alternate;
+          will-change: transform;
+        }
+        
+        @media (min-width: 768px) {
+          .animate-ken-burns-in {
+            animation-name: ken-burns-zoom-in-desktop;
+            animation-duration: 20s;
+          }
+          .animate-ken-burns-out {
+            animation-name: ken-burns-zoom-out-desktop;
+            animation-duration: 20s;
+          }
         }
 
         @keyframes gradient-pan {
@@ -424,7 +433,7 @@ export default function DashboardPage() {
       `}</style>
 
       {/* 🔥 DARK HEADER */}
-      <header className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+      <header className="bg-slate-950/80 sm:backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <div className="flex items-center gap-3">
@@ -468,7 +477,7 @@ export default function DashboardPage() {
           <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
           
           <div className="relative z-10 p-6 sm:p-10 text-white">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-sm font-semibold mb-4 border border-white/20">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 sm:backdrop-blur-md rounded-full text-sm font-semibold mb-4 border border-white/20">
               <Sparkles className="w-4 h-4" />
               <span>छात्र डैशबोर्ड</span>
             </div>
@@ -540,7 +549,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) - NEW CINEMATIC BG */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
           <CinematicBackground images={videosBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
@@ -574,7 +583,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 4. STATS CARDS (ZOOM OUT) - NEW CINEMATIC BG */}
+        {/* 🔥 4. STATS CARDS (ZOOM OUT) */}
         <div className="mb-12 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.3s" }}>
           <CinematicBackground images={statsBgImages} zoomType="out" />
           <div className="absolute inset-0 z-0 animate-living-gradient" />
@@ -590,7 +599,7 @@ export default function DashboardPage() {
               ].map((stat, i) => (
                 <div 
                   key={i} 
-                  className="bg-slate-800/60 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
+                  className="bg-slate-800/60 sm:backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
                   style={{ animationDelay: stat.delay }}
                 >
                   <div className="flex items-center gap-4">
@@ -629,12 +638,12 @@ export default function DashboardPage() {
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
                 {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                    <div className="bg-slate-800/60 sm:backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                       <div className="relative h-40 sm:h-48 overflow-hidden">
                         <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                         <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
-                          <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
+                          <span className="bg-blue-600/90 sm:backdrop-blur-sm text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
                             {course.badge}
                           </span>
                         </div>
@@ -727,13 +736,13 @@ export default function DashboardPage() {
             </div>
             
             {updates.length === 0 ? (
-              <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-8 text-center border border-slate-700/50">
+              <div className="bg-slate-800/50 sm:backdrop-blur-md rounded-2xl p-8 text-center border border-slate-700/50">
                 <p className="text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="group bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
+                  <div key={update.id} className="group bg-slate-800/60 sm:backdrop-blur-md rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
                     {update.imageUrl && (
                       <div className="relative h-48 overflow-hidden">
                         <Image 
@@ -744,7 +753,7 @@ export default function DashboardPage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                         <div className="absolute top-3 left-3">
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-md ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold text-white sm:backdrop-blur-md ${
                             update.type === "announcement" ? "bg-blue-500/80" :
                             update.type === "motivation" ? "bg-purple-500/80" :
                             "bg-green-500/80"
@@ -803,7 +812,7 @@ export default function DashboardPage() {
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 sm:backdrop-blur-md rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 hover:scale-105 shadow-lg shadow-orange-500/10 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
