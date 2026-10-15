@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import Link from "next/link";
 import Image from "next/image";
+import ThemeToggle from "@/components/ThemeToggle"; 
 import AdPopup from "@/components/AdPopup"; 
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 

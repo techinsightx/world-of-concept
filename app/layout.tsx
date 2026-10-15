@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Devanagari } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
+
 import "./globals.css";
 
 // ==================== FONTS (Hindi + English Fallback) ====================

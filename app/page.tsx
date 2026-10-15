@@ -8,6 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
+import ThemeToggle from "@/components/ThemeToggle"; 
 import Logo from "@/components/logo";
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
