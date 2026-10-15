@@ -47,8 +47,8 @@ const MagneticButton = ({ children, className, onClick, href, ...props }: any) =
   );
 };
 
-// 🔥 Optimized Cinematic Background Component (Large Display Friendly)
-const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
+// 🔥 Dynamic Background: Light = Images, Dark = CSS Space (Zero Glitch, Ultra Smooth)
+const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -61,18 +61,31 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
-      {images.map((src, i) => (
-        <img 
-          key={src}
-          src={src} 
-          alt={`Cinematic BG ${i}`} 
-          loading={i === 0 ? "eager" : "lazy"}
-          decoding="async"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
-            i === index ? 'opacity-100' : 'opacity-0'
-          } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
-        />
-      ))}
+      {/* ☀️ LIGHT MODE: Cinematic Images */}
+      <div className="dark:hidden absolute inset-0">
+        {images.map((src, i) => (
+          <img 
+            key={src}
+            src={src} 
+            alt={`Cinematic BG ${i}`} 
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding="async"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
+              i === index ? 'opacity-100' : 'opacity-0'
+            } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
+          />
+        ))}
+      </div>
+
+      {/* 🌙 DARK MODE: Pure CSS Space/Solar System (Ultra Smooth, Zero Network Load) */}
+      <div className="hidden dark:block absolute inset-0">
+        <div className="absolute inset-0 animate-nebula-shift" />
+        <div className="absolute inset-0 space-stars" />
+        <div className="absolute top-1/4 left-1/4 solar-orbit-1" />
+        <div className="absolute bottom-1/3 right-1/4 solar-orbit-2" />
+        <div className="absolute top-1/2 left-1/2 solar-orbit-3" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/85 to-slate-950/95" />
+      </div>
     </div>
   );
 };
@@ -149,7 +162,7 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
 
   return (
     <div ref={cardRef} className="relative w-[85vw] max-w-[300px] sm:w-80 flex-shrink-0 group">
-      <div className="bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 transition-all duration-500 hover:-translate-y-2">
+      <div className="bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 transition-all duration-500 hover:-translate-y-2">
         <div className="relative aspect-video bg-slate-900">
           {!isIntersecting ? (
             <>
@@ -466,6 +479,86 @@ export default function DashboardPage() {
           background-size: 200% 200%;
           animation: gradient-pan 15s ease infinite;
         }
+
+        /* 🔥 SPACE & SOLAR SYSTEM ANIMATIONS (Dark Mode Only - Zero Glitch) */
+        @keyframes nebula-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-nebula-shift {
+          background: linear-gradient(135deg, #020617 0%, #0f172a 25%, #1e1b4b 50%, #312e81 75%, #020617 100%);
+          background-size: 400% 400%;
+          animation: nebula-shift 10s ease infinite;
+        }
+        @keyframes star-zoom {
+          0% { transform: translateZ(0) scale(0.2); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateZ(800px) scale(4); opacity: 0; }
+        }
+        .space-stars {
+          position: absolute;
+          inset: 0;
+          background: transparent;
+          overflow: hidden;
+          perspective: 500px;
+        }
+        .space-stars::before, .space-stars::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 2px;
+          height: 2px;
+          border-radius: 50%;
+          box-shadow: 
+            -20vw -20vh 0 0 #fff, 30vw -10vh 0 0 #a5b4fc, -10vw 30vh 0 0 #fff,
+            40vw 20vh 0 0 #f472b6, -30vw 40vh 0 0 #fff, 10vw -40vh 0 0 #60a5fa,
+            20vw 10vh 0 0 #fff, -40vw -10vh 0 0 #c084fc, 0vw 0vw 0 0 #fff;
+          animation: star-zoom 3s linear infinite;
+        }
+        .space-stars::after {
+          animation-delay: 1.5s;
+          box-shadow: 
+            15vw -25vh 0 0 #fff, -25vw 15vh 0 0 #fbbf24, 35vw 35vh 0 0 #fff,
+            -15vw -35vh 0 0 #34d399, 25vw -15vh 0 0 #fff, -35vw 25vh 0 0 #f87171;
+        }
+        @keyframes orbit {
+          0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+        @keyframes orbit-reverse {
+          0% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+          100% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+        }
+        @keyframes orbit-slow {
+          0% { transform: rotate(0deg) translateX(180px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(180px) rotate(-360deg); }
+        }
+        .solar-orbit-1 {
+          width: 10px;
+          height: 10px;
+          background: #fbbf24;
+          border-radius: 50%;
+          box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+          animation: orbit 8s linear infinite;
+        }
+        .solar-orbit-2 {
+          width: 8px;
+          height: 8px;
+          background: #60a5fa;
+          border-radius: 50%;
+          box-shadow: 0 0 20px #3b82f6, 0 0 40px #2563eb;
+          animation: orbit-reverse 12s linear infinite;
+        }
+        .solar-orbit-3 {
+          width: 6px;
+          height: 6px;
+          background: #f472b6;
+          border-radius: 50%;
+          box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777;
+          animation: orbit-slow 18s linear infinite;
+        }
       `}</style>
 
       {/* 🔥 DARK HEADER */}
@@ -508,12 +601,12 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
-        {/* 🔥 1. WELCOME CARD (ZOOM IN) */}
+        {/* 🔥 1. WELCOME CARD */}
         <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
-          <CinematicBackground images={welcomeBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-purple-950/80" />
-          <div className="absolute inset-0 z-0 shimmer-effect opacity-40" />
+          <DynamicBackground images={welcomeBgImages} zoomType="in" />
+          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-purple-950/80 dark:bg-transparent" />
+          <div className="absolute inset-0 z-0 shimmer-effect opacity-40 dark:opacity-20" />
           
           <div className="relative z-10 p-6 sm:p-10 text-white">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full text-sm font-semibold mb-4 border border-white/20">
@@ -529,13 +622,13 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER (ZOOM OUT) */}
+        {/* 🔥 2. LIVE CLASS BANNER */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
-            <CinematicBackground images={liveClassBgImages} zoomType="out" />
-            <div className="absolute inset-0 z-0 animate-living-gradient" />
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75" />
-            <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40" />
+            <DynamicBackground images={liveClassBgImages} zoomType="out" />
+            <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75 dark:bg-transparent" />
+            <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40 dark:opacity-20" />
             <div className="absolute inset-0 z-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
 
             <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -586,11 +679,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION (ZOOM IN) */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
-          <CinematicBackground images={videosBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
+          <DynamicBackground images={videosBgImages} zoomType="in" />
+          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
           
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
@@ -623,11 +716,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 4. STATS CARDS (ZOOM OUT) */}
+        {/* 🔥 4. STATS CARDS */}
         <div className="mb-12 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.3s" }}>
-          <CinematicBackground images={statsBgImages} zoomType="out" />
-          <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
+          <DynamicBackground images={statsBgImages} zoomType="out" />
+          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
           
           <div className="relative z-10 p-6 sm:p-8">
             <h2 className="text-2xl font-extrabold text-white mb-6 rainbow-shimmer-text px-2">आपकी प्रगति</h2>
@@ -639,7 +732,7 @@ export default function DashboardPage() {
               ].map((stat, i) => (
                 <div 
                   key={i} 
-                  className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
+                  className="bg-slate-800/60 dark:bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
                   style={{ animationDelay: stat.delay }}
                 >
                   <div className="flex items-center gap-4">
@@ -657,11 +750,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. AVAILABLE COURSES (ZOOM IN) */}
+        {/* 🔥 5. AVAILABLE COURSES */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
-          <CinematicBackground images={coursesBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
+          <DynamicBackground images={coursesBgImages} zoomType="in" />
+          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
           
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
@@ -681,7 +774,7 @@ export default function DashboardPage() {
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
                 {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                    <div className="bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                       <div className="relative h-40 sm:h-48 overflow-hidden">
                         <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -716,11 +809,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. CINEMATIC GALLERY (ZOOM OUT) */}
+        {/* 🔥 6. CINEMATIC GALLERY */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
-          <CinematicBackground images={gallerySectionBgImages} zoomType="out" />
-          <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
+          <DynamicBackground images={gallerySectionBgImages} zoomType="out" />
+          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
@@ -766,11 +859,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 7. RK SIR UPDATES (ZOOM IN) */}
+        {/* 🔥 7. RK SIR UPDATES */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
-          <CinematicBackground images={updatesBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-0 animate-living-gradient" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
+          <DynamicBackground images={updatesBgImages} zoomType="in" />
+          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
@@ -781,13 +874,13 @@ export default function DashboardPage() {
             </div>
             
             {updates.length === 0 ? (
-              <div className="bg-slate-800/60 rounded-2xl p-8 text-center border border-slate-700/50">
+              <div className="bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl p-8 text-center border border-slate-700/50">
                 <p className="text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="group bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
+                  <div key={update.id} className="group bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
                     {update.imageUrl && (
                       <div className="relative h-48 overflow-hidden">
                         <Image 
