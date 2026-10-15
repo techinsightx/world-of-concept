@@ -620,3 +620,20 @@ body.popup-open {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+@keyframes rainbow-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-rainbow-shift {
+  background-size: 200% 200%;
+  animation: rainbow-shift 3s ease infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.group-hover\:animate-shimmer-sweep:hover {
+  animation: shimmer-sweep 1.5s linear infinite;
+}
