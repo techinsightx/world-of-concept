@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import ThemeToggle from "@/components/ThemeToggle"; // 🔥 Imported Global Toggle
 
 import "./globals.css";
 
@@ -104,14 +105,13 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   other: {
-    // 🔥 ADVANCED LOCAL SEO DOMINATION TAGS
     "geo.region": "IN-BR",
     "geo.placename": "Alamnagar, Madhepura, Bihar",
     "geo.position": "25.9333;86.1167",
     "ICBM": "25.9333, 86.1167",
     "rating": "5.0",
     "distribution": "global",
-    "revisit-after": "1 days", // Signals Google to crawl more frequently
+    "revisit-after": "1 days",
     "business:country": "India",
     "copyright": `© ${CURRENT_YEAR} World of Concept. All rights reserved.`,
     "og:site_name": "World of Concept",
@@ -128,7 +128,7 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
   ],
   colorScheme: "light dark",
@@ -179,7 +179,6 @@ const structuredData = {
         "email": "support@worldofconcept.in",
         "availableLanguage": ["Hindi", "English"]
       },
-      // 🔥 ENRICHED ORGANIZATION DATA
       "knowsAbout": [
         "Bihar School Examination Board",
         "BSEB Matriculation Examination",
@@ -224,7 +223,6 @@ const structuredData = {
         "query-input": "required name=search_term_string"
       }
     },
-    // 🔥 COURSE SCHEMA 1: Mathematics
     {
       "@type": "Course",
       "@id": `${SITE_URL}#course-math`,
@@ -241,7 +239,6 @@ const structuredData = {
         "url": `${SITE_URL}/courses`
       }
     },
-    // 🔥 COURSE SCHEMA 2: Science (Added for broader indexing)
     {
       "@type": "Course",
       "@id": `${SITE_URL}#course-science`,
@@ -323,15 +320,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* 🔥 CRITICAL: Native Hindi Language Declaration */}
         <meta httpEquiv="Content-Language" content="hi" />
         <meta name="language" content="Hindi" />
-
-        {/* 🔥 Explicit Theme Colors for Mobile Browsers */}
-        <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
 
-        {/* 🔥 Performance Optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
@@ -340,30 +333,38 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
-        {/* 🔥 SEO Canonical URL & Sitemap */}
         <link rel="canonical" href={SITE_URL} />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         
-        {/* 🔥 PWA & Mobile Meta Tags */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="World of Concept" />
         
-        {/* 🔥 Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.json" />
         
-        {/* 🔥 World-Class Structured Data Injection */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className={`antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-100 font-sans`}>
-        {children}
+      
+      {/* 🔥 Added transition-colors for smooth theme switching */}
+      <body className="antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-100 font-sans transition-colors duration-300">
+        
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          
+          {/* 🔥 GLOBAL FLOATING THEME TOGGLE (Visible on ALL pages, top-right) */}
+          <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] drop-shadow-2xl">
+            <ThemeToggle />
+          </div>
+
+          {children}
+          
+        </ThemeProvider>
       </body>
     </html>
   );
