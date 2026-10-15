@@ -9,11 +9,10 @@ export async function GET() {
     const SITE_URL = 'https://worldofconcept.in';
     const FOUNDER_NAME = 'Mukesh Kumar Malakar';
 
-    // ✅ Fetch latest updates/posts from 'updates' collection
     const q = query(
       collection(db, 'updates'),
       orderBy('createdAt', 'desc'),
-      limit(20) // Top 20 latest posts for RSS
+      limit(20)
     );
     
     const snapshot = await getDocs(q);
@@ -23,20 +22,12 @@ export async function GET() {
       const data = doc.data();
       const dateObj = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
       const pubDate = dateObj.toUTCString();
-      
-      // ✅ Updated URL structure
-      const postUrl = `${SITE_URL}`; // Can be updated to specific route like ${SITE_URL}/updates/${doc.id} if needed
-      
-      // ✅ Use imageUrl for thumbnail (from updates collection)
+      const postUrl = `${SITE_URL}`; 
       const thumbnail = data.imageUrl || `${SITE_URL}/logo.png`;
       const description = data.description || 'Check out this amazing update from World of Concept!';
       const title = data.title || 'New Update from World of Concept';
-      const author = 'RK Sir'; // Or data.userName || 'World of Concept'
-      
-      // Use type as category (Announcement, Motivation, Tip)
-      const category = data.type 
-        ? data.type.charAt(0).toUpperCase() + data.type.slice(1) 
-        : 'Update';
+      const author = 'RK Sir';
+      const category = data.type ? data.type.charAt(0).toUpperCase() + data.type.slice(1) : 'Update';
 
       itemsXml += `
         <item>
@@ -47,10 +38,7 @@ export async function GET() {
           <description><![CDATA[${description}]]></description>
           <content:encoded><![CDATA[
             <p>${description}</p>
-            <br/>
-            ${data.imageUrl ? `<img src="${data.imageUrl}" alt="Update Media" style="max-width: 100%; height: auto; border-radius: 8px;" />` : ''}
-            <br/>
-            <p><strong>Read more on World of Concept:</strong> <a href="${postUrl}">${postUrl}</a></p>
+            ${data.imageUrl ? `<br/><img src="${data.imageUrl}" alt="Update Media" style="max-width: 100%; height: auto; border-radius: 8px;" />` : ''}
           ]]></content:encoded>
           <author><![CDATA[${author}]]></author>
           <category><![CDATA[${category}]]></category>
@@ -60,19 +48,19 @@ export async function GET() {
       `;
     });
 
+    // ✅ Fixed: Added proper xmlns for content and media
     const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>World of Concept | RK Sir's Latest Updates & Courses</title>
     <link>${SITE_URL}</link>
-    <description>Discover the latest courses, updates, motivational posts, and educational content from World of Concept by RK Sir. Elevate your Bihar Board Matric & Inter preparation.</description>
+    <description>Discover the latest courses, updates, motivational posts, and educational content from World of Concept by RK Sir.</description>
     <language>hi-in</language>
     <copyright>© ${new Date().getFullYear()} World of Concept. All rights reserved.</copyright>
     <managingEditor>support@worldofconcept.in (${FOUNDER_NAME})</managingEditor>
     <webMaster>support@worldofconcept.in (${FOUNDER_NAME})</webMaster>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <generator>Next.js RSS Generator</generator>
-    
     <image>
       <url>${SITE_URL}/logo.png</url>
       <title>World of Concept</title>
@@ -80,18 +68,17 @@ export async function GET() {
       <width>144</width>
       <height>144</height>
     </image>
-
     ${itemsXml}
   </channel>
 </rss>`;
 
     return new NextResponse(rssXml, {
+      status: 200,
       headers: {
-        'Content-Type': 'application/xml; charset=utf-8',
+        'Content-Type': 'application/rss+xml; charset=utf-8',
         'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
       },
     });
-
   } catch (error) {
     console.error('❌ RSS Generation Error:', error);
     return new NextResponse('Error generating RSS feed', { 
