@@ -23,9 +23,10 @@ const FOUNDER_NAME = 'Mukesh Kumar Malakar';
 const INSTRUCTOR_NAME = 'RK Sir';
 const CURRENT_YEAR = new Date().getFullYear();
 
-// ==================== WORLD-CLASS SEO META OPTIMIZATION ====================
+// ==================== GOD-TIER SEO META OPTIMIZATION ====================
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  applicationName: "World of Concept",
   title: {
     default: `World of Concept | RK Sir - Best Bihar Board Matric & Inter Online Coaching ${CURRENT_YEAR}`,
     template: `%s | World of Concept by RK Sir`,
@@ -37,7 +38,8 @@ export const metadata: Metadata = {
     "Alamnagar Coaching Center", "Madhepura Coaching", "Mukesh Kumar Malakar", 
     "बिहार बोर्ड मैट्रिक कोचिंग", "बिहार बोर्ड इंटर कोचिंग", "आरके सर क्लासेस", 
     "वर्ल्ड ऑफ कॉन्सेप्ट", "Bihar Board 10th Online Class", "Bihar Board 12th Science Arts Commerce", 
-    "Best Coaching in Alamnagar", "BSEB Model Paper 2027", "Bihar Board Topper Strategy"
+    "Best Coaching in Alamnagar", "BSEB Model Paper 2027", "Bihar Board Topper Strategy",
+    "Bihar Board 10th Math Important Questions", "BSEB 12th Science Topper", "RK Sir Math Tricks"
   ],
   authors: [
     { name: INSTRUCTOR_NAME, url: "https://youtube.com/@JoinWorldofConcept" },
@@ -55,6 +57,7 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "World of Concept",
   },
+  manifest: "/manifest.json",
   openGraph: {
     type: "website",
     locale: "hi_IN",
@@ -99,7 +102,7 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   other: {
-    // 🔥 ADVANCED LOCAL SEO DOMINATION TAGS (Corrected: Alamnagar is in Madhepura, not Patna)
+    // 🔥 ADVANCED LOCAL SEO DOMINATION TAGS
     "geo.region": "IN-BR",
     "geo.placename": "Alamnagar, Madhepura, Bihar",
     "geo.position": "25.9333;86.1167",
@@ -129,7 +132,7 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
 };
 
-// ==================== WORLD-CLASS SCHEMA.ORG (JSON-LD @graph) ====================
+// ==================== GOD-TIER SCHEMA.ORG (JSON-LD @graph) ====================
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -157,7 +160,7 @@ const structuredData = {
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Alamnagar",
-        "addressLocality": "Madhepura", // FIXED: Alamnagar is in Madhepura district
+        "addressLocality": "Madhepura",
         "addressRegion": "Bihar",
         "postalCode": "852219",
         "addressCountry": "IN"
@@ -174,7 +177,23 @@ const structuredData = {
         "email": "support@worldofconcept.in",
         "availableLanguage": ["Hindi", "English"]
       },
-      // 🔥 GOLDEN STAR RATING SCHEMA (Drastically improves CTR in Google Search)
+      // 🔥 ENRICHED ORGANIZATION DATA
+      "knowsAbout": [
+        "Bihar School Examination Board",
+        "BSEB Matriculation Examination",
+        "BSEB Intermediate Examination",
+        "Mathematics",
+        "Science",
+        "English",
+        "Social Science"
+      ],
+      "makesOffer": {
+        "@type": "Offer",
+        "category": "Online Education",
+        "priceCurrency": "INR",
+        "price": "499",
+        "description": "Affordable online coaching for Bihar Board students"
+      },
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
@@ -203,7 +222,7 @@ const structuredData = {
         "query-input": "required name=search_term_string"
       }
     },
-    // 🔥 COURSE SCHEMA (Helps rank for specific course searches)
+    // 🔥 COURSE SCHEMA 1: Mathematics
     {
       "@type": "Course",
       "@id": `${SITE_URL}#course-math`,
@@ -215,6 +234,23 @@ const structuredData = {
       "offers": {
         "@type": "Offer",
         "price": "499",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "url": `${SITE_URL}/courses`
+      }
+    },
+    // 🔥 COURSE SCHEMA 2: Science (Added for broader indexing)
+    {
+      "@type": "Course",
+      "@id": `${SITE_URL}#course-science`,
+      "name": "Bihar Board Class 10 Science by RK Sir",
+      "description": "Complete physics, chemistry, and biology preparation with practical guides.",
+      "provider": { "@id": `${SITE_URL}#organization` },
+      "educationalLevel": "Secondary",
+      "inLanguage": "hi",
+      "offers": {
+        "@type": "Offer",
+        "price": "699",
         "priceCurrency": "INR",
         "availability": "https://schema.org/InStock",
         "url": `${SITE_URL}/courses`
@@ -250,7 +286,6 @@ const structuredData = {
         }
       ]
     },
-    // 🔥 BREADCRUMB SCHEMA (Helps Google understand site structure)
     {
       "@type": "BreadcrumbList",
       "@id": `${SITE_URL}#breadcrumbs`,
@@ -290,6 +325,10 @@ export default function RootLayout({
         <meta httpEquiv="Content-Language" content="hi" />
         <meta name="language" content="Hindi" />
 
+        {/* 🔥 Explicit Theme Colors for Mobile Browsers */}
+        <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+
         {/* 🔥 Performance Optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -299,13 +338,15 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
-        {/* 🔥 SEO Canonical URL */}
+        {/* 🔥 SEO Canonical URL & Sitemap */}
         <link rel="canonical" href={SITE_URL} />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         
         {/* 🔥 PWA & Mobile Meta Tags */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="World of Concept" />
         
         {/* 🔥 Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -319,7 +360,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className={`antialiased bg-slate-50 text-slate-900 selection:bg-blue-200 selection:text-blue-900 font-sans`}>
+      <body className={`antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-100 font-sans`}>
         {children}
       </body>
     </html>
