@@ -60,7 +60,7 @@ interface CourseItem {
   desc: string;
 }
 
-// 🔥 Optimized Cinematic Background Component (Large Display Friendly)
+// 🔥 Optimized Cinematic Background Component (Light Mode Only)
 const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
 
@@ -86,6 +86,28 @@ const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zo
           } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
         />
       ))}
+    </div>
+  );
+};
+
+// 🔥 Dynamic Background: Light = Images, Dark = CSS Space (Zero Glitch, Ultra Smooth)
+const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* ☀️ LIGHT MODE: Cinematic Images */}
+      <div className="dark:hidden absolute inset-0">
+        <CinematicBackground images={images} zoomType={zoomType} />
+      </div>
+
+      {/* 🌙 DARK MODE: Pure CSS Space/Solar System (Ultra Smooth, Zero Network Load) */}
+      <div className="hidden dark:block absolute inset-0">
+        <div className="absolute inset-0 animate-nebula-shift" />
+        <div className="absolute inset-0 space-stars" />
+        <div className="absolute top-1/4 left-1/4 solar-orbit-1" />
+        <div className="absolute bottom-1/3 right-1/4 solar-orbit-2" />
+        <div className="absolute top-1/2 left-1/2 solar-orbit-3" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/85 to-slate-950/95" />
+      </div>
     </div>
   );
 };
@@ -329,13 +351,95 @@ export default function Home() {
             -webkit-text-fill-color: transparent;
             animation: shimmer-text 3s linear infinite;
           }
+
+          /* 🔥 SPACE & SOLAR SYSTEM ANIMATIONS (Dark Mode Only - Zero Glitch) */
+          @keyframes nebula-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          .animate-nebula-shift {
+            background: linear-gradient(135deg, #020617 0%, #0f172a 25%, #1e1b4b 50%, #312e81 75%, #020617 100%);
+            background-size: 400% 400%;
+            animation: nebula-shift 10s ease infinite;
+          }
+
+          @keyframes star-zoom {
+            0% { transform: translateZ(0) scale(0.2); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateZ(800px) scale(4); opacity: 0; }
+          }
+          .space-stars {
+            position: absolute;
+            inset: 0;
+            background: transparent;
+            overflow: hidden;
+            perspective: 500px;
+          }
+          .space-stars::before, .space-stars::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            box-shadow: 
+              -20vw -20vh 0 0 #fff, 30vw -10vh 0 0 #a5b4fc, -10vw 30vh 0 0 #fff,
+              40vw 20vh 0 0 #f472b6, -30vw 40vh 0 0 #fff, 10vw -40vh 0 0 #60a5fa,
+              20vw 10vh 0 0 #fff, -40vw -10vh 0 0 #c084fc, 0vw 0vw 0 0 #fff;
+            animation: star-zoom 3s linear infinite;
+          }
+          .space-stars::after {
+            animation-delay: 1.5s;
+            box-shadow: 
+              15vw -25vh 0 0 #fff, -25vw 15vh 0 0 #fbbf24, 35vw 35vh 0 0 #fff,
+              -15vw -35vh 0 0 #34d399, 25vw -15vh 0 0 #fff, -35vw 25vh 0 0 #f87171;
+          }
+
+          @keyframes orbit {
+            0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+          }
+          @keyframes orbit-reverse {
+            0% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+            100% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+          }
+          @keyframes orbit-slow {
+            0% { transform: rotate(0deg) translateX(180px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(180px) rotate(-360deg); }
+          }
+          .solar-orbit-1 {
+            width: 10px;
+            height: 10px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+            animation: orbit 8s linear infinite;
+          }
+          .solar-orbit-2 {
+            width: 8px;
+            height: 8px;
+            background: #60a5fa;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #3b82f6, 0 0 40px #2563eb;
+            animation: orbit-reverse 12s linear infinite;
+          }
+          .solar-orbit-3 {
+            width: 6px;
+            height: 6px;
+            background: #f472b6;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777;
+            animation: orbit-slow 18s linear infinite;
+          }
         `}</style>
 
-        {/* 1. HERO SECTION (ZOOM IN) */}
+        {/* 1. HERO SECTION */}
         <section className="relative min-h-[100dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
-          <CinematicBackground images={heroBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-10 bg-slate-950/80" />
-          <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+          <DynamicBackground images={heroBgImages} zoomType="in" />
+          <div className="absolute inset-0 z-10 bg-slate-950/80 dark:bg-transparent" />
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent dark:via-slate-950/85" />
 
           <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20 pt-12 lg:pt-0">
             <div className="flex-1 text-center lg:text-left space-y-6 animate-fade-in-up">
@@ -369,10 +473,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. WHY CHOOSE US SECTION (ZOOM OUT) */}
+        {/* 2. WHY CHOOSE US SECTION */}
         <section className="relative py-24 overflow-hidden border-t border-slate-800">
-          <CinematicBackground images={whyChooseBgImages} zoomType="out" />
-          <div className="absolute inset-0 z-10 bg-slate-950/90" />
+          <DynamicBackground images={whyChooseBgImages} zoomType="out" />
+          <div className="absolute inset-0 z-10 bg-slate-950/90 dark:bg-transparent" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">
@@ -387,7 +491,7 @@ export default function Home() {
                 { icon: "📊", title: "टेस्ट सीरीज", desc: "विस्तृत प्रदर्शन विश्लेषण के साथ अध्याय-वार और पूर्ण मॉक टेस्ट।" },
                 { icon: "💬", title: "डाउट सपोर्ट", desc: "RK Sir और उनकी समर्पित मेंटर टीम से सीधी और त्वरित सहायता।" },
               ].map((feature, i) => (
-                <div key={i} className="group bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 text-center hover:bg-slate-800/80 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300">
+                <div key={i} className="group bg-slate-800/60 dark:bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 text-center hover:bg-slate-800/80 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300">
                   <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
                     {feature.icon}
                   </div>
@@ -399,10 +503,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. CINEMATIC DUAL ROW SCROLLING (ZOOM IN) */}
+        {/* 3. CINEMATIC DUAL ROW SCROLLING */}
         <section className="relative py-16 overflow-hidden border-y border-slate-800">
-          <CinematicBackground images={scrollingBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-10 bg-slate-950/90" />
+          <DynamicBackground images={scrollingBgImages} zoomType="in" />
+          <div className="absolute inset-0 z-10 bg-slate-950/90 dark:bg-transparent" />
 
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
@@ -639,6 +743,86 @@ export default function Home() {
           .animate-ken-burns-in { animation-duration: 40s; }
           .animate-ken-burns-out { animation-duration: 40s; }
         }
+
+        /* 🔥 SPACE & SOLAR SYSTEM ANIMATIONS (Dark Mode Only) */
+        @keyframes nebula-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-nebula-shift {
+          background: linear-gradient(135deg, #020617 0%, #0f172a 25%, #1e1b4b 50%, #312e81 75%, #020617 100%);
+          background-size: 400% 400%;
+          animation: nebula-shift 10s ease infinite;
+        }
+        @keyframes star-zoom {
+          0% { transform: translateZ(0) scale(0.2); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateZ(800px) scale(4); opacity: 0; }
+        }
+        .space-stars {
+          position: absolute;
+          inset: 0;
+          background: transparent;
+          overflow: hidden;
+          perspective: 500px;
+        }
+        .space-stars::before, .space-stars::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 2px;
+          height: 2px;
+          border-radius: 50%;
+          box-shadow: 
+            -20vw -20vh 0 0 #fff, 30vw -10vh 0 0 #a5b4fc, -10vw 30vh 0 0 #fff,
+            40vw 20vh 0 0 #f472b6, -30vw 40vh 0 0 #fff, 10vw -40vh 0 0 #60a5fa,
+            20vw 10vh 0 0 #fff, -40vw -10vh 0 0 #c084fc, 0vw 0vw 0 0 #fff;
+          animation: star-zoom 3s linear infinite;
+        }
+        .space-stars::after {
+          animation-delay: 1.5s;
+          box-shadow: 
+            15vw -25vh 0 0 #fff, -25vw 15vh 0 0 #fbbf24, 35vw 35vh 0 0 #fff,
+            -15vw -35vh 0 0 #34d399, 25vw -15vh 0 0 #fff, -35vw 25vh 0 0 #f87171;
+        }
+        @keyframes orbit {
+          0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+        @keyframes orbit-reverse {
+          0% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+          100% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+        }
+        @keyframes orbit-slow {
+          0% { transform: rotate(0deg) translateX(180px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(180px) rotate(-360deg); }
+        }
+        .solar-orbit-1 {
+          width: 10px;
+          height: 10px;
+          background: #fbbf24;
+          border-radius: 50%;
+          box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+          animation: orbit 8s linear infinite;
+        }
+        .solar-orbit-2 {
+          width: 8px;
+          height: 8px;
+          background: #60a5fa;
+          border-radius: 50%;
+          box-shadow: 0 0 20px #3b82f6, 0 0 40px #2563eb;
+          animation: orbit-reverse 12s linear infinite;
+        }
+        .solar-orbit-3 {
+          width: 6px;
+          height: 6px;
+          background: #f472b6;
+          border-radius: 50%;
+          box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777;
+          animation: orbit-slow 18s linear infinite;
+        }
       `}</style>
 
       <header className="bg-slate-950/90 border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
@@ -677,10 +861,10 @@ export default function Home() {
             <p className="text-slate-400 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
           </div>
 
-          {/* LIVE CLASS CARD (ZOOM OUT) */}
+          {/* LIVE CLASS CARD */}
           <div className="animate-fade-in-up w-full relative overflow-hidden rounded-2xl border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
-            <CinematicBackground images={liveClassBgImages} zoomType="out" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-br from-red-950/90 via-red-900/85 to-orange-900/80" />
+            <DynamicBackground images={liveClassBgImages} zoomType="out" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-br from-red-950/90 via-red-900/85 to-orange-900/80 dark:bg-transparent" />
             
             <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
               <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white/20">
@@ -710,7 +894,7 @@ export default function Home() {
               { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-500/10 text-green-400 border-green-500/20", delay: "0.1s" },
               { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", delay: "0.2s" },
             ].map((stat, i) => (
-              <div key={i} className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" style={{ animationDelay: stat.delay }}>
+              <div key={i} className="bg-slate-800/60 dark:bg-slate-800/40 border border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} border rounded-xl flex items-center justify-center shadow-sm`}>
                     <span className="text-xl sm:text-2xl">{stat.icon}</span>
@@ -724,10 +908,10 @@ export default function Home() {
             ))}
           </div>
 
-          {/* AVAILABLE COURSES RAIL (ZOOM IN) */}
+          {/* AVAILABLE COURSES RAIL */}
           <div id="available-courses" className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.4s" }}>
-            <CinematicBackground images={coursesBgImages} zoomType="in" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
+            <DynamicBackground images={coursesBgImages} zoomType="in" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
             
             <div className="relative z-10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
@@ -757,7 +941,7 @@ export default function Home() {
                     
                     return (
                       <div key={`course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 lg:w-96 flex-shrink-0 group" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
-                        <div className="bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                        <div className="bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                           <div className="relative h-40 sm:h-56 overflow-hidden">
                             <Image src={src} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -793,10 +977,10 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CINEMATIC GALLERY (ZOOM OUT) */}
+          {/* CINEMATIC GALLERY */}
           <div className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
-            <CinematicBackground images={gallerySectionBgImages} zoomType="out" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95" />
+            <DynamicBackground images={gallerySectionBgImages} zoomType="out" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
 
             <div className="relative z-10">
               <div className="text-center mb-6 sm:mb-8 px-2 pt-4">
