@@ -54,30 +54,45 @@ const MagneticButton = ({ children, className, onClick, href, ...props }: any) =
   );
 };
 
-// 🔥 Optimized Cinematic Background Component (Large Display Friendly)
-const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
+// 🔥 Dynamic Background: Light = Images, Dark = CSS Space (Zero Glitch, Ultra Smooth)
+const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
-  
+
   useEffect(() => {
     if (images.length <= 1) return;
-    const interval = setInterval(() => setIndex((prev) => (prev + 1) % images.length), 8000);
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 8000);
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
-      {images.map((src, i) => (
-        <img 
-          key={src}
-          src={src} 
-          alt={`BG ${i}`} 
-          loading={i === 0 ? "eager" : "lazy"}
-          decoding="async"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
-            i === index ? 'opacity-100' : 'opacity-0'
-          } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
-        />
-      ))}
+      {/* ☀️ LIGHT MODE: Cinematic Images */}
+      <div className="dark:hidden absolute inset-0">
+        {images.map((src, i) => (
+          <img 
+            key={src}
+            src={src} 
+            alt={`Cinematic BG ${i}`} 
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding="async"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
+              i === index ? 'opacity-100' : 'opacity-0'
+            } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
+          />
+        ))}
+      </div>
+
+      {/* 🌙 DARK MODE: Pure CSS Space/Solar System (Ultra Smooth, Zero Network Load) */}
+      <div className="hidden dark:block absolute inset-0">
+        <div className="absolute inset-0 animate-nebula-shift" />
+        <div className="absolute inset-0 space-stars" />
+        <div className="absolute top-1/4 left-1/4 solar-orbit-1" />
+        <div className="absolute bottom-1/3 right-1/4 solar-orbit-2" />
+        <div className="absolute top-1/2 left-1/2 solar-orbit-3" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/85 to-slate-950/95" />
+      </div>
     </div>
   );
 };
@@ -307,6 +322,86 @@ export default function AdminDashboardPage() {
         
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
+
+        /* 🔥 SPACE & SOLAR SYSTEM ANIMATIONS (Dark Mode Only - Zero Glitch) */
+        @keyframes nebula-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-nebula-shift {
+          background: linear-gradient(135deg, #020617 0%, #0f172a 25%, #1e1b4b 50%, #312e81 75%, #020617 100%);
+          background-size: 400% 400%;
+          animation: nebula-shift 10s ease infinite;
+        }
+        @keyframes star-zoom {
+          0% { transform: translateZ(0) scale(0.2); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translateZ(800px) scale(4); opacity: 0; }
+        }
+        .space-stars {
+          position: absolute;
+          inset: 0;
+          background: transparent;
+          overflow: hidden;
+          perspective: 500px;
+        }
+        .space-stars::before, .space-stars::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 2px;
+          height: 2px;
+          border-radius: 50%;
+          box-shadow: 
+            -20vw -20vh 0 0 #fff, 30vw -10vh 0 0 #a5b4fc, -10vw 30vh 0 0 #fff,
+            40vw 20vh 0 0 #f472b6, -30vw 40vh 0 0 #fff, 10vw -40vh 0 0 #60a5fa,
+            20vw 10vh 0 0 #fff, -40vw -10vh 0 0 #c084fc, 0vw 0vw 0 0 #fff;
+          animation: star-zoom 3s linear infinite;
+        }
+        .space-stars::after {
+          animation-delay: 1.5s;
+          box-shadow: 
+            15vw -25vh 0 0 #fff, -25vw 15vh 0 0 #fbbf24, 35vw 35vh 0 0 #fff,
+            -15vw -35vh 0 0 #34d399, 25vw -15vh 0 0 #fff, -35vw 25vh 0 0 #f87171;
+        }
+        @keyframes orbit {
+          0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+        }
+        @keyframes orbit-reverse {
+          0% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+          100% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+        }
+        @keyframes orbit-slow {
+          0% { transform: rotate(0deg) translateX(180px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(180px) rotate(-360deg); }
+        }
+        .solar-orbit-1 {
+          width: 10px;
+          height: 10px;
+          background: #fbbf24;
+          border-radius: 50%;
+          box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
+          animation: orbit 8s linear infinite;
+        }
+        .solar-orbit-2 {
+          width: 8px;
+          height: 8px;
+          background: #60a5fa;
+          border-radius: 50%;
+          box-shadow: 0 0 20px #3b82f6, 0 0 40px #2563eb;
+          animation: orbit-reverse 12s linear infinite;
+        }
+        .solar-orbit-3 {
+          width: 6px;
+          height: 6px;
+          background: #f472b6;
+          border-radius: 50%;
+          box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777;
+          animation: orbit-slow 18s linear infinite;
+        }
       `}</style>
 
       {/* 🔥 HEADER */}
@@ -343,9 +438,9 @@ export default function AdminDashboardPage() {
       {/* 🔥 MAIN CONTENT */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <CinematicBackground images={adminBgImages} zoomType="in" />
-          <div className="absolute inset-0 animate-living-gradient" />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/95 to-slate-950/95" />
+          <DynamicBackground images={adminBgImages} zoomType="in" />
+          <div className="absolute inset-0 animate-living-gradient dark:bg-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/95 to-slate-950/95 dark:bg-transparent" />
         </div>
 
         <div className="relative z-10">
@@ -385,7 +480,7 @@ export default function AdminDashboardPage() {
                   { label: "कुल राजस्व", value: `₹${(totalRevenue / 100000).toFixed(1)}L`, change: "+8%", icon: DollarSign, color: "text-purple-400", bg: "bg-purple-500/10 border-purple-500/20" },
                   { label: "औसत वृद्धि", value: "68%", change: "+5%", icon: TrendingUp, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-slate-600 transition-all duration-300">
+                  <div key={i} className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl p-6 border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-slate-600 transition-all duration-300">
                     <div className="flex items-start justify-between mb-4">
                       <div className={`p-3 rounded-xl border ${stat.bg}`}><stat.icon className={`w-6 h-6 ${stat.color}`} /></div>
                       <span className="text-xs font-bold text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-1 rounded-full">{stat.change}</span>
@@ -395,7 +490,7 @@ export default function AdminDashboardPage() {
                   </div>
                 ))}
               </div>
-              <div className="bg-slate-800/80 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg mb-8">
+              <div className="bg-slate-800/80 dark:bg-slate-800/60 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg mb-8">
                 <h3 className="text-xl font-bold rainbow-shimmer-text mb-6 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-indigo-400" /> राजस्व और छात्र वृद्धि (6 महीने)</h3>
                 <div className="h-80 w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -411,14 +506,14 @@ export default function AdminDashboardPage() {
                   </ResponsiveContainer>
                 </div>
               </div>
-              <div className="bg-slate-800/80 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg">
+              <div className="bg-slate-800/80 dark:bg-slate-800/60 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg">
                 <h3 className="text-xl font-bold rainbow-shimmer-text mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-indigo-400" /> हाल की गतिविधियाँ</h3>
                 <div className="space-y-4">
                   {recentActivities.length === 0 ? (
                     <p className="text-slate-400 text-center py-8">कोई गतिविधि नहीं</p>
                   ) : (
                     recentActivities.map((activity) => (
-                      <div key={activity.id} className="flex items-start gap-4 p-4 bg-slate-900/80 rounded-xl border border-slate-700/50">
+                      <div key={activity.id} className="flex items-start gap-4 p-4 bg-slate-900/80 dark:bg-slate-900/60 rounded-xl border border-slate-700/50">
                         <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0"><Activity className="w-5 h-5 text-indigo-400" /></div>
                         <div className="flex-1">
                           <p className="font-semibold text-white">{activity.action}</p>
@@ -449,10 +544,10 @@ export default function AdminDashboardPage() {
               {showCourseForm && (
                 <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-slate-700/50 shadow-xl">
                   <div className="absolute inset-0 z-0">
-                    <CinematicBackground images={formBgImages} zoomType="out" />
-                    <div className="absolute inset-0 bg-slate-950/90" />
+                    <DynamicBackground images={formBgImages} zoomType="out" />
+                    <div className="absolute inset-0 bg-slate-950/90 dark:bg-transparent" />
                   </div>
-                  <div className="relative z-10 bg-slate-800/80 p-6 sm:p-8">
+                  <div className="relative z-10 bg-slate-800/80 dark:bg-slate-800/60 p-6 sm:p-8">
                     <div className="flex justify-between items-center mb-6">
                       <h3 className="text-xl font-bold rainbow-shimmer-text flex items-center gap-2">
                         <BookOpen className="w-5 h-5 text-indigo-400" /> नया कोर्स जोड़ें
@@ -504,7 +599,7 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course) => (
-                  <div key={course.id} className="bg-slate-800/80 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-indigo-500/50 transition-all group">
+                  <div key={course.id} className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-indigo-500/50 transition-all group">
                     <div className="relative h-48">
                       <Image src={course.imageUrl} alt={course.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent" />
@@ -540,10 +635,10 @@ export default function AdminDashboardPage() {
               {showPostForm && (
                 <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-slate-700/50 shadow-xl">
                   <div className="absolute inset-0 z-0">
-                    <CinematicBackground images={formBgImages} zoomType="in" />
-                    <div className="absolute inset-0 bg-slate-950/90" />
+                    <DynamicBackground images={formBgImages} zoomType="in" />
+                    <div className="absolute inset-0 bg-slate-950/90 dark:bg-transparent" />
                   </div>
-                  <div className="relative z-10 bg-slate-800/80 p-6 sm:p-8">
+                  <div className="relative z-10 bg-slate-800/80 dark:bg-slate-800/60 p-6 sm:p-8">
                     <div className="flex justify-between items-center mb-6">
                       <h3 className="text-xl font-bold rainbow-shimmer-text flex items-center gap-2">
                         <Sparkles className="w-5 h-5 text-indigo-400" /> नई पोस्ट जोड़ें
@@ -591,7 +686,7 @@ export default function AdminDashboardPage() {
 
               <div className="space-y-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-indigo-500/30 transition-all group">
+                  <div key={update.id} className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl p-6 border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-indigo-500/30 transition-all group">
                     <div className="flex items-start gap-4">
                       {update.imageUrl && (
                         <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 border border-slate-700 group-hover:border-indigo-500/50 transition-colors">
@@ -619,7 +714,7 @@ export default function AdminDashboardPage() {
 
           {/* Students Tab */}
           {activeTab === "students" && (
-            <div className="bg-slate-800/80 rounded-2xl p-8 border border-slate-700/50 shadow-lg text-center">
+            <div className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl p-8 border border-slate-700/50 shadow-lg text-center">
               <Users className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold rainbow-shimmer-text mb-2">कुल छात्र: <span className="text-indigo-400">{totalStudents}</span></h2>
               <p className="text-slate-400">विस्तृत छात्र प्रबंधन system जल्द ही उपलब्ध होगा।</p>
