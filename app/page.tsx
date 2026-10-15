@@ -8,7 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
-import ThemeToggle from "@/components/ThemeToggle"; // 🔥 Imported
+// 🔥 ThemeToggle import removed as it is now global in layout.tsx
 import Logo from "@/components/logo";
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
@@ -110,7 +110,6 @@ const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoom
   );
 };
 
-// ... (Icons remain exactly the same as your code) ...
 const YoutubeIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" fill="#FF0000"/>
@@ -234,7 +233,6 @@ export default function Home() {
     return (
       <main className="relative min-h-[100dvh] bg-white dark:bg-slate-950 overflow-x-hidden flex flex-col" itemScope itemType="https://schema.org/WebPage">
         <style jsx global>{`
-          /* ... (Your existing keyframes remain exactly the same) ... */
           @keyframes tricolor-shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
           .tricolor-text { background: linear-gradient(90deg, #FF9933 0%, #FFFFFF 30%, #FFFFFF 70%, #138808 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: tricolor-shimmer 4s linear infinite; }
           @keyframes tricolor-shimmer-reverse { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
@@ -274,27 +272,9 @@ export default function Home() {
           .solar-orbit-3 { width: 6px; height: 6px; background: #f472b6; border-radius: 50%; box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777; animation: orbit-slow 18s linear infinite; }
         `}</style>
 
-        {/* 🔥 LOGGED OUT HEADER WITH THEME TOGGLE */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-all duration-300">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16 sm:h-20">
-              <div className="flex items-center gap-3">
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
-                  <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
-                </div>
-                <span className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-lg">
-                  World of Concept
-                </span>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-4">
-                {/* 🔥 THEME TOGGLE IS NOW VISIBLE HERE */}
-                <ThemeToggle />
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Added pt-20 to prevent content from hiding behind the fixed header */}
+        {/* 🔥 Local header removed to avoid duplication with Global Layout Header */}
+        
+        {/* Added pt-20 to prevent content from hiding behind the fixed global header */}
         <div className="pt-20">
           {/* 1. HERO SECTION */}
           <section className="relative min-h-[90dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
@@ -514,7 +494,6 @@ export default function Home() {
   return (
     <main className="min-h-[100dvh] bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 flex flex-col relative overflow-x-hidden w-full transition-colors duration-300">
       <style jsx global>{`
-        /* ... (Your existing keyframes remain exactly the same) ... */
         @keyframes rainbow-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
         .rainbow-shimmer-bg { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; animation: rainbow-shimmer 3s linear infinite; }
         .rainbow-shimmer-bg:hover { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3); }
@@ -549,7 +528,7 @@ export default function Home() {
         .solar-orbit-3 { width: 6px; height: 6px; background: #f472b6; border-radius: 50%; box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777; animation: orbit-slow 18s linear infinite; }
       `}</style>
 
-      {/* 🔥 LOGGED IN HEADER WITH THEME TOGGLE */}
+      {/* 🔥 LOGGED IN HEADER (Theme Toggle handled globally in layout.tsx) */}
       <header className="bg-white/90 dark:bg-slate-950/90 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
@@ -562,9 +541,6 @@ export default function Home() {
               </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
-              {/* 🔥 THEME TOGGLE IS NOW VISIBLE HERE TOO */}
-              <ThemeToggle />
-              
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-bold text-slate-900 dark:text-white">{student?.fullName || "छात्र"}</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">{student?.email || user?.email}</p>
