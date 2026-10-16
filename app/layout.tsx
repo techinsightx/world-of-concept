@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import ThemeToggle from "@/components/ThemeToggle"; // 🔥 Imported Global Toggle
+import ThemeToggle from "@/components/ThemeToggle";
 
 import "./globals.css";
 
@@ -31,24 +31,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: "World of Concept",
   title: {
-    default: `World of Concept | RK Sir - Best Bihar Board Matric & Inter Online Coaching ${CURRENT_YEAR}`,
-    template: `%s | World of Concept by RK Sir`,
+    default: `World of Concept | RK Sir (Dynamic Educator) & Mukesh Kumar Malakar (Tech Expert & Founder) - Best Bihar Board Coaching ${CURRENT_YEAR}`,
+    template: `%s | World of Concept Legacy`,
   },
-  description: "Join World of Concept by RK Sir, the #1 rated online coaching for Bihar Board (BSEB) Matric (10th) & Inter (12th). Get HD video lectures, smart notes, mock test series, and live doubt solving. Enroll now for guaranteed success!",
+  description: "Experience the ultimate EdTech legacy: RK Sir, the dynamic teacher for Bihar Board preparation, meets Mukesh Kumar Malakar, the Full-Stack Developer & Tech Expert handling platform development, UI/UX, and virality. Join the #1 online coaching for BSEB Matric & Inter.",
   keywords: [
     "World of Concept", "RK Sir", "RK Sir Classes", "RK Sir Maths", 
-    "Bihar Board Matric Coaching", "Bihar Board Inter Coaching", "BSEB Online Classes", 
-    "Alamnagar Coaching Center", "Madhepura Coaching", "Mukesh Kumar Malakar", 
-    "बिहार बोर्ड मैट्रिक कोचिंग", "बिहार बोर्ड इंटर कोचिंग", "आरके सर क्लासेस", 
-    "वर्ल्ड ऑफ कॉन्सेप्ट", "Bihar Board 10th Online Class", "Bihar Board 12th Science Arts Commerce", 
-    "Best Coaching in Alamnagar", "BSEB Model Paper 2027", "Bihar Board Topper Strategy",
-    "Bihar Board 10th Math Important Questions", "BSEB 12th Science Topper", "RK Sir Math Tricks"
+    "Dynamic Teacher Bihar Board", "Mukesh Kumar Malakar", "Full-Stack Developer", 
+    "Tech Expert", "EdTech Founder", "Bihar Board Matric Coaching", 
+    "Bihar Board Inter Coaching", "BSEB Online Classes", "Alamnagar Coaching Center", 
+    "Madhepura Coaching", "बिहार बोर्ड मैट्रिक कोचिंग", "बिहार बोर्ड इंटर कोचिंग", 
+    "आरके सर क्लासेस", "वर्ल्ड ऑफ कॉन्सेप्ट", "BSEB Model Paper 2027", "Bihar Board Topper Strategy"
   ],
   authors: [
     { name: INSTRUCTOR_NAME, url: "https://youtube.com/@JoinWorldofConcept" },
     { name: FOUNDER_NAME, url: "https://www.google.com/search?q=Mukesh+Kumar+Malakar" }
   ],
-  creator: FOUNDER_NAME,
+  creator: `${FOUNDER_NAME} & ${INSTRUCTOR_NAME}`,
   publisher: "World of Concept",
   formatDetection: {
     telephone: true,
@@ -65,23 +64,23 @@ export const metadata: Metadata = {
     type: "website",
     locale: "hi_IN",
     url: SITE_URL,
-    title: `World of Concept | RK Sir - #1 Bihar Board Matric & Inter Coaching ${CURRENT_YEAR}`,
-    description: "Join World of Concept by RK Sir. HD video lectures, smart notes, test series, and live doubt solving for Bihar Board 10th & 12th students.",
+    title: `World of Concept | RK Sir & Mukesh Kumar Malakar - #1 Bihar Board Coaching ${CURRENT_YEAR}`,
+    description: "A revolutionary EdTech legacy by RK Sir (Dynamic Educator) and Mukesh Kumar Malakar (Full-Stack Developer & Tech Expert). HD video lectures, smart notes, and viral educational content.",
     siteName: "World of Concept",
     images: [
       {
         url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "World of Concept - Best Bihar Board Coaching by RK Sir",
+        alt: "World of Concept - RK Sir & Mukesh Kumar Malakar Legacy",
         type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `World of Concept | RK Sir's Official Platform`,
-    description: "The most trusted platform for Bihar Board Matric and Inter preparation. Learn with RK Sir.",
+    title: `World of Concept | RK Sir & Mukesh Kumar Malakar's Official Platform`,
+    description: "The most trusted platform for Bihar Board Matric and Inter preparation. Dynamic teaching by RK Sir, powered by Mukesh Kumar Malakar's tech expertise.",
     images: [`${SITE_URL}/og-image.jpg`],
     creator: "@JoinWorldofConcept",
   },
@@ -115,7 +114,7 @@ export const metadata: Metadata = {
     "business:country": "India",
     "copyright": `© ${CURRENT_YEAR} World of Concept. All rights reserved.`,
     "og:site_name": "World of Concept",
-    "article:author": INSTRUCTOR_NAME,
+    "article:author": `${INSTRUCTOR_NAME} & ${FOUNDER_NAME}`,
     "article:publisher": SITE_URL,
   },
 };
@@ -140,9 +139,23 @@ const structuredData = {
   "@graph": [
     {
       "@type": "Person",
+      "@id": `${SITE_URL}#instructor`,
+      "name": INSTRUCTOR_NAME,
+      "jobTitle": "Dynamic Educator & Master Teacher for Bihar Board",
+      "description": "Dedicated teacher providing complete content, live telecasts, and proven strategies for Bihar Board Matric and Inter students.",
+      "url": "https://youtube.com/@JoinWorldofConcept",
+      "sameAs": [
+        "https://youtube.com/@JoinWorldofConcept",
+        "https://instagram.com/join_world_of_concept",
+        "https://facebook.com/world.of.concept"
+      ]
+    },
+    {
+      "@type": "Person",
       "@id": `${SITE_URL}#founder`,
       "name": FOUNDER_NAME,
-      "jobTitle": "Founder & EdTech Visionary",
+      "jobTitle": "Full-Stack Developer, Tech Expert & Founder",
+      "description": "The tech visionary handling UI/UX, platform development, social media virality, and live telecast execution from scratch.",
       "url": "https://www.google.com/search?q=Mukesh+Kumar+Malakar",
       "sameAs": [
         "https://www.linkedin.com/in/mukesh-kumar-malakar-one",
@@ -157,7 +170,7 @@ const structuredData = {
       "url": SITE_URL,
       "logo": `${SITE_URL}/logo.png`,
       "image": `${SITE_URL}/og-image.jpg`,
-      "description": "बिहार बोर्ड मैट्रिक और इंटर छात्रों के लिए बेस्ट ऑनलाइन कोचिंग प्लेटफॉर्म",
+      "description": "बिहार बोर्ड मैट्रिक और इंटर छात्रों के लिए बेस्ट ऑनलाइन कोचिंग प्लेटफॉर्म, RK Sir और Mukesh Kumar Malakar द्वारा संचालित।",
       "founder": { "@id": `${SITE_URL}#founder` },
       "address": {
         "@type": "PostalAddress",
@@ -352,13 +365,11 @@ export default function RootLayout({
         />
       </head>
       
-      {/* 🔥 Added transition-colors for smooth theme switching */}
       <body className="antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-100 font-sans transition-colors duration-300">
-        
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           
-          {/* 🔥 GLOBAL FLOATING THEME TOGGLE (Visible on ALL pages, top-right) */}
-          <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] drop-shadow-2xl">
+          {/* 🔥 FIXED: Mobile पर Toggle अब Header के नीचे (top-20) दिखेगा, Overlap नहीं होगा */}
+          <div className="fixed top-20 sm:top-6 right-4 sm:right-6 z-[9999] drop-shadow-2xl">
             <ThemeToggle />
           </div>
 
