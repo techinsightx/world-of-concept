@@ -212,11 +212,11 @@ export default function Home() {
   if (loading) {
     return (
       <main className="relative min-h-[100dvh] flex flex-col items-center justify-center bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
-        <div className="text-center space-y-6 px-4">
+        <div className="text-center space-y-4 px-4">
           <PureLogo size="lg" />
           <div className="space-y-2">
-            <p className="text-slate-600 dark:text-slate-300 font-semibold text-lg tracking-wide">World of Concept लोड हो रहा है...</p>
-            <div className="w-48 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full mx-auto overflow-hidden">
+            <p className="text-slate-600 dark:text-slate-300 font-semibold text-base tracking-wide">World of Concept लोड हो रहा है...</p>
+            <div className="w-40 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full mx-auto overflow-hidden">
               <div className="h-full bg-gradient-to-r from-orange-500 via-white to-green-500 rounded-full animate-[loading_1.5s_ease-in-out_infinite]" style={{ width: '60%' }} />
             </div>
           </div>
@@ -248,23 +248,13 @@ export default function Home() {
           .animate-ken-burns-out { animation: ken-burns-zoom-out 60s ease-in-out infinite alternate; will-change: transform; }
           @media (max-width: 768px) { .animate-ken-burns-in { animation-duration: 40s; } .animate-ken-burns-out { animation-duration: 40s; } }
           
-          /* 🔥 FRICTIONLESS SEAMLESS RAILWAY TRACK ANIMATION */
-          @keyframes marquee-seamless { 
-            0% { transform: translate3d(0, 0, 0); } 
-            100% { transform: translate3d(-50%, 0, 0); } 
-          }
-          .animate-marquee-seamless { 
-            animation: marquee-seamless 45s linear infinite; 
-            will-change: transform; 
-            touch-action: pan-y; 
-          }
-          .animate-marquee-seamless:hover { 
-            animation-play-state: paused; 
-          }
+          @keyframes marquee-seamless { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+          .animate-marquee-seamless { animation: marquee-seamless 40s linear infinite; will-change: transform; touch-action: pan-y; }
+          .animate-marquee-seamless:hover { animation-play-state: paused; }
 
           @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
           @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-          .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+          .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
           @keyframes shimmer-text { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
           .animate-shimmer-text { background: linear-gradient(90deg, #94a3b8 0%, #ffffff 50%, #94a3b8 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer-text 3s linear infinite; }
           @keyframes nebula-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -281,22 +271,22 @@ export default function Home() {
           .solar-orbit-3 { width: 6px; height: 6px; background: #f472b6; border-radius: 50%; box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777; animation: orbit-slow 18s linear infinite; }
         `}</style>
 
-        {/* Added pt-20 to prevent content from hiding behind the fixed global header */}
-        <div className="pt-20">
-          {/* 1. HERO SECTION */}
-          <section className="relative min-h-[90dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
+        {/* Added pt-16 for mobile, pt-20 for desktop */}
+        <div className="pt-16 sm:pt-20">
+          {/* 1. HERO SECTION (Mobile Optimized) */}
+          <section className="relative min-h-[80dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
             <DynamicBackground images={heroBgImages} zoomType="in" />
             <div className="absolute inset-0 z-10 bg-slate-950/80 dark:bg-transparent" />
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent dark:via-slate-950/85" />
 
-            <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-              <div className="flex-1 text-center lg:text-left space-y-6 animate-fade-in-up">
-                <div className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-sm font-semibold shadow-sm mx-auto lg:mx-0">
-                  <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
+            <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-8 lg:gap-20">
+              <div className="flex-1 text-center lg:text-left space-y-4 sm:space-y-6 animate-fade-in-up">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs sm:text-sm font-semibold shadow-sm mx-auto lg:mx-0">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   2027 बैच के लिए एडमिशन खुले
                 </div>
                 
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white flex items-center" itemProp="name">
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight leading-none text-white flex items-center justify-center lg:justify-start" itemProp="name">
                   <span className="inline-block relative">
                     <span className="tricolor-text-reverse absolute top-0 left-0 whitespace-nowrap">
                       {typedText}
@@ -307,9 +297,9 @@ export default function Home() {
                   </span>
                 </h1>
                 
-                <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium" itemProp="description">
+                <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium" itemProp="description">
                   बिहार बोर्ड मैट्रिक और इंटर की तैयारी के लिए सबसे भरोसेमंद प्लेटफॉर्म।
-                  <span className="block mt-3 text-white font-bold">
+                  <span className="block mt-2 sm:mt-3 text-white font-bold">
                     RK Sir के साथ सफलता की अपनी नई यात्रा शुरू करें।
                   </span>
                 </p>
@@ -321,72 +311,82 @@ export default function Home() {
             </div>
           </section>
 
-          {/* 2. WHY CHOOSE US SECTION */}
-          <section className="relative py-24 overflow-hidden border-t border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
+          {/* 2. WHY CHOOSE US SECTION (Mobile Optimized) */}
+          <section className="relative py-12 sm:py-24 overflow-hidden border-t border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
             <DynamicBackground images={whyChooseBgImages} zoomType="out" />
             <div className="absolute inset-0 z-10 bg-slate-950/90 dark:bg-transparent" />
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">
+              <h2 className="text-2xl sm:text-5xl font-extrabold text-white mb-3 sm:mb-4">
                 <span className="rainbow-shimmer-text">World of Concept</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-green-500">क्यों चुनें?</span>
               </h2>
-              <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-12">बिहार बोर्ड परीक्षाओं में टॉप करने के लिए RK Sir द्वारा तैयार किया गया सब कुछ।</p>
+              <p className="text-slate-400 text-sm sm:text-lg max-w-2xl mx-auto mb-8 sm:mb-12">बिहार बोर्ड परीक्षाओं में टॉप करने के लिए RK Sir द्वारा तैयार किया गया सब कुछ।</p>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {[
                   { icon: "🎬", title: "HD वीडियो लेक्चर", desc: "स्टूडियो क्वालिटी में रिकॉर्ड किए गए स्पष्ट कॉन्सेप्ट-बेस्ड पाठ।" },
                   { icon: "📝", title: "स्मार्ट नोट्स", desc: "त्वरित और प्रभावी पुनरावृत्ति के लिए संरचित, हस्तलिखित नोट्स।" },
                   { icon: "📊", title: "टेस्ट सीरीज", desc: "विस्तृत प्रदर्शन विश्लेषण के साथ अध्याय-वार और पूर्ण मॉक टेस्ट।" },
                   { icon: "💬", title: "डाउट सपोर्ट", desc: "RK Sir और उनकी समर्पित मेंटर टीम से सीधी और त्वरित सहायता।" },
                 ].map((feature, i) => (
-                  <div key={i} className="group bg-white dark:bg-slate-800/40 border border-orange-100 dark:border-slate-700/50 rounded-2xl p-6 text-center hover:bg-orange-50 dark:hover:bg-slate-800/80 hover:border-orange-300 dark:hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-500">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-500">
+                  <div key={i} className="group bg-white dark:bg-slate-800/40 rounded-2xl p-4 sm:p-6 text-center hover:bg-orange-50 dark:hover:bg-slate-800/80 transition-all duration-300">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
                       {feature.icon}
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{feature.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{feature.desc}</p>
+                    <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white mb-1 sm:mb-2">{feature.title}</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">{feature.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
           </section>
 
-          {/* 3. CINEMATIC DUAL ROW SCROLLING (FRICTIONLESS) */}
-          <section className="relative py-16 overflow-hidden border-y border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
+          {/* 3. CINEMATIC DUAL ROW SCROLLING (TRUE EDGELESS & FRICTIONLESS) */}
+          <section className="relative py-8 sm:py-16 overflow-hidden border-y border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
             <DynamicBackground images={scrollingBgImages} zoomType="in" />
             <div className="absolute inset-0 z-10 bg-slate-950/90 dark:bg-transparent" />
 
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
-
-            {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
-            <div className="relative z-10 flex gap-4 w-max animate-marquee-seamless mb-4">
-              {[...row1Images, ...row1Images].map((src, i) => (
-                <div key={`m1-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
-                  <Image src={src} alt={`Marquee 1 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                  <div className="absolute bottom-4 left-4 text-white font-bold text-sm drop-shadow-md flex items-center gap-2">
-                    <PlayCircle className="w-4 h-4" /> World of Concept क्लास
-                  </div>
+            <div className="relative z-10 w-full">
+              {/* Row 1 */}
+              <div className="relative w-full overflow-hidden mb-3 sm:mb-4">
+                <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+                
+                <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-8">
+                  {[...row1Images, ...row1Images].map((src, i) => (
+                    <div key={`m1-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-80 h-44 sm:h-52 rounded-2xl overflow-hidden flex-shrink-0 shadow-md">
+                      <Image src={src} alt={`Marquee 1 ${i}`} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                      <div className="absolute bottom-3 left-3 text-white font-bold text-xs sm:text-sm drop-shadow-md flex items-center gap-2">
+                        <PlayCircle className="w-3 h-3 sm:w-4 sm:h-4" /> World of Concept क्लास
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="relative z-10 flex gap-4 w-max animate-marquee-seamless" style={{ animationDirection: 'reverse' }}>
-              {[...row2Images, ...row2Images].map((src, i) => (
-                <div key={`m2-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
-                  <Image src={src} alt={`Marquee 2 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                  <div className="absolute bottom-4 left-4 text-white font-bold text-sm drop-shadow-md flex items-center gap-2">
-                    <Trophy className="w-4 h-4 text-yellow-400" /> छात्र सफलता की कहानी
-                  </div>
+              {/* Row 2 */}
+              <div className="relative w-full overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-32 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+                
+                <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-8" style={{ animationDirection: 'reverse' }}>
+                  {[...row2Images, ...row2Images].map((src, i) => (
+                    <div key={`m2-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-80 h-44 sm:h-52 rounded-2xl overflow-hidden flex-shrink-0 shadow-md">
+                      <Image src={src} alt={`Marquee 2 ${i}`} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                      <div className="absolute bottom-3 left-3 text-white font-bold text-xs sm:text-sm drop-shadow-md flex items-center gap-2">
+                        <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400" /> छात्र सफलता की कहानी
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </section>
 
-          {/* 4. WORLD-CLASS FOOTER */}
-          <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-700">
+          {/* 4. WORLD-CLASS FOOTER (Mobile Optimized) */}
+          <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-8 sm:py-16 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-700">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
             
             <div className="absolute inset-0 z-0">
@@ -400,7 +400,7 @@ export default function Home() {
                   top: 0,
                   left: 0,
                   filter: 'invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.3) saturate(0.6)',
-                  opacity: 0.6
+                  opacity: 0.4
                 }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -408,85 +408,79 @@ export default function Home() {
                 title="World of Concept Location"
                 allowFullScreen
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/85 dark:from-slate-950/85 via-[#FFF9F0]/75 dark:via-slate-950/75 to-[#FFF9F0]/85 dark:to-slate-950/85" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/90 dark:from-slate-950/90 via-[#FFF9F0]/80 dark:via-slate-950/80 to-[#FFF9F0]/90 dark:to-slate-950/90" />
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto">
-              <div className="mb-8 flex items-center justify-center">
+              <div className="mb-6 flex items-center justify-center">
                 <MagneticButton 
                   href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-                  className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-orange-200 dark:border-slate-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-slate-800 transition-all duration-500 shadow-lg shadow-orange-500/10 overflow-hidden"
+                  className="group relative inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900/80 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                  <span className="relative flex h-3 w-3">
+                  <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
                   </span>
-                  <span className="text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
+                  <span className="text-xs sm:text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
                     आलमनगर, बिहार
                   </span>
-                  <ExternalLink className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
+                  <ExternalLink className="w-3 h-3 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
                 </MagneticButton>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
-                <div className="sm:col-span-2 lg:col-span-1 space-y-4 sm:space-y-6">
-                  <div className="flex items-center gap-3 text-slate-900 dark:text-white">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
+                <div className="col-span-2 sm:col-span-1 space-y-3">
+                  <div className="flex items-center gap-2 text-slate-900 dark:text-white">
                     <PureLogo size="sm" />
-                    <span className="font-extrabold text-lg sm:text-xl tracking-tight">World of Concept</span>
+                    <span className="font-extrabold text-sm sm:text-base tracking-tight">World of Concept</span>
                   </div>
-                  <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-600 dark:text-slate-400">
-                    बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
-                  </p>
-                  <div className="flex gap-3 sm:gap-4 pt-2">
-                    <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                    <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                    <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                    <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                  <p className="text-[10px] sm:text-xs leading-relaxed text-slate-600 dark:text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा प्रदान करना।</p>
+                  <div className="flex gap-2 pt-1">
+                    <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm"><YoutubeIcon className="w-4 h-4" /></MagneticButton>
+                    <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-300 shadow-sm"><InstagramIcon className="w-4 h-4" /></MagneticButton>
+                    <MagneticButton href="https://facebook.com/worldofconcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm"><FacebookIcon className="w-4 h-4" /></MagneticButton>
+                    <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-sm"><TelegramIcon className="w-4 h-4" /></MagneticButton>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
-                  <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                    <li><a href="#available-courses" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सभी कोर्सेस</a></li>
-                    <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
-                    <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
+                  <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">प्लेटफॉर्म</h4>
+                  <ul className="space-y-2 text-[10px] sm:text-xs">
+                    <li><a href="#available-courses" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">सभी कोर्सेस</a></li>
+                    <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">हमें क्यों चुनें</a></li>
                   </ul>
                 </div>
 
                 <div>
-                  <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">कानूनी</h4>
-                  <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                    <li><a href="/privacy" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">गोपनीयता नीति</a></li>
-                    <li><a href="/terms" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सेवा की शर्तें</a></li>
-                    <li><a href="/refund" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">रिफंड नीति</a></li>
-                    <li><a href="/contact" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">संपर्क करें</a></li>
+                  <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">कानूनी</h4>
+                  <ul className="space-y-2 text-[10px] sm:text-xs">
+                    <li><a href="/privacy" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">गोपनीयता नीति</a></li>
+                    <li><a href="/terms" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">सेवा की शर्तें</a></li>
+                    <li><a href="/refund" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">रिफंड नीति</a></li>
                   </ul>
                 </div>
 
                 <div>
-                  <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">सहायता</h4>
-                  <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                    <li className="flex items-center gap-2 sm:gap-3"><span>📧</span> support@worldofconcept.in</li>
-                    <li className="flex items-center gap-2 sm:gap-3"><span>📞</span> +91 7979096954</li>
-                    <li className="flex items-center gap-2 sm:gap-3"><span>📍</span> अलमनगर, बिहार, भारत</li>
+                  <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">सहायता</h4>
+                  <ul className="space-y-2 text-[10px] sm:text-xs">
+                    <li className="flex items-center gap-1.5"><span>📧</span> support@worldofconcept.in</li>
+                    <li className="flex items-center gap-1.5"><span>📞</span> +91 7979096954</li>
                   </ul>
                 </div>
               </div>
 
-              <div className="pt-6 sm:pt-8 border-t border-orange-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 px-2">
+              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
                 <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
                 <MagneticButton 
                   href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
-                  className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-500 group" 
+                  className="flex items-center gap-1.5 hover:text-orange-500 transition-colors" 
                   title="Designed and Developed by Mukesh Kumar Malakar"
                 >
                   <span>निर्मित</span>
-                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-500" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
-                  <span>द्वारा <span className="font-bold text-slate-900 dark:text-white">Mukesh Kumar Malakar</span></span>
+                  <span>द्वारा <span className="font-bold">Mukesh Kumar Malakar</span></span>
                 </MagneticButton>
               </div>
             </div>
@@ -497,7 +491,7 @@ export default function Home() {
   }
 
   // ==========================================
-  // LOGGED IN VIEW (Dashboard)
+  // LOGGED IN VIEW (Dashboard) - Mobile Optimized
   // ==========================================
   return (
     <main className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 flex flex-col relative overflow-x-hidden w-full transition-colors duration-700">
@@ -509,22 +503,12 @@ export default function Home() {
         .rainbow-shimmer-bg:hover::after { transform: translateX(100%); }
         .rainbow-shimmer-text { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: rainbow-shimmer 3s linear infinite; }
         
-        /* 🔥 FRICTIONLESS SEAMLESS RAILWAY TRACK ANIMATION */
-        @keyframes marquee-seamless { 
-          0% { transform: translate3d(0, 0, 0); } 
-          100% { transform: translate3d(-50%, 0, 0); } 
-        }
-        .animate-marquee-seamless { 
-          animation: marquee-seamless 45s linear infinite; 
-          will-change: transform; 
-          touch-action: pan-y; 
-        }
-        .animate-marquee-seamless:hover { 
-          animation-play-state: paused; 
-        }
+        @keyframes marquee-seamless { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+        .animate-marquee-seamless { animation: marquee-seamless 40s linear infinite; will-change: transform; touch-action: pan-y; }
+        .animate-marquee-seamless:hover { animation-play-state: paused; }
 
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+        .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
         @keyframes shimmer-text { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         .animate-shimmer-text { background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer-text 3s linear infinite; }
         @keyframes ken-burns-zoom-in { 0% { transform: translate3d(0, 0, 0) scale(1.0); } 100% { transform: translate3d(-1%, -1%, 0) scale(1.08); } }
@@ -546,23 +530,23 @@ export default function Home() {
         .solar-orbit-3 { width: 6px; height: 6px; background: #f472b6; border-radius: 50%; box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777; animation: orbit-slow 18s linear infinite; }
       `}</style>
 
-      {/* 🔥 CLEAN LOGGED IN HEADER (Branding Removed, Right-Aligned) */}
-      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 border-b border-orange-100 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full backdrop-blur-xl">
+      {/* 🔥 CLEAN LOGGED IN HEADER (Mobile Optimized) */}
+      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-end items-center h-16 sm:h-20 gap-3 sm:gap-6">
-            <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200 dark:border-slate-800">
+          <div className="flex justify-end items-center h-14 sm:h-16 gap-3 sm:gap-6">
+            <div className="hidden sm:flex items-center gap-3 pl-4">
               <div className="text-right">
                 <p className="text-sm font-bold text-slate-900 dark:text-white">{student?.fullName || "छात्र"}</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">{student?.email || user?.email}</p>
               </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
+              <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
                 {student?.fullName?.charAt(0).toUpperCase() || "छ"}
               </div>
             </div>
             
             <MagneticButton 
               onClick={handleLogout} 
-              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-500 border border-red-200 dark:border-red-500/30 hover:border-red-300 dark:hover:border-red-400/50 hover:shadow-md"
+              className="flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300"
             >
               <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
             </MagneticButton>
@@ -570,51 +554,55 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 relative w-full">
-        <div className="relative z-10 space-y-8 sm:space-y-12 lg:space-y-16 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1 relative w-full">
+        <div className="relative z-10 space-y-6 sm:space-y-12 w-full">
           <div className="animate-fade-in-up">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-2">
+            <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-1 sm:mb-2">
               वापसी पर स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-blue-600 dark:from-orange-400 dark:to-blue-400">{student?.fullName?.split(" ")[0] || "छात्र"}</span> 👋
             </h1>
-            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
+            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें।</p>
           </div>
 
-          {/* LIVE CLASS CARD */}
-          <div className="animate-fade-in-up w-full relative overflow-hidden rounded-2xl border border-red-200 dark:border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-xl dark:shadow-red-950/40 group bg-white dark:bg-slate-900">
+          {/* LIVE CLASS CARD (Mobile Optimized) */}
+          <div className="animate-fade-in-up w-full relative overflow-hidden rounded-2xl shadow-xl group bg-white dark:bg-slate-900" style={{ animationDelay: "0.1s" }}>
             <DynamicBackground images={liveClassBgImages} zoomType="out" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-br from-red-50/90 via-red-100/85 to-orange-50/80 dark:from-red-950/90 dark:via-red-900/85 dark:to-orange-900/80" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75 dark:bg-transparent" />
             
-            <div className="relative z-10 p-4 sm:p-8 flex flex-col sm:flex-row items-center text-center sm:text-left gap-6 w-full">
-              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 bg-red-600 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold shadow-lg animate-pulse z-20 border-2 border-white/20">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-ping"></span>
+            <div className="relative z-10 p-4 sm:p-6 flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 sm:gap-6 w-full">
+              <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-red-600 text-white px-2 py-1 rounded-full text-[10px] font-bold shadow-lg animate-pulse z-20">
+                <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
                 LIVE NOW
               </div>
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-3xl sm:text-4xl group-hover:scale-110 transition-transform duration-500 flex-shrink-0 shadow-2xl shadow-black/40">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center text-xl sm:text-3xl flex-shrink-0 shadow-xl">
                 <span className="text-red-700">▶️</span>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white mb-2 w-full leading-tight">RK Sir के साथ दैनिक लाइव क्लास</h3>
-                <p className="text-red-800/90 dark:text-orange-100/95 text-xs sm:text-base w-full max-w-xl font-medium">दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।</p>
+                <h3 className="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white mb-1 w-full leading-tight">
+                  RK Sir के साथ दैनिक लाइव क्लास
+                </h3>
+                <p className="text-red-800/90 dark:text-orange-100/95 text-xs sm:text-sm w-full max-w-xl">
+                  दैनिक लाइव सत्र में शामिल हों, रियल टाइम में संदेह दूर करें।
+                </p>
               </div>
               <MagneticButton 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
-                className="inline-flex items-center justify-center gap-2 bg-red-600 dark:bg-white text-white dark:text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-red-700 dark:hover:bg-orange-50 transition-all duration-500 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-transparent dark:border-white/50 hover:border-orange-300"
+                className="inline-flex items-center justify-center gap-2 bg-red-600 dark:bg-white text-white dark:text-red-900 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl text-sm font-extrabold hover:bg-red-700 dark:hover:bg-orange-50 transition-all duration-300 shadow-lg whitespace-nowrap"
               >
-                <PlayCircle className="w-5 h-5" /> अभी जुड़ें
+                <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5" /> अभी जुड़ें
               </MagneticButton>
             </div>
           </div>
 
-          {/* STATS CARDS */}
+          {/* STATS CARDS (Mobile Optimized) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 w-full">
             {[
-              { icon: "📚", label: "कुल कोर्सेस", value: "0", color: "bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20", delay: "0s" },
-              { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20", delay: "0.1s" },
-              { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20", delay: "0.2s" },
+              { icon: "📚", label: "कुल कोर्सेस", value: "0", color: "bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400", delay: "0s" },
+              { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400", delay: "0.1s" },
+              { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400", delay: "0.2s" },
             ].map((stat, i) => (
-              <div key={i} className="bg-white dark:bg-slate-800/60 border border-orange-100 dark:border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-orange-300 dark:hover:border-slate-600 transition-all duration-500" style={{ animationDelay: stat.delay }}>
+              <div key={i} className="bg-white dark:bg-slate-800/40 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-300" style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} border rounded-xl flex items-center justify-center shadow-sm`}>
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
                     <span className="text-xl sm:text-2xl">{stat.icon}</span>
                   </div>
                   <div>
@@ -626,64 +614,57 @@ export default function Home() {
             ))}
           </div>
 
-          {/* AVAILABLE COURSES RAIL (FRICTIONLESS) */}
-          <div id="available-courses" className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.4s" }}>
+          {/* AVAILABLE COURSES RAIL (TRUE EDGELESS & FRICTIONLESS) */}
+          <div id="available-courses" className="animate-fade-in-up relative" style={{ animationDelay: "0.4s" }}>
             <DynamicBackground images={coursesBgImages} zoomType="in" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-50/85 via-slate-100/90 to-slate-50/95 dark:from-slate-950/85 dark:via-slate-950/90 dark:to-slate-950/95" />
+            <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
             
             <div className="relative z-10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
-                <div>
-                  <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text mb-2">उपलब्ध कोर्सेस</h2>
-                  <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-base">बिहार बोर्ड परीक्षाओं के लिए RK Sir के साथ पूर्ण तैयारी</p>
-                </div>
-                <MagneticButton 
-                  href="/courses" 
-                  className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm transition-colors group"
-                >
-                  सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between mb-4 pt-4">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text">उपलब्ध कोर्सेस</h2>
+                <MagneticButton href="/courses" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm flex items-center gap-1">
+                  सभी देखें <ArrowRight className="w-4 h-4" />
                 </MagneticButton>
               </div>
               
-              <div className="relative w-full overflow-hidden py-4">
-                {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
-                <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y">
+              {/* Edgeless Rail Container */}
+              <div className="relative w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden py-2">
+                <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+                
+                <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
                   {[...courseImages, ...courseImages].map((src, i) => {
                     const courses: CourseItem[] = [
-                      { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।" },
-                      { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन विज्ञान, जीव विज्ञान का पूर्ण कवरेज।" },
-                      { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय शामिल।" },
-                      { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी भाषा में आसानी से महारत हासिल करें।" },
-                      { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।" },
+                      { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित।" },
+                      { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन, जीव विज्ञान।" },
+                      { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय।" },
+                      { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी में आसानी से महारत।" },
+                      { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र।" },
                     ];
                     const course = courses[i % 5];
                     
                     return (
-                      <div key={`course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 lg:w-96 flex-shrink-0 group" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
-                        <div className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-orange-100 dark:border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
-                          <div className="relative h-40 sm:h-56 overflow-hidden">
-                            <Image src={src} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
+                      <div key={`course-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
+                        <div className="bg-white dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 h-full flex flex-col">
+                          <div className="relative h-36 sm:h-44 overflow-hidden">
+                            <Image src={src} alt={course.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                            <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
-                              <span className="bg-blue-600/90 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg">
+                            <div className="absolute top-2 left-2">
+                              <span className="bg-blue-600/90 text-white px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold">
                                 {course.badge}
                               </span>
                             </div>
-                            <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3">
-                              <h3 className="text-white font-bold text-sm sm:text-lg drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
+                            <div className="absolute bottom-2 left-2 right-2">
+                              <h3 className="text-white font-bold text-sm sm:text-base drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
                             </div>
                           </div>
-                          <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-900/50">
-                            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
+                          <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-900/50">
+                            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3 line-clamp-2">{course.desc}</p>
                             <div className="flex items-center justify-between mt-auto">
-                              <span className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white">{course.price}</span>
-                              <MagneticButton 
-                                href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
-                                className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 text-xs sm:text-sm whitespace-nowrap"
-                              >
-                                <span className="relative z-10 flex items-center justify-center gap-1">
-                                  अभी नामांकन करें <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                                </span>
+                              <span className="text-lg font-extrabold text-slate-900 dark:text-white">{course.price}</span>
+                              <MagneticButton href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`} className="block text-center rainbow-shimmer-bg text-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm whitespace-nowrap">
+                                नामांकन करें
                               </MagneticButton>
                             </div>
                           </div>
@@ -696,41 +677,44 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CINEMATIC GALLERY (FRICTIONLESS) */}
-          <div className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
+          {/* CINEMATIC GALLERY (TRUE EDGELESS & FRICTIONLESS) */}
+          <div className="animate-fade-in-up relative" style={{ animationDelay: "0.6s" }}>
             <DynamicBackground images={gallerySectionBgImages} zoomType="out" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-50/85 via-slate-100/90 to-slate-50/95 dark:from-slate-950/85 dark:via-slate-950/90 dark:to-slate-950/95" />
+            <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
 
             <div className="relative z-10">
-              <div className="text-center mb-6 sm:mb-8 px-2 pt-4">
-                <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text mb-2">World of Concept में जीवन</h2>
-                <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-base max-w-xl mx-auto">हमारी कक्षाओं, सत्रों और छात्रों की सफलता की झलकियां</p>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-4 pt-4">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text">World of Concept में जीवन</h2>
               </div>
 
-              <div className="relative w-full overflow-hidden py-4 sm:py-6">
-                {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
-                <div className="flex gap-4 w-max animate-marquee-seamless touch-pan-y mb-4 sm:mb-6">
+              {/* Edgeless Rail Container */}
+              <div className="relative w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden py-2">
+                <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+
+                <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y mb-3 sm:mb-4 pl-4 sm:pl-6 lg:pl-8" style={{ animationDirection: 'reverse' }}>
                   {[...row1Images, ...row1Images].map((src, i) => (
-                    <div key={`row1-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
-                      <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
-                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <div key={`row1-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 h-40 sm:h-48 rounded-2xl overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                      <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                         <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md flex items-center gap-2">
-                          <PlayCircle className="w-4 h-4" /> World of Concept क्लास
+                          <PlayCircle className="w-3 h-3 sm:w-4 sm:h-4" /> World of Concept क्लास
                         </span>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex gap-4 w-max animate-marquee-seamless touch-pan-y" style={{ animationDirection: 'reverse' }}>
+                <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
                   {[...row2Images, ...row2Images].map((src, i) => (
-                    <div key={`row2-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
-                      <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
-                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <div key={`row2-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 h-40 sm:h-48 rounded-2xl overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                      <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                         <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md flex items-center gap-2">
-                          <Trophy className="w-4 h-4 text-yellow-400" /> छात्र सफलता की कहानी
+                          <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400" /> छात्र सफलता
                         </span>
                       </div>
                     </div>
@@ -742,10 +726,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* WORLD-CLASS FOOTER */}
-      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-700">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
-        
+      {/* WORLD-CLASS FOOTER (Mobile Optimized) */}
+      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           <iframe
             src="https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&output=embed"
@@ -757,7 +739,7 @@ export default function Home() {
               top: 0,
               left: 0,
               filter: 'invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.3) saturate(0.6)',
-              opacity: 0.6
+              opacity: 0.4
             }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -765,83 +747,79 @@ export default function Home() {
             title="World of Concept Location"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/85 dark:from-slate-950/85 via-[#FFF9F0]/75 dark:via-slate-950/75 to-[#FFF9F0]/85 dark:to-slate-950/85" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/90 dark:from-slate-950/90 via-[#FFF9F0]/80 dark:via-slate-950/80 to-[#FFF9F0]/90 dark:to-slate-950/90" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="mb-8 flex items-center justify-center">
+          <div className="mb-6 flex items-center justify-center">
             <MagneticButton 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-orange-200 dark:border-slate-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-slate-800 transition-all duration-500 shadow-lg shadow-orange-500/10 overflow-hidden"
+              className="group relative inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900/80 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              <span className="relative flex h-3 w-3">
+              <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
               </span>
-              <span className="text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
+              <span className="text-xs sm:text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
                 आलमनगर, बिहार
               </span>
-              <ExternalLink className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
+              <ExternalLink className="w-3 h-3 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
             </MagneticButton>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
-            <div className="sm:col-span-2 lg:col-span-1 space-y-4 sm:space-y-6">
-              <div className="flex items-center gap-3 text-slate-900 dark:text-white">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
+            <div className="col-span-2 sm:col-span-1 space-y-3">
+              <div className="flex items-center gap-2 text-slate-900 dark:text-white">
                 <PureLogo size="sm" />
-                <span className="font-extrabold text-lg sm:text-xl tracking-tight">World of Concept</span>
+                <span className="font-extrabold text-sm sm:text-base tracking-tight">World of Concept</span>
               </div>
-              <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-600 dark:text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
-              <div className="flex gap-3 sm:gap-4 pt-2">
-                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+              <p className="text-[10px] sm:text-xs leading-relaxed text-slate-600 dark:text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा प्रदान करना।</p>
+              <div className="flex gap-2 pt-1">
+                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm"><YoutubeIcon className="w-4 h-4" /></MagneticButton>
+                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-300 shadow-sm"><InstagramIcon className="w-4 h-4" /></MagneticButton>
+                <MagneticButton href="https://facebook.com/worldofconcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm"><FacebookIcon className="w-4 h-4" /></MagneticButton>
+                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-sm"><TelegramIcon className="w-4 h-4" /></MagneticButton>
               </div>
             </div>
 
             <div>
-              <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
-              <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="#available-courses" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सभी कोर्सेस</a></li>
-                <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
-                <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
+              <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">प्लेटफॉर्म</h4>
+              <ul className="space-y-2 text-[10px] sm:text-xs">
+                <li><a href="/courses" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">सभी कोर्सेस</a></li>
+                <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">हमें क्यों चुनें</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">कानूनी</h4>
-              <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="/privacy" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">गोपनीयता नीति</a></li>
-                <li><a href="/terms" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सेवा की शर्तें</a></li>
-                <li><a href="/refund" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">रिफंड नीति</a></li>
-                <li><a href="/contact" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">संपर्क करें</a></li>
+              <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">कानूनी</h4>
+              <ul className="space-y-2 text-[10px] sm:text-xs">
+                <li><a href="/privacy" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">गोपनीयता नीति</a></li>
+                <li><a href="/terms" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">सेवा की शर्तें</a></li>
+                <li><a href="/refund" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">रिफंड नीति</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">सहायता</h4>
-              <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li className="flex items-center gap-2 sm:gap-3"><span>📧</span> support@worldofconcept.in</li>
-                <li className="flex items-center gap-2 sm:gap-3"><span>📞</span> +91 7979096954</li>
-                <li className="flex items-center gap-2 sm:gap-3"><span>📍</span> अलमनगर, बिहार, भारत</li>
+              <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">सहायता</h4>
+              <ul className="space-y-2 text-[10px] sm:text-xs">
+                <li className="flex items-center gap-1.5"><span>📧</span> support@worldofconcept.in</li>
+                <li className="flex items-center gap-1.5"><span>📞</span> +91 7979096954</li>
               </ul>
             </div>
           </div>
 
-          <div className="pt-6 sm:pt-8 border-t border-orange-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 px-2">
+          <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <MagneticButton 
               href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
-              className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-500 group" 
+              className="flex items-center gap-1.5 hover:text-orange-500 transition-colors" 
               title="Designed and Developed by Mukesh Kumar Malakar"
             >
               <span>निर्मित</span>
-              <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-500" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
-              <span>द्वारा <span className="font-bold text-slate-900 dark:text-white">Mukesh Kumar Malakar</span></span>
+              <span>द्वारा <span className="font-bold">Mukesh Kumar Malakar</span></span>
             </MagneticButton>
           </div>
         </div>
