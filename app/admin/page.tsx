@@ -10,7 +10,6 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "@/components/logo";
 import { 
   Sparkles, PlusCircle, Users, ArrowLeft, LogOut, 
   TrendingUp, DollarSign, Activity, Clock, BookOpen,
@@ -240,15 +239,15 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[100dvh] bg-slate-950 flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 flex items-center justify-center transition-colors duration-700">
         <div className="text-center space-y-4">
           <div className="relative w-24 h-24 mx-auto">
-            <div className="absolute inset-0 bg-indigo-500/30 rounded-full animate-ping" />
-            <div className="relative w-24 h-24 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/50">
+            <div className="absolute inset-0 bg-orange-500/20 rounded-full animate-ping" />
+            <div className="relative w-24 h-24 bg-gradient-to-br from-orange-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/30">
               <span className="text-5xl">🛡️</span>
             </div>
           </div>
-          <p className="text-slate-300 font-medium animate-pulse tracking-wider">ADMIN COMMAND CENTER लोड हो रहा है...</p>
+          <p className="text-slate-600 dark:text-slate-300 font-medium animate-pulse tracking-wider">ADMIN COMMAND CENTER लोड हो रहा है...</p>
         </div>
       </div>
     );
@@ -257,7 +256,7 @@ export default function AdminDashboardPage() {
   if (!adminData) return null;
 
   return (
-    <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative font-sans w-full overflow-x-hidden">
+    <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative font-sans w-full overflow-x-hidden transition-colors duration-700">
       <style jsx global>{`
         /* 🔥 RAINBOW SHIMMER ANIMATION */
         @keyframes rainbow-shimmer {
@@ -404,30 +403,26 @@ export default function AdminDashboardPage() {
         }
       `}</style>
 
-      {/* 🔥 HEADER */}
-      <header className="relative z-50 bg-slate-950/90 border-b border-slate-800 sticky top-0 shadow-sm">
+      {/* 🔥 CLEAN HEADER (Branding Removed, Back Button Kept for Navigation) */}
+      <header className="relative z-50 bg-[#FFF9F0]/90 dark:bg-slate-950/90 border-b border-orange-100 dark:border-slate-800 sticky top-0 shadow-sm transition-all duration-500 w-full backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <div className="flex items-center gap-3">
-              <MagneticButton href="/dashboard" className="p-2 hover:bg-slate-800 rounded-full transition-colors group" title="Student View">
-                <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:-translate-x-1 group-hover:text-white transition-all" />
+              <MagneticButton href="/dashboard" className="p-2 hover:bg-orange-100 dark:hover:bg-slate-800 rounded-full transition-colors group" title="Student View">
+                <ArrowLeft className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:-translate-x-1 group-hover:text-slate-900 dark:group-hover:text-white transition-all" />
               </MagneticButton>
-              <Logo size="medium" showText={false} />
-              <span className="text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">
-                World of Concept
-              </span>
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-3 text-right">
                 <div>
-                  <p className="text-sm font-bold text-white">{adminData.fullName}</p>
-                  <p className="text-xs text-indigo-400 font-semibold">Super Administrator</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">{adminData.fullName}</p>
+                  <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold">Super Administrator</p>
                 </div>
-                <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/30 ring-2 ring-slate-950">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
                   {adminData.fullName.charAt(0).toUpperCase()}
                 </div>
               </div>
-              <MagneticButton onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all border border-red-500/30 hover:border-red-400/50">
+              <MagneticButton onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-500 border border-red-200 dark:border-red-500/30 hover:border-red-300 dark:hover:border-red-400/50 hover:shadow-md">
                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
               </MagneticButton>
             </div>
@@ -445,10 +440,10 @@ export default function AdminDashboardPage() {
 
         <div className="relative z-10">
           <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
-              स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">{adminData.fullName}</span> 👋
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
+              स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-blue-600 dark:from-orange-400 dark:to-blue-400">{adminData.fullName}</span> 👋
             </h1>
-            <p className="text-slate-400 text-lg">यहाँ आपका प्लेटफ़ॉर्म का complete management system है।</p>
+            <p className="text-slate-600 dark:text-slate-400 text-lg">यहाँ आपका प्लेटफ़ॉर्म का complete management system है।</p>
             
             <div className="flex gap-2 mt-6 overflow-x-auto pb-2 scrollbar-hide">
               {[
@@ -460,8 +455,8 @@ export default function AdminDashboardPage() {
                 <MagneticButton
                   key={tab.id}
                   onClick={() => { setActiveTab(tab.id as any); setShowCourseForm(false); setShowPostForm(false); setErrorMsg(""); setSuccessMsg(""); }}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
-                    activeTab === tab.id ? "rainbow-shimmer-bg text-white shadow-lg" : "bg-slate-800/80 text-slate-400 hover:bg-slate-800 hover:text-white border border-slate-700/50"
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-500 ${
+                    activeTab === tab.id ? "rainbow-shimmer-bg text-white shadow-lg" : "bg-white dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-slate-800 hover:text-orange-600 dark:hover:text-white border border-orange-100 dark:border-slate-700/50"
                   }`}
                 >
                   <tab.icon className="w-4 h-4" /> {tab.label}
@@ -475,50 +470,50 @@ export default function AdminDashboardPage() {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {[
-                  { label: "कुल छात्र", value: totalStudents.toLocaleString(), change: "+12%", icon: Users, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
-                  { label: "सक्रिय कोर्सेस", value: totalCourses.toString(), change: "+2", icon: BookOpen, color: "text-green-400", bg: "bg-green-500/10 border-green-500/20" },
-                  { label: "कुल राजस्व", value: `₹${(totalRevenue / 100000).toFixed(1)}L`, change: "+8%", icon: DollarSign, color: "text-purple-400", bg: "bg-purple-500/10 border-purple-500/20" },
-                  { label: "औसत वृद्धि", value: "68%", change: "+5%", icon: TrendingUp, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
+                  { label: "कुल छात्र", value: totalStudents.toLocaleString(), change: "+12%", icon: Users, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-100 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20" },
+                  { label: "सक्रिय कोर्सेस", value: totalCourses.toString(), change: "+2", icon: BookOpen, color: "text-green-600 dark:text-green-400", bg: "bg-green-100 dark:bg-green-500/10 border-green-200 dark:border-green-500/20" },
+                  { label: "कुल राजस्व", value: `₹${(totalRevenue / 100000).toFixed(1)}L`, change: "+8%", icon: DollarSign, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-100 dark:bg-purple-500/10 border-purple-200 dark:border-purple-500/20" },
+                  { label: "औसत वृद्धि", value: "68%", change: "+5%", icon: TrendingUp, color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20" },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl p-6 border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-slate-600 transition-all duration-300">
+                  <div key={i} className="bg-white dark:bg-slate-800/60 rounded-2xl p-6 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-xl hover:border-orange-300 dark:hover:border-slate-600 transition-all duration-500">
                     <div className="flex items-start justify-between mb-4">
                       <div className={`p-3 rounded-xl border ${stat.bg}`}><stat.icon className={`w-6 h-6 ${stat.color}`} /></div>
-                      <span className="text-xs font-bold text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-1 rounded-full">{stat.change}</span>
+                      <span className="text-xs font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 px-2 py-1 rounded-full">{stat.change}</span>
                     </div>
-                    <p className="text-sm text-slate-400 font-medium mb-1">{stat.label}</p>
-                    <p className="text-3xl font-extrabold text-white">{stat.value}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">{stat.label}</p>
+                    <p className="text-3xl font-extrabold text-slate-900 dark:text-white">{stat.value}</p>
                   </div>
                 ))}
               </div>
-              <div className="bg-slate-800/80 dark:bg-slate-800/60 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg mb-8">
-                <h3 className="text-xl font-bold rainbow-shimmer-text mb-6 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-indigo-400" /> राजस्व और छात्र वृद्धि (6 महीने)</h3>
+              <div className="bg-white dark:bg-slate-800/60 rounded-3xl p-6 sm:p-8 border border-orange-100 dark:border-slate-700/50 shadow-lg mb-8">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white rainbow-shimmer-text mb-6 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-indigo-500 dark:text-indigo-400" /> राजस्व और छात्र वृद्धि (6 महीने)</h3>
                 <div className="h-80 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={growthData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="month" stroke="#94a3b8" />
-                      <YAxis stroke="#94a3b8" />
-                      <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#f8fafc', borderRadius: '12px' }} itemStyle={{ color: '#f8fafc' }} labelStyle={{ color: '#94a3b8' }} />
-                      <Legend wrapperStyle={{ color: '#94a3b8' }} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-700" />
+                      <XAxis dataKey="month" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', borderRadius: '12px' }} className="dark:[&>div]:bg-slate-800 dark:[&>div]:border-slate-700 dark:[&>div]:text-slate-50" itemStyle={{ color: '#0f172a' }} labelStyle={{ color: '#64748b' }} />
+                      <Legend wrapperStyle={{ color: '#64748b' }} />
                       <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} name="राजस्व (₹)" dot={{ r: 6, fill: '#3b82f6' }} />
                       <Line type="monotone" dataKey="students" stroke="#10b981" strokeWidth={3} name="छात्र" dot={{ r: 6, fill: '#10b981' }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               </div>
-              <div className="bg-slate-800/80 dark:bg-slate-800/60 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg">
-                <h3 className="text-xl font-bold rainbow-shimmer-text mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-indigo-400" /> हाल की गतिविधियाँ</h3>
+              <div className="bg-white dark:bg-slate-800/60 rounded-3xl p-6 sm:p-8 border border-orange-100 dark:border-slate-700/50 shadow-lg">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white rainbow-shimmer-text mb-6 flex items-center gap-2"><Activity className="w-5 h-5 text-indigo-500 dark:text-indigo-400" /> हाल की गतिविधियाँ</h3>
                 <div className="space-y-4">
                   {recentActivities.length === 0 ? (
-                    <p className="text-slate-400 text-center py-8">कोई गतिविधि नहीं</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-center py-8">कोई गतिविधि नहीं</p>
                   ) : (
                     recentActivities.map((activity) => (
-                      <div key={activity.id} className="flex items-start gap-4 p-4 bg-slate-900/80 dark:bg-slate-900/60 rounded-xl border border-slate-700/50">
-                        <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0"><Activity className="w-5 h-5 text-indigo-400" /></div>
+                      <div key={activity.id} className="flex items-start gap-4 p-4 bg-[#FFF9F0] dark:bg-slate-900/60 rounded-xl border border-orange-100 dark:border-slate-700/50">
+                        <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 flex items-center justify-center flex-shrink-0"><Activity className="w-5 h-5 text-indigo-600 dark:text-indigo-400" /></div>
                         <div className="flex-1">
-                          <p className="font-semibold text-white">{activity.action}</p>
-                          <p className="text-sm text-slate-300">{activity.details}</p>
-                          <p className="text-xs text-slate-500 mt-1">{activity.timestamp?.toDate().toLocaleString("hi-IN")}</p>
+                          <p className="font-semibold text-slate-900 dark:text-white">{activity.action}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-300">{activity.details}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{activity.timestamp?.toDate().toLocaleString("hi-IN")}</p>
                         </div>
                       </div>
                     ))
@@ -532,63 +527,63 @@ export default function AdminDashboardPage() {
           {activeTab === "courses" && (
             <>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <h2 className="text-2xl font-bold rainbow-shimmer-text">कोर्सेस प्रबंधन</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white rainbow-shimmer-text">कोर्सेस प्रबंधन</h2>
                 <MagneticButton 
                   onClick={() => { setShowCourseForm(!showCourseForm); setErrorMsg(""); setSuccessMsg(""); }} 
-                  className="flex items-center gap-2 px-6 py-3 rainbow-shimmer-bg text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl border border-indigo-400/50"
+                  className="flex items-center gap-2 px-6 py-3 rainbow-shimmer-bg text-white rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl border border-indigo-400/50"
                 >
                   <PlusCircle className="w-5 h-5" /> {showCourseForm ? "फॉर्म बंद करें" : "नया कोर्स जोड़ें"}
                 </MagneticButton>
               </div>
 
               {showCourseForm && (
-                <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-slate-700/50 shadow-xl">
+                <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-orange-100 dark:border-slate-700/50 shadow-xl">
                   <div className="absolute inset-0 z-0">
                     <DynamicBackground images={formBgImages} zoomType="out" />
                     <div className="absolute inset-0 bg-slate-950/90 dark:bg-transparent" />
                   </div>
-                  <div className="relative z-10 bg-slate-800/80 dark:bg-slate-800/60 p-6 sm:p-8">
+                  <div className="relative z-10 bg-white dark:bg-slate-800/60 p-6 sm:p-8">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-bold rainbow-shimmer-text flex items-center gap-2">
-                        <BookOpen className="w-5 h-5 text-indigo-400" /> नया कोर्स जोड़ें
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white rainbow-shimmer-text flex items-center gap-2">
+                        <BookOpen className="w-5 h-5 text-indigo-500 dark:text-indigo-400" /> नया कोर्स जोड़ें
                       </h3>
-                      <MagneticButton onClick={() => setShowCourseForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
-                        <X className="w-5 h-5 text-slate-400" />
+                      <MagneticButton onClick={() => setShowCourseForm(false)} className="p-2 hover:bg-orange-100 dark:hover:bg-slate-700 rounded-full transition-colors">
+                        <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                       </MagneticButton>
                     </div>
                     
-                    {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
-                    {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
+                    {errorMsg && <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
+                    {successMsg && <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 text-green-600 dark:text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
                     
                     <form onSubmit={handleAddCourse} className="space-y-5">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
-                          <label className="block text-sm font-semibold text-slate-300 mb-2">कोर्स शीर्षक *</label>
-                          <input type="text" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: गणित मास्टरक्लास" required />
+                          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">कोर्स शीर्षक *</label>
+                          <input type="text" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all" placeholder="जैसे: गणित मास्टरक्लास" required />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-slate-300 mb-2">बैज *</label>
-                          <input type="text" value={courseBadge} onChange={(e) => setCourseBadge(e.target.value)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: कक्षा 10" required />
+                          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">बैज *</label>
+                          <input type="text" value={courseBadge} onChange={(e) => setCourseBadge(e.target.value)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all" placeholder="जैसे: कक्षा 10" required />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
-                          <label className="block text-sm font-semibold text-slate-300 mb-2">मूल्य *</label>
-                          <input type="text" value={coursePrice} onChange={(e) => setCoursePrice(e.target.value)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="जैसे: ₹499" required />
+                          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">मूल्य *</label>
+                          <input type="text" value={coursePrice} onChange={(e) => setCoursePrice(e.target.value)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all" placeholder="जैसे: ₹499" required />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-slate-300 mb-2">कोर्स इमेज *</label>
-                          <input type="file" accept="image/*" onChange={(e) => setCourseImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" required />
+                          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">कोर्स इमेज *</label>
+                          <input type="file" accept="image/*" onChange={(e) => setCourseImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-500 file:text-white hover:file:bg-orange-600 transition-all cursor-pointer" required />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">विवरण *</label>
-                        <textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none" rows={3} placeholder="कोर्स का विस्तृत विवरण..." required />
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">विवरण *</label>
+                        <textarea value={courseDesc} onChange={(e) => setCourseDesc(e.target.value)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all resize-none" rows={3} placeholder="कोर्स का विस्तृत विवरण..." required />
                       </div>
                       <MagneticButton 
                         type="submit" 
                         disabled={uploading} 
-                        className="w-full flex items-center justify-center gap-2 rainbow-shimmer-bg text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-2 rainbow-shimmer-bg text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> कोर्स सेव करें</>)}
                       </MagneticButton>
@@ -599,18 +594,18 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course) => (
-                  <div key={course.id} className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-indigo-500/50 transition-all group">
+                  <div key={course.id} className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-xl hover:border-orange-300 dark:hover:border-indigo-500/50 transition-all duration-500 group">
                     <div className="relative h-48">
                       <Image src={course.imageUrl} alt={course.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent" />
                     </div>
                     <div className="p-5">
-                      <span className="inline-block px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold rounded-full mb-3">{course.badge}</span>
-                      <h3 className="font-bold text-white mb-2 text-lg">{course.title}</h3>
-                      <p className="text-sm text-slate-400 mb-4 line-clamp-2">{course.description}</p>
+                      <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20 text-xs font-bold rounded-full mb-3">{course.badge}</span>
+                      <h3 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{course.title}</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">{course.description}</p>
                       <div className="flex items-center justify-between">
-                        <p className="text-xl font-extrabold text-indigo-400">{course.price}</p>
-                        <MagneticButton className="text-xs text-slate-400 hover:text-white transition-colors">Edit</MagneticButton>
+                        <p className="text-xl font-extrabold text-indigo-600 dark:text-indigo-400">{course.price}</p>
+                        <MagneticButton className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">Edit</MagneticButton>
                       </div>
                     </div>
                   </div>
@@ -623,59 +618,59 @@ export default function AdminDashboardPage() {
           {activeTab === "posts" && (
             <>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <h2 className="text-2xl font-bold rainbow-shimmer-text">अपडेट्स प्रबंधन</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white rainbow-shimmer-text">अपडेट्स प्रबंधन</h2>
                 <MagneticButton 
                   onClick={() => { setShowPostForm(!showPostForm); setErrorMsg(""); setSuccessMsg(""); }} 
-                  className="flex items-center gap-2 px-6 py-3 rainbow-shimmer-bg text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl border border-indigo-400/50"
+                  className="flex items-center gap-2 px-6 py-3 rainbow-shimmer-bg text-white rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl border border-indigo-400/50"
                 >
                   <PlusCircle className="w-5 h-5" /> {showPostForm ? "फॉर्म बंद करें" : "नई पोस्ट जोड़ें"}
                 </MagneticButton>
               </div>
 
               {showPostForm && (
-                <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-slate-700/50 shadow-xl">
+                <div className="relative overflow-hidden rounded-3xl mb-8 animate-fade-in-up border border-orange-100 dark:border-slate-700/50 shadow-xl">
                   <div className="absolute inset-0 z-0">
                     <DynamicBackground images={formBgImages} zoomType="in" />
                     <div className="absolute inset-0 bg-slate-950/90 dark:bg-transparent" />
                   </div>
-                  <div className="relative z-10 bg-slate-800/80 dark:bg-slate-800/60 p-6 sm:p-8">
+                  <div className="relative z-10 bg-white dark:bg-slate-800/60 p-6 sm:p-8">
                     <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-bold rainbow-shimmer-text flex items-center gap-2">
-                        <Sparkles className="w-5 h-5 text-indigo-400" /> नई पोस्ट जोड़ें
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white rainbow-shimmer-text flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-indigo-500 dark:text-indigo-400" /> नई पोस्ट जोड़ें
                       </h3>
-                      <MagneticButton onClick={() => setShowPostForm(false)} className="p-2 hover:bg-slate-700 rounded-full transition-colors">
-                        <X className="w-5 h-5 text-slate-400" />
+                      <MagneticButton onClick={() => setShowPostForm(false)} className="p-2 hover:bg-orange-100 dark:hover:bg-slate-700 rounded-full transition-colors">
+                        <X className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                       </MagneticButton>
                     </div>
                     
-                    {errorMsg && <div className="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
-                    {successMsg && <div className="bg-green-500/10 border border-green-500/30 text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
+                    {errorMsg && <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> {errorMsg}</div>}
+                    {successMsg && <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 text-green-600 dark:text-green-300 px-4 py-3 rounded-xl mb-4 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {successMsg}</div>}
                     
                     <form onSubmit={handleAddPost} className="space-y-5">
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">पोस्ट प्रकार</label>
-                        <select value={postType} onChange={(e) => setPostType(e.target.value as any)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all cursor-pointer">
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">पोस्ट प्रकार</label>
+                        <select value={postType} onChange={(e) => setPostType(e.target.value as any)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all cursor-pointer">
                           <option value="announcement">📢 घोषणा</option>
                           <option value="motivation">💪 प्रेरणा</option>
                           <option value="tip">💡 टिप</option>
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">शीर्षक *</label>
-                        <input type="text" value={postTitle} onChange={(e) => setPostTitle(e.target.value)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all" placeholder="पोस्ट का शीर्षक" required />
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">शीर्षक *</label>
+                        <input type="text" value={postTitle} onChange={(e) => setPostTitle(e.target.value)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all" placeholder="पोस्ट का शीर्षक" required />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">विवरण *</label>
-                        <textarea value={postDesc} onChange={(e) => setPostDesc(e.target.value)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all resize-none" rows={4} placeholder="पोस्ट का विस्तृत विवरण..." required />
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">विवरण *</label>
+                        <textarea value={postDesc} onChange={(e) => setPostDesc(e.target.value)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all resize-none" rows={4} placeholder="पोस्ट का विस्तृत विवरण..." required />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-slate-300 mb-2">इमेज (वैकल्पिक)</label>
-                        <input type="file" accept="image/*" onChange={(e) => setPostImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 transition-all cursor-pointer" />
+                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">इमेज (वैकल्पिक)</label>
+                        <input type="file" accept="image/*" onChange={(e) => setPostImage(e.target.files?.[0] || null)} className="w-full px-4 py-3 bg-[#FFF9F0] dark:bg-slate-900/80 border border-orange-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-500 file:text-white hover:file:bg-orange-600 transition-all cursor-pointer" />
                       </div>
                       <MagneticButton 
                         type="submit" 
                         disabled={uploading} 
-                        className="w-full flex items-center justify-center gap-2 rainbow-shimmer-bg text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-2 rainbow-shimmer-bg text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {uploading ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> अपलोड हो रहा है...</>) : (<><Upload className="w-5 h-5" /> पोस्ट सेव करें</>)}
                       </MagneticButton>
@@ -686,24 +681,24 @@ export default function AdminDashboardPage() {
 
               <div className="space-y-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl p-6 border border-slate-700/50 shadow-lg hover:shadow-xl hover:border-indigo-500/30 transition-all group">
+                  <div key={update.id} className="bg-white dark:bg-slate-800/60 rounded-2xl p-6 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-xl hover:border-orange-300 dark:hover:border-indigo-500/30 transition-all duration-500 group">
                     <div className="flex items-start gap-4">
                       {update.imageUrl && (
-                        <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 border border-slate-700 group-hover:border-indigo-500/50 transition-colors">
+                        <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 border border-orange-200 dark:border-slate-700 group-hover:border-indigo-500/50 transition-colors">
                           <Image src={update.imageUrl} alt={update.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                         </div>
                       )}
                       <div className="flex-1">
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 ${
-                          update.type === "announcement" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" :
-                          update.type === "motivation" ? "bg-purple-500/10 text-purple-400 border border-purple-500/20" :
-                          "bg-green-500/10 text-green-400 border border-green-500/20"
+                          update.type === "announcement" ? "bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20" :
+                          update.type === "motivation" ? "bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20" :
+                          "bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/20"
                         }`}>
                           {update.type === "announcement" ? "📢 घोषणा" : update.type === "motivation" ? "💪 प्रेरणा" : "💡 टिप"}
                         </span>
-                        <h3 className="font-bold text-white mb-2 text-lg">{update.title}</h3>
-                        <p className="text-sm text-slate-300 mb-3">{update.description}</p>
-                        <p className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3" /> {update.createdAt?.toDate().toLocaleString("hi-IN")}</p>
+                        <h3 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{update.title}</h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{update.description}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1"><Clock className="w-3 h-3" /> {update.createdAt?.toDate().toLocaleString("hi-IN")}</p>
                       </div>
                     </div>
                   </div>
@@ -714,10 +709,10 @@ export default function AdminDashboardPage() {
 
           {/* Students Tab */}
           {activeTab === "students" && (
-            <div className="bg-slate-800/80 dark:bg-slate-800/60 rounded-2xl p-8 border border-slate-700/50 shadow-lg text-center">
-              <Users className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold rainbow-shimmer-text mb-2">कुल छात्र: <span className="text-indigo-400">{totalStudents}</span></h2>
-              <p className="text-slate-400">विस्तृत छात्र प्रबंधन system जल्द ही उपलब्ध होगा।</p>
+            <div className="bg-white dark:bg-slate-800/60 rounded-2xl p-8 border border-orange-100 dark:border-slate-700/50 shadow-lg text-center">
+              <Users className="w-16 h-16 text-indigo-500 dark:text-indigo-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white rainbow-shimmer-text mb-2">कुल छात्र: <span className="text-indigo-600 dark:text-indigo-400">{totalStudents}</span></h2>
+              <p className="text-slate-600 dark:text-slate-400">विस्तृत छात्र प्रबंधन system जल्द ही उपलब्ध होगा।</p>
             </div>
           )}
         </div>
