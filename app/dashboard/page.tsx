@@ -580,10 +580,10 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
+      <main className="relative w-full">
         
         {/* 🔥 1. WELCOME CARD */}
-        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/10 dark:shadow-blue-900/20">
+        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/10 dark:shadow-blue-900/20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-12">
           <DynamicBackground images={welcomeBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-purple-950/80 dark:bg-transparent" />
@@ -604,7 +604,7 @@ export default function DashboardPage() {
         </div>
 
         {/* 🔥 2. LIVE CLASS BANNER */}
-        <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
+        <div className="animate-fade-in-up mb-12 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl w-full border border-red-200 dark:border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/20 dark:shadow-red-950/40 group bg-white dark:bg-slate-900">
             <DynamicBackground images={liveClassBgImages} zoomType="out" />
             <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
@@ -660,14 +660,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION (FRICTIONLESS) */}
-        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (FRICTIONLESS & EDGELESS) */}
+        <div className="mb-16 animate-fade-in-up relative" style={{ animationDelay: "0.2s" }}>
           <DynamicBackground images={videosBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
           
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6 px-2 pt-4">
+            {/* Header stays constrained */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between mb-6 pt-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30">
                   <YoutubeIcon className="w-7 h-7 text-white" />
@@ -687,8 +688,11 @@ export default function DashboardPage() {
               </MagneticButton>
             </div>
             
-            <div className="relative w-full overflow-hidden py-4">
-              {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+            {/* 🔥 EDGELESS Scrolling Rail */}
+            <div className="relative w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden py-4">
+              <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+              
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y" style={{ animationDirection: 'reverse' }}>
                 {[...youtubeVideos, ...youtubeVideos].map((video, i) => (
                   <YouTubeVideoCard key={`yt-${i}`} video={video} />
@@ -699,12 +703,8 @@ export default function DashboardPage() {
         </div>
 
         {/* 🔥 4. STATS CARDS */}
-        <div className="mb-12 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.3s" }}>
-          <DynamicBackground images={statsBgImages} zoomType="out" />
-          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
-          
-          <div className="relative z-10 p-6 sm:p-8">
+        <div className="mb-12 animate-fade-in-up relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ animationDelay: "0.3s" }}>
+          <div className="relative z-10 p-6 sm:p-8 bg-white dark:bg-slate-800/60 border border-orange-100 dark:border-slate-700/50 rounded-3xl shadow-lg">
             <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 rainbow-shimmer-text px-2">आपकी प्रगति</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               {[
@@ -714,7 +714,7 @@ export default function DashboardPage() {
               ].map((stat, i) => (
                 <div 
                   key={i} 
-                  className="bg-white dark:bg-slate-800/60 border border-orange-100 dark:border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-orange-300 dark:hover:border-slate-600 transition-all duration-500" 
+                  className="bg-[#FFF9F0] dark:bg-slate-900/60 border border-orange-100 dark:border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-orange-300 dark:hover:border-slate-600 transition-all duration-500" 
                   style={{ animationDelay: stat.delay }}
                 >
                   <div className="flex items-center gap-4">
@@ -732,14 +732,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. AVAILABLE COURSES (FRICTIONLESS) */}
-        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
+        {/* 🔥 5. AVAILABLE COURSES (FRICTIONLESS & EDGELESS) */}
+        <div className="mb-16 animate-fade-in-up relative" style={{ animationDelay: "0.6s" }}>
           <DynamicBackground images={coursesBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
           
           <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
+            {/* Header stays constrained */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 pt-4">
               <div>
                 <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text">उपलब्ध कोर्सेस</h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
@@ -752,8 +753,11 @@ export default function DashboardPage() {
               </MagneticButton>
             </div>
             
-            <div className="relative w-full overflow-hidden py-4">
-              {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+            {/* 🔥 EDGELESS Scrolling Rail */}
+            <div className="relative w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden py-4">
+              <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+              
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y">
                 {[...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
@@ -792,20 +796,24 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. CINEMATIC GALLERY (FRICTIONLESS) */}
-        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
+        {/* 🔥 6. CINEMATIC GALLERY (FRICTIONLESS & EDGELESS) */}
+        <div className="mb-16 animate-fade-in-up relative" style={{ animationDelay: "0.7s" }}>
           <DynamicBackground images={gallerySectionBgImages} zoomType="out" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
 
           <div className="relative z-10">
-            <div className="text-center mb-10 px-2 pt-4">
+            {/* Header stays constrained */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-10 pt-4">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-3 rainbow-shimmer-text">World of Concept में जीवन</h2>
               <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
-            <div className="relative w-full overflow-hidden py-4 sm:py-6">
-              {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+            {/* 🔥 EDGELESS Scrolling Rail */}
+            <div className="relative w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden py-4 sm:py-6">
+              <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y mb-4 sm:mb-6" style={{ animationDirection: 'reverse' }}>
                 {[...row1Images, ...row1Images].map((src, i) => (
                   <div 
@@ -844,13 +852,9 @@ export default function DashboardPage() {
         </div>
 
         {/* 🔥 7. RK SIR UPDATES */}
-        <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.8s" }}>
-          <DynamicBackground images={updatesBgImages} zoomType="in" />
-          <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
-
+        <div className="mb-16 animate-fade-in-up relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ animationDelay: "0.8s" }}>
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6 px-2 pt-4">
+            <div className="flex items-center justify-between mb-6 pt-4">
               <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 rainbow-shimmer-text">
                 <MessageCircle className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
                 RK Sir के अपडेट्स
@@ -862,7 +866,7 @@ export default function DashboardPage() {
                 <p className="text-slate-500 dark:text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
                 {updates.map((update) => (
                   <div key={update.id} className="group bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-500 hover:-translate-y-1">
                     {update.imageUrl && (
