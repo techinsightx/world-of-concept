@@ -12,7 +12,7 @@ import AdPopup from "@/components/AdPopup";
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
   Bell, LogOut, Sparkles, Trophy, Clock, ArrowRight,
-  Calendar, MessageCircle, MapPin
+  Calendar, MessageCircle
 } from "lucide-react";
 
 // 🔥 Magnetic Button Component for World-Class Interaction
@@ -32,7 +32,7 @@ const MagneticButton = ({ children, className, onClick, href, ...props }: any) =
     (ref.current as HTMLElement).style.transform = `translate(0px, 0px) scale(1)`;
   };
 
-  const baseClass = "transition-transform duration-200 ease-out relative overflow-hidden group";
+  const baseClass = "transition-all duration-300 ease-out relative overflow-hidden group";
   
   if (href) {
     return (
@@ -62,7 +62,6 @@ const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoom
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
-      {/* ☀️ LIGHT MODE: Cinematic Images */}
       <div className="dark:hidden absolute inset-0">
         {images.map((src, i) => (
           <img 
@@ -77,8 +76,6 @@ const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoom
           />
         ))}
       </div>
-
-      {/* 🌙 DARK MODE: Pure CSS Space/Solar System (Ultra Smooth, Zero Network Load) */}
       <div className="hidden dark:block absolute inset-0">
         <div className="absolute inset-0 animate-nebula-shift" />
         <div className="absolute inset-0 space-stars" />
@@ -91,20 +88,8 @@ const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoom
   );
 };
 
-interface StudentData {
-  fullName: string;
-  email: string;
-  role?: string;
-}
-
-interface UpdateData {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl?: string;
-  timestamp: any;
-  type: "announcement" | "motivation" | "tip";
-}
+interface StudentData { fullName: string; email: string; role?: string; }
+interface UpdateData { id: string; title: string; description: string; imageUrl?: string; timestamp: any; type: "announcement" | "motivation" | "tip"; }
 
 const YoutubeIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
@@ -163,7 +148,7 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
 
   return (
     <div ref={cardRef} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
-      <div className="bg-white dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div className="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20 transition-all duration-500 hover:-translate-y-2 border border-white/50 dark:border-slate-700/50">
         <div className="relative aspect-video bg-slate-100 dark:bg-slate-900">
           {!isIntersecting ? (
             <>
@@ -181,7 +166,7 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
                   <PlayCircle className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
               </div>
-              <div className="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">NEW</div>
+              <div className="absolute bottom-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-md">NEW</div>
             </>
           ) : (
             <iframe
@@ -216,10 +201,8 @@ export default function DashboardPage() {
   const welcomeBgImages = ["/gallery2.jpg", "/gallery4.jpg", "/gallery6.jpg"];
   const liveClassBgImages = ["/gallery4.jpg", "/gallery2.jpg", "/gallery5.jpg"];
   const videosBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
-  const statsBgImages = ["/gallery6.jpg", "/gallery8.jpg", "/gallery10.jpg"];
   const coursesBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
   const gallerySectionBgImages = ["/gallery3.jpg", "/gallery6.jpg", "/gallery8.jpg"];
-  const updatesBgImages = ["/gallery5.jpg", "/gallery7.jpg", "/gallery9.jpg"];
 
   const row1Images = ["/gallery1.jpg", "/gallery2.jpg", "/gallery3.jpg", "/gallery4.jpg", "/gallery5.jpg"];
   const row2Images = ["/gallery6.jpg", "/gallery7.jpg", "/gallery8.jpg", "/gallery9.jpg", "/gallery10.jpg"];
@@ -228,73 +211,37 @@ export default function DashboardPage() {
     { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 1" },
     { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - भौतिकी" },
     { id: "dQw4w9WgXcQ", title: "टॉपर कैसे बनें? मोटिवेशनल" },
-    { id: "dQw4w9WgXcQ", title: "गणित शॉर्टकट ट्रिक्स - पार्ट 2" },
-    { id: "dQw4w9WgXcQ", title: "विज्ञान रिवीजन - रसायन" },
     { id: "dQw4w9WgXcQ", title: "English Grammar Masterclass" },
-    { id: "dQw4w9WgXcQ", title: "Social Science Quick Revision" },
-    { id: "dQw4w9WgXcQ", title: "Maths Formula Tricks" },
-    { id: "dQw4w9WgXcQ", title: "Science Practical Guide" },
     { id: "dQw4w9WgXcQ", title: "Exam Preparation Strategy" },
   ];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setAuthChecked(true);
-      if (!user) {
-        window.location.replace("/");
-        return;
-      }
+      if (!user) { window.location.replace("/"); return; }
       try {
         const studentDoc = await getDoc(doc(db, "students", user.uid));
         if (studentDoc.exists()) {
           const data = studentDoc.data() as StudentData;
-          
-          if (data.role?.trim().toLowerCase() === "admin") {
-            window.location.replace("/admin");
-            return;
-          }
-          
+          if (data.role?.trim().toLowerCase() === "admin") { window.location.replace("/admin"); return; }
           setStudent(data);
-          
-          try {
-            const updatesQuery = query(
-              collection(db, "updates"),
-              orderBy("timestamp", "desc"),
-              limit(6)
-            );
-            const updatesSnapshot = await getDocs(updatesQuery);
-            const updatesData = updatesSnapshot.docs.map(doc => ({
-              id: doc.id,
-              ...doc.data()
-            })) as UpdateData[];
-            setUpdates(updatesData);
-          } catch (updatesError) {
-            console.log("No updates collection yet");
-          }
-        } else {
-          window.location.replace("/");
-        }
-      } catch (error) {
-        console.error("Error fetching student data:", error);
-        window.location.replace("/");
-      } finally {
-        setLoading(false);
-      }
+          const updatesSnapshot = await getDocs(query(collection(db, "updates"), orderBy("timestamp", "desc"), limit(6)));
+          setUpdates(updatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as UpdateData[]);
+        } else { window.location.replace("/"); }
+      } catch (error) { window.location.replace("/"); }
+      finally { setLoading(false); }
     });
     return () => unsubscribe();
   }, []);
 
-  const handleLogout = async () => {
-    await auth.signOut();
-    window.location.replace("/");
-  };
+  const handleLogout = async () => { await auth.signOut(); window.location.replace("/"); };
 
   const availableCourses = [
-    { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।", image: "/course1.jpg" },
-    { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन विज्ञान, जीव विज्ञान का पूर्ण कवरेज।", image: "/course2.jpg" },
-    { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय शामिल।", image: "/course3.jpg" },
-    { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी भाषा में आसानी से महारत हासिल करें।", image: "/course4.jpg" },
-    { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र को सरल बनाया गया।", image: "/course5.jpg" },
+    { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित।", image: "/course1.jpg" },
+    { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन, जीव विज्ञान।", image: "/course2.jpg" },
+    { title: "इंटर: संपूर्ण टॉपर बैच", price: "₹999", badge: "कक्षा 12", desc: "मॉक टेस्ट के साथ सभी विषय।", image: "/course3.jpg" },
+    { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "सभी कक्षाएं", desc: "अंग्रेजी में आसानी से महारत।", image: "/course4.jpg" },
+    { title: "सामाजिक विज्ञान: पूर्ण कोर्स", price: "₹599", badge: "कक्षा 10", desc: "इतिहास, भूगोल और नागरिक शास्त्र।", image: "/course5.jpg" },
   ];
 
   if (!authChecked || loading) {
@@ -303,14 +250,11 @@ export default function DashboardPage() {
         <div className="text-center space-y-4 px-4">
           <div className="relative w-20 h-20 mx-auto">
             <div className="absolute inset-0 bg-orange-500/20 rounded-full animate-ping" />
-            <div className="relative w-20 h-20 bg-gradient-to-br from-orange-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-orange-500/30">
+            <div className="relative w-20 h-20 bg-gradient-to-br from-orange-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl">
               <span className="text-4xl">🎓</span>
             </div>
           </div>
-          <div className="space-y-1">
-            <p className="text-slate-600 dark:text-slate-300 font-bold text-lg tracking-wide">World of Concept</p>
-            <p className="text-slate-500 dark:text-slate-400 font-medium text-sm animate-pulse">आपका डैशबोर्ड लोड हो रहा है...</p>
-          </div>
+          <p className="text-slate-600 dark:text-slate-300 font-bold text-lg">World of Concept लोड हो रहा है...</p>
         </div>
       </div>
     );
@@ -320,33 +264,24 @@ export default function DashboardPage() {
     return (
       <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 flex items-center justify-center transition-colors duration-700">
         <div className="text-center space-y-4 px-4">
-          <div className="w-16 h-16 mx-auto bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center">
-            <span className="text-3xl">⚠️</span>
-          </div>
-          <p className="text-slate-600 dark:text-slate-300 text-base font-medium">छात्र डेटा लोड करने में असमर्थ</p>
-          <MagneticButton 
-            onClick={() => window.location.replace("/")} 
-            className="px-6 py-2.5 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20"
-          >
-            होम पर जाएं
-          </MagneticButton>
+          <div className="w-16 h-16 mx-auto bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center"><span className="text-3xl">⚠️</span></div>
+          <p className="text-slate-600 dark:text-slate-300 font-medium">छात्र डेटा लोड करने में असमर्थ</p>
+          <MagneticButton onClick={() => window.location.replace("/")} className="px-6 py-2.5 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-all shadow-lg">होम पर जाएं</MagneticButton>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto transition-colors duration-700">
+    <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative font-sans w-full overflow-x-hidden transition-colors duration-700">
       <AdPopup />
 
       <style jsx global>{`
         @keyframes rainbow-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
         .rainbow-shimmer-bg { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; animation: rainbow-shimmer 3s linear infinite; }
         .rainbow-shimmer-bg:hover { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3); }
-        .rainbow-shimmer-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transform: translateX(-100%); transition: transform 0.7s; }
-        .rainbow-shimmer-bg:hover::after { transform: translateX(100%); }
         .rainbow-shimmer-text { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: rainbow-shimmer 3s linear infinite; }
-
+        
         @keyframes ken-burns-zoom-in { 0% { transform: translate3d(0, 0, 0) scale(1.0); } 100% { transform: translate3d(-1%, -1%, 0) scale(1.08); } }
         @keyframes ken-burns-zoom-out { 0% { transform: translate3d(1%, 1%, 0) scale(1.08); } 100% { transform: translate3d(0, 0, 0) scale(1.0); } }
         .animate-ken-burns-in { animation: ken-burns-zoom-in 60s ease-in-out infinite alternate; will-change: transform; }
@@ -360,16 +295,11 @@ export default function DashboardPage() {
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
         
-        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-        @keyframes shimmer-reverse { 0% { background-position: 1000px 0; } 100% { background-position: -1000px 0; } }
         @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
         .animate-float { animation: float 4s ease-in-out infinite; }
         
-        @keyframes shimmer-text { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        .animate-shimmer-text { background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer-text 3s linear infinite; }
-        
+        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
         .shimmer-effect { background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%); background-size: 1000px 100%; animation: shimmer 2s infinite linear; }
-        .shimmer-effect-reverse { background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%); background-size: 1000px 100%; animation: shimmer-reverse 2.5s infinite linear; }
         
         @keyframes gradient-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .animate-living-gradient { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%); background-size: 200% 200%; animation: gradient-pan 15s ease infinite; }
@@ -388,20 +318,20 @@ export default function DashboardPage() {
         .solar-orbit-3 { width: 6px; height: 6px; background: #f472b6; border-radius: 50%; box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777; animation: orbit-slow 18s linear infinite; }
       `}</style>
 
-      {/* 🔥 CLEAN HEADER (Branding Removed, Right-Aligned, Compact) */}
-      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full backdrop-blur-xl">
+      {/* 🔥 CLEAN HEADER */}
+      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full backdrop-blur-xl border-b border-orange-100/50 dark:border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-end items-center h-14 sm:h-16 gap-3 sm:gap-6">
             <button className="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-orange-100 dark:hover:bg-slate-800 rounded-full transition-colors">
               <Bell className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 animate-pulse"></span>
             </button>
-            <div className="hidden sm:flex items-center gap-3 pl-4">
+            <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
               <div className="text-right">
                 <p className="text-sm font-bold text-slate-900 dark:text-white">{student.fullName}</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">{student.email}</p>
               </div>
-              <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
+              <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
                 {student.fullName.charAt(0).toUpperCase()}
               </div>
             </div>
@@ -415,35 +345,35 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="relative w-full">
+      <main className="relative w-full pb-8">
         
-        {/* 🔥 1. WELCOME CARD (Compact & Borderless) */}
-        <div className="animate-fade-in-up relative overflow-hidden rounded-3xl shadow-xl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8 mb-6 sm:mb-8">
+        {/* 🔥 1. WELCOME CARD (Silky Banner) */}
+        <div className="animate-fade-in-up relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8 mb-6 sm:mb-8 group">
           <DynamicBackground images={welcomeBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-purple-950/80 dark:bg-transparent" />
-          <div className="absolute inset-0 z-0 shimmer-effect opacity-40 dark:opacity-20" />
+          <div className="absolute inset-0 z-0 shimmer-effect opacity-30 dark:opacity-20" />
           
-          <div className="relative z-10 p-4 sm:p-8 text-white">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-xs sm:text-sm font-semibold mb-3">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+          <div className="relative z-10 p-5 sm:p-8 text-white">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs sm:text-sm font-semibold mb-3 border border-white/20">
+              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-300" />
               <span>छात्र डैशबोर्ड</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold mb-2 leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold mb-2 leading-tight drop-shadow-lg">
               वापसी पर स्वागत है, {student.fullName.split(" ")[0]} 👋
             </h1>
-            <p className="text-blue-100 text-sm sm:text-lg max-w-2xl">
+            <p className="text-blue-100 text-sm sm:text-lg max-w-2xl drop-shadow-md">
               RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। निरंतरता बनाए रखें!
             </p>
           </div>
         </div>
 
-        {/* 🔥 2. LIVE CLASS BANNER (Compact, Borderless, Floating Elements) */}
+        {/* 🔥 2. LIVE CLASS BANNER (Silky & Floating) */}
         <div className="animate-fade-in-up w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-10" style={{ animationDelay: "0.1s" }}>
-          <div className="relative overflow-hidden rounded-2xl w-full shadow-xl group bg-white dark:bg-slate-900">
+          <div className="relative overflow-hidden rounded-2xl w-full shadow-xl group bg-white dark:bg-slate-900 border border-red-100 dark:border-red-900/30">
             <DynamicBackground images={liveClassBgImages} zoomType="out" />
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75 dark:bg-transparent" />
-            <div className="absolute inset-0 z-0 shimmer-effect-reverse opacity-40 dark:opacity-20" />
+            <div className="absolute inset-0 z-0 shimmer-effect opacity-20" style={{ animationDirection: 'reverse' }} />
 
             <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
               <div className="absolute top-4 left-4 sm:top-8 sm:left-10 text-white/30 animate-float" style={{ animationDelay: '0s' }}>
@@ -455,15 +385,15 @@ export default function DashboardPage() {
             </div>
             
             <div className="relative z-10 p-4 sm:p-6 flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 sm:gap-6 w-full">
-              <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-red-600 text-white px-2 py-1 rounded-full text-[10px] font-bold shadow-lg animate-pulse z-20">
+              <div className="absolute top-2 right-2 flex items-center gap-1.5 bg-red-600 text-white px-2 py-1 rounded-full text-[10px] font-bold shadow-lg animate-pulse z-20 border border-white/20">
                 <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
                 LIVE NOW
               </div>
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center text-xl sm:text-3xl flex-shrink-0 shadow-xl">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center text-xl sm:text-3xl flex-shrink-0 shadow-xl group-hover:scale-105 transition-transform duration-500">
                 <span className="text-red-700">▶️</span>
               </div>
               <div className="flex-1">
-                <h3 className="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white mb-1 w-full leading-tight">
+                <h3 className="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white mb-1 w-full leading-tight drop-shadow-sm">
                   RK Sir के साथ दैनिक लाइव क्लास
                 </h3>
                 <p className="text-red-800/90 dark:text-orange-100/95 text-xs sm:text-sm w-full max-w-xl">
@@ -489,7 +419,7 @@ export default function DashboardPage() {
           <div className="relative z-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between mb-4 pt-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/20">
                   <YoutubeIcon className="w-5 h-5 text-white" />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text">
@@ -515,18 +445,18 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 4. STATS CARDS (NO BORDER, COMPACT, BORDERLESS) */}
+        {/* 🔥 4. STATS CARDS (OUT OF BOX & COMPACT) */}
         <div className="mb-6 sm:mb-10 animate-fade-in-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ animationDelay: "0.3s" }}>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mb-4 px-1 rainbow-shimmer-text">आपकी प्रगति</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
-              { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400", delay: "0.3s" },
-              { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400", delay: "0.4s" },
-              { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400", delay: "0.5s" },
+              { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-500/20", hoverColor: "hover:shadow-blue-500/20", delay: "0.3s" },
+              { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-100 dark:border-green-500/20", hoverColor: "hover:shadow-green-500/20", delay: "0.4s" },
+              { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-500/20", hoverColor: "hover:shadow-purple-500/20", delay: "0.5s" },
             ].map((stat, i) => (
-              <div key={i} className="bg-white dark:bg-slate-800/40 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-300" style={{ animationDelay: stat.delay }}>
+              <div key={i} className={`bg-white dark:bg-slate-800/60 backdrop-blur-sm border rounded-2xl p-4 sm:p-5 shadow-sm ${stat.hoverColor} hover:shadow-lg hover:-translate-y-1 transition-all duration-500`} style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} border rounded-xl flex items-center justify-center`}>
                     <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <div>
@@ -561,12 +491,12 @@ export default function DashboardPage() {
               <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
                 {[...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-white dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 h-full flex flex-col">
+                    <div className="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col border border-white/50 dark:border-slate-700/50">
                       <div className="relative h-36 sm:h-44 overflow-hidden">
-                        <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                         <div className="absolute top-2 left-2">
-                          <span className="bg-blue-600/90 text-white px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold">
+                          <span className="bg-blue-600/90 backdrop-blur-sm text-white px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold shadow-md">
                             {course.badge}
                           </span>
                         </div>
@@ -574,7 +504,7 @@ export default function DashboardPage() {
                           <h3 className="text-white font-bold text-sm sm:text-base drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
                         </div>
                       </div>
-                      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-900/50">
+                      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-50/80 to-slate-100/80 dark:from-slate-800/50 dark:to-slate-900/50">
                         <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3 line-clamp-2">{course.desc}</p>
                         <div className="flex items-center justify-between mt-auto">
                           <span className="text-lg font-extrabold text-slate-900 dark:text-white">{course.price}</span>
@@ -609,8 +539,8 @@ export default function DashboardPage() {
 
               <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y mb-3 sm:mb-4 pl-4 sm:pl-6 lg:pl-8" style={{ animationDirection: 'reverse' }}>
                 {[...row1Images, ...row1Images].map((src, i) => (
-                  <div key={`row1-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 h-40 sm:h-48 rounded-2xl overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div key={`row1-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 h-40 sm:h-48 rounded-2xl overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20 transition-all duration-500 hover:-translate-y-2 border border-white/50 dark:border-slate-700/50">
+                    <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
                     <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                       <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md flex items-center gap-2">
@@ -623,8 +553,8 @@ export default function DashboardPage() {
 
               <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
                 {[...row2Images, ...row2Images].map((src, i) => (
-                  <div key={`row2-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 h-40 sm:h-48 rounded-2xl overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div key={`row2-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 h-40 sm:h-48 rounded-2xl overflow-hidden group flex-shrink-0 shadow-md hover:shadow-xl hover:shadow-yellow-500/10 dark:hover:shadow-yellow-500/20 transition-all duration-500 hover:-translate-y-2 border border-white/50 dark:border-slate-700/50">
+                    <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
                     <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                       <span className="text-white font-bold text-xs sm:text-sm tracking-wide drop-shadow-md flex items-center gap-2">
@@ -638,7 +568,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 7. RK SIR UPDATES (NO BORDER, COMPACT) */}
+        {/* 🔥 7. RK SIR UPDATES (OUT OF BOX CARDS) */}
         <div className="mb-8 sm:mb-12 animate-fade-in-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ animationDelay: "0.8s" }}>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 rainbow-shimmer-text mb-4">
             <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500 dark:text-indigo-400" />
@@ -646,30 +576,30 @@ export default function DashboardPage() {
           </h2>
           
           {updates.length === 0 ? (
-            <div className="bg-white dark:bg-slate-800/40 rounded-2xl p-6 text-center shadow-sm">
+            <div className="bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl p-6 text-center shadow-sm">
               <p className="text-slate-500 dark:text-slate-400 text-sm">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {updates.map((update) => (
-                <div key={update.id} className="group bg-white dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <div key={update.id} className="group bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20 transition-all duration-500 hover:-translate-y-1">
                   {update.imageUrl && (
                     <div className="relative h-36 sm:h-40 overflow-hidden">
                       <Image src={update.imageUrl} alt={update.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                       <div className="absolute top-2 left-2">
-                        <span className={`px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold text-white ${update.type === "announcement" ? "bg-blue-500/80" : update.type === "motivation" ? "bg-purple-500/80" : "bg-green-500/80"}`}>
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold text-white backdrop-blur-sm ${update.type === "announcement" ? "bg-blue-500/80" : update.type === "motivation" ? "bg-purple-500/80" : "bg-green-500/80"}`}>
                           {update.type === "announcement" ? "📢 घोषणा" : update.type === "motivation" ? "💪 प्रेरणा" : "💡 टिप"}
                         </span>
                       </div>
                     </div>
                   )}
                   <div className="p-4">
-                    <h3 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 text-sm sm:text-base">{update.title}</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 text-sm sm:text-base">{update.title}</h3>
                     <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-2 line-clamp-2">{update.description}</p>
                     <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
-                      {update.timestamp?.toDate().toLocaleDateString("hi-IN", { day: 'numeric', month: 'short', year: 'numeric' })}
+                      {update.timestamp?.toDate().toLocaleDateString("hi-IN", { day: 'numeric', month: 'short' })}
                     </p>
                   </div>
                 </div>
@@ -681,7 +611,7 @@ export default function DashboardPage() {
       </main>
 
       {/* 🔥 WORLD-CLASS FOOTER (Compact & Borderless) */}
-      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
+      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-orange-100/50 dark:border-slate-800/50">
         <div className="absolute inset-0 z-0">
           <iframe
             src="https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&output=embed"
@@ -693,7 +623,7 @@ export default function DashboardPage() {
               top: 0,
               left: 0,
               filter: 'invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.3) saturate(0.6)',
-              opacity: 0.4
+              opacity: 0.3
             }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -701,14 +631,14 @@ export default function DashboardPage() {
             title="World of Concept Location"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/90 dark:from-slate-950/90 via-[#FFF9F0]/80 dark:via-slate-950/80 to-[#FFF9F0]/90 dark:to-slate-950/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/95 dark:from-slate-950/95 via-[#FFF9F0]/85 dark:via-slate-950/85 to-[#FFF9F0]/95 dark:to-slate-950/95" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-6 flex items-center justify-center">
             <MagneticButton 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-              className="group relative inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900/80 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+              className="group relative inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-full shadow-md hover:shadow-lg transition-all duration-300 border border-orange-100 dark:border-slate-700"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -729,10 +659,10 @@ export default function DashboardPage() {
               </div>
               <p className="text-[10px] sm:text-xs leading-relaxed text-slate-600 dark:text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा प्रदान करना।</p>
               <div className="flex gap-2 pt-1">
-                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm"><YoutubeIcon className="w-4 h-4" /></MagneticButton>
-                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-300 shadow-sm"><InstagramIcon className="w-4 h-4" /></MagneticButton>
-                <MagneticButton href="https://facebook.com/worldofconcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm"><FacebookIcon className="w-4 h-4" /></MagneticButton>
-                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-sm"><TelegramIcon className="w-4 h-4" /></MagneticButton>
+                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"><YoutubeIcon className="w-4 h-4" /></MagneticButton>
+                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"><InstagramIcon className="w-4 h-4" /></MagneticButton>
+                <MagneticButton href="https://facebook.com/worldofconcept" className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"><FacebookIcon className="w-4 h-4" /></MagneticButton>
+                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"><TelegramIcon className="w-4 h-4" /></MagneticButton>
               </div>
             </div>
 
@@ -762,7 +692,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
+          <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 border-t border-orange-100/50 dark:border-slate-800/50">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <MagneticButton 
               href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
