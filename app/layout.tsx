@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     default: `World of Concept | RK Sir (Dynamic Educator) & Mukesh Kumar Malakar (Tech Expert & Founder) - Best Bihar Board Coaching ${CURRENT_YEAR}`,
     template: `%s | World of Concept Legacy`,
   },
-  description: "Experience the ultimate EdTech legacy: RK Sir, the dynamic teacher for Bihar Board preparation, meets Mukesh Kumar Malakar, the Full-Stack Developer & Tech Expert handling platform development, UI/UX, and virality. Join the #1 online coaching for BSEB Matric & Inter.",
+  description: "Experience EdTech Legacy: RK Sir, the dynamic teacher for Bihar Board preparation, meets Mukesh Kumar Malakar, the Full-Stack Developer & Tech Expert handling platform development, UI/UX, and virality. Join the #1 online coaching for BSEB Matric & Inter.",
   keywords: [
     "World of Concept", "RK Sir", "RK Sir Classes", "RK Sir Maths", 
     "Dynamic Teacher Bihar Board", "Mukesh Kumar Malakar", "Full-Stack Developer", 
