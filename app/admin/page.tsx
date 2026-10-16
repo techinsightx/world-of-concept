@@ -493,7 +493,12 @@ export default function AdminDashboardPage() {
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-700" />
                       <XAxis dataKey="month" stroke="#64748b" />
                       <YAxis stroke="#64748b" />
-                      <Tooltip contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', borderRadius: '12px' }} className="dark:[&>div]:bg-slate-800 dark:[&>div]:border-slate-700 dark:[&>div]:text-slate-50" itemStyle={{ color: '#0f172a' }} labelStyle={{ color: '#64748b' }} />
+                      {/* 🔥 FIXED: Removed 'className' from Tooltip to resolve TypeScript error */}
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', borderRadius: '12px' }} 
+                        itemStyle={{ color: '#0f172a' }} 
+                        labelStyle={{ color: '#64748b' }} 
+                      />
                       <Legend wrapperStyle={{ color: '#64748b' }} />
                       <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} name="राजस्व (₹)" dot={{ r: 6, fill: '#3b82f6' }} />
                       <Line type="monotone" dataKey="students" stroke="#10b981" strokeWidth={3} name="छात्र" dot={{ r: 6, fill: '#10b981' }} />
