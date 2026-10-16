@@ -127,7 +127,7 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: light)", color: "#FFF9F0" }, // Kesaria tint for mobile browser
     { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
   ],
   colorScheme: "light dark",
@@ -335,7 +335,7 @@ export default function RootLayout({
       <head>
         <meta httpEquiv="Content-Language" content="hi" />
         <meta name="language" content="Hindi" />
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#FFF9F0" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -365,15 +365,47 @@ export default function RootLayout({
         />
       </head>
       
-      <body className="antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-100 font-sans transition-colors duration-300">
+      {/* 🔥 KESARIA LIGHT MODE + CRYSTAL GRADIENT BACKGROUND */}
+      <body className="relative min-h-screen antialiased bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 selection:bg-orange-500/30 selection:text-orange-900 dark:selection:text-orange-100 font-sans transition-colors duration-700 ease-in-out">
+        
+        {/* 🔥 CRYSTAL EDUCATIONAL GRADIENT ORBS (Visible, Subtle, Premium) */}
+        <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+          {/* Kesaria / Orange Glow */}
+          <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full bg-orange-400/10 dark:bg-orange-500/5 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+          {/* Education / Blue Glow */}
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full bg-blue-400/10 dark:bg-blue-500/5 blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+          {/* Center Accent */}
+          <div className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] rounded-full bg-purple-400/5 dark:bg-purple-500/5 blur-[100px]" />
+        </div>
+
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           
+          {/* 🔥 CINEMATIC HEADER WITH SMOOTH TRANSITIONS */}
+          <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#FFF9F0]/80 dark:bg-slate-950/80 border-b border-orange-100 dark:border-slate-800 transition-all duration-500 ease-in-out shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16 sm:h-20">
+                {/* Logo Section with Cinematic Visibility */}
+                <div className="flex items-center gap-3 transition-all duration-500 hover:scale-[1.02]">
+                  <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 drop-shadow-md dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.1)] transition-all duration-500">
+                    <img src="/logo.png" alt="World of Concept" className="w-full h-full object-contain" />
+                  </div>
+                  <span className="text-lg sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-orange-600 to-blue-600 dark:from-orange-400 dark:to-blue-400 bg-clip-text text-transparent drop-shadow-sm transition-all duration-500">
+                    World of Concept
+                  </span>
+                </div>
+              </div>
+            </div>
+          </header>
+
           {/* 🔥 FIXED: Mobile पर Toggle अब Header के नीचे (top-20) दिखेगा, Overlap नहीं होगा */}
-          <div className="fixed top-20 sm:top-6 right-4 sm:right-6 z-[9999] drop-shadow-2xl">
+          <div className="fixed top-20 sm:top-6 right-4 sm:right-6 z-[9999] drop-shadow-2xl transition-all duration-500">
             <ThemeToggle />
           </div>
 
-          {children}
+          {/* Main Content Wrapper with Top Padding for Fixed Header */}
+          <main className="pt-16 sm:pt-20 min-h-screen transition-all duration-500">
+            {children}
+          </main>
           
         </ThemeProvider>
       </body>
