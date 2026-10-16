@@ -31,8 +31,6 @@ export default function AuthForm() {
     const rect = submitBtnRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    
-    // Subtle magnetic pull towards cursor
     submitBtnRef.current.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.03)`;
   };
 
@@ -109,7 +107,7 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative w-full h-full flex items-center justify-center p-2 sm:p-4">
       <style jsx global>{`
         @keyframes tricolor-shimmer {
           0% { background-position: -200% center; }
@@ -137,7 +135,6 @@ export default function AuthForm() {
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
-        /* 🔥 RAINBOW SHIMMER ANIMATION */
         @keyframes rainbow-shimmer {
           0% { background-position: 0% 50%; }
           100% { background-position: 200% 50%; }
@@ -157,33 +154,33 @@ export default function AuthForm() {
         }
       `}</style>
 
-      {/* 🔥 COMPACT AUTH FORM CARD */}
-      <div className="relative z-10 w-full max-w-sm mx-4 animate-fade-in-up">
-        <div className="bg-slate-900/70 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/10 p-5 sm:p-6 relative overflow-hidden">
+      {/* 🔥 PERFECTLY FITTED MOBILE AUTH FORM CARD */}
+      <div className="relative z-10 w-full max-w-[95vw] sm:max-w-md mx-auto animate-fade-in-up">
+        <div className="bg-white/90 dark:bg-slate-900/80 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl border border-orange-100 dark:border-white/10 p-4 sm:p-6 relative overflow-hidden">
           
           {/* Subtle decorative glows */}
-          <div className="absolute -top-16 -right-16 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-float" />
-          <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
+          <div className="absolute -top-12 -right-12 w-24 h-24 sm:w-32 sm:h-32 bg-blue-600/10 dark:bg-blue-600/20 rounded-full blur-3xl pointer-events-none animate-float" />
+          <div className="absolute -bottom-12 -left-12 w-24 h-24 sm:w-32 sm:h-32 bg-purple-600/10 dark:bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
           
           <div className="relative z-10">
-            {/* 🔥 COMPACT LOGO */}
-            <div className="text-center mb-6">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-4 drop-shadow-2xl">
+            {/* 🔥 COMPACT & RESPONSIVE LOGO */}
+            <div className="text-center mb-4 sm:mb-6">
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-3 sm:mb-4 drop-shadow-2xl">
                 <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
+              <h2 className="text-xl sm:text-2xl font-black tracking-tight mb-1">
                 <span className="tricolor-text">World of Concept</span>
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base font-medium max-w-[16rem] mx-auto flex items-center justify-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-medium max-w-[16rem] mx-auto flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-500" />
                 {isLogin ? "अपने डैशबोर्ड में लॉगिन करें" : "टॉप करने की यात्रा शुरू करें"}
               </p>
             </div>
 
             {/* Smooth Premium Rainbow Tab Switcher */}
-            <div className="relative flex bg-slate-800/50 p-1 rounded-xl mb-6 border border-white/5">
+            <div className="relative flex bg-slate-100 dark:bg-slate-800/50 p-1 rounded-xl mb-5 sm:mb-6 border border-slate-200 dark:border-white/5">
               <div 
-                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg shadow-lg transition-all duration-300 ease-out rainbow-tab-active ${
+                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg shadow-md transition-all duration-300 ease-out rainbow-tab-active ${
                   isLogin ? "left-1" : "left-[calc(50%+2px)]"
                 }`} 
               />
@@ -191,7 +188,7 @@ export default function AuthForm() {
                 type="button"
                 onClick={() => { if (!isLogin) switchMode(); }}
                 className={`relative z-10 flex-1 py-2.5 text-xs sm:text-sm font-bold transition-colors duration-300 rounded-lg ${
-                  isLogin ? "text-white" : "text-slate-400 hover:text-white"
+                  isLogin ? "text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white"
                 }`}
               >
                 साइन इन
@@ -200,7 +197,7 @@ export default function AuthForm() {
                 type="button"
                 onClick={() => { if (isLogin) switchMode(); }}
                 className={`relative z-10 flex-1 py-2.5 text-xs sm:text-sm font-bold transition-colors duration-300 rounded-lg ${
-                  !isLogin ? "text-white" : "text-slate-400 hover:text-white"
+                  !isLogin ? "text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white"
                 }`}
               >
                 साइन अप
@@ -211,17 +208,17 @@ export default function AuthForm() {
             <form onSubmit={handleEmailAuth} className="space-y-4" noValidate>
               {!isLogin && (
                 <div className="space-y-1.5 animate-fade-in-up">
-                  <label className="block text-xs font-semibold text-slate-200">
-                    पूरा नाम <span className="text-red-400">*</span>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200">
+                    पूरा नाम <span className="text-red-500">*</span>
                   </label>
                   <div className="relative group">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                     <input
                       type="text"
                       placeholder="शुभम कुमार"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      className="w-full pl-10 pr-3 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                       required
                     />
                   </div>
@@ -229,41 +226,41 @@ export default function AuthForm() {
               )}
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-200">
-                  ईमेल पता <span className="text-red-400">*</span>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  ईमेल पता <span className="text-red-500">*</span>
                 </label>
                 <div className="relative group">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                   <input
                     type="email"
                     placeholder="students@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-3 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full pl-10 pr-3 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-200">
-                  पासवर्ड <span className="text-red-400">*</span>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  पासवर्ड <span className="text-red-500">*</span>
                 </label>
                 <div className="relative group">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="कम से कम 6 अक्षर"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="w-full pl-10 pr-10 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                     required
                     minLength={6}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -275,7 +272,7 @@ export default function AuthForm() {
                       type="button"
                       onClick={handleForgotPassword}
                       disabled={loading}
-                      className="text-[11px] text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors disabled:opacity-50"
+                      className="text-[11px] text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:underline font-semibold transition-colors disabled:opacity-50"
                     >
                       पासवर्ड भूल गए?
                     </button>
@@ -285,16 +282,16 @@ export default function AuthForm() {
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-500/10 border border-red-500/30 text-red-200 px-3 py-2 rounded-lg text-xs flex items-start gap-2 animate-fade-in-up">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
+                <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-200 px-3 py-2.5 rounded-xl text-xs flex items-start gap-2 animate-fade-in-up">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-500 dark:text-red-400" />
                   <span>{error}</span>
                 </div>
               )}
 
               {/* Success Message */}
               {successMsg && (
-                <div className="bg-green-500/10 border border-green-500/30 text-green-200 px-3 py-2 rounded-lg text-xs flex items-start gap-2 animate-fade-in-up">
-                  <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-green-400" />
+                <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 text-green-600 dark:text-green-200 px-3 py-2.5 rounded-xl text-xs flex items-start gap-2 animate-fade-in-up">
+                  <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-green-500 dark:text-green-400" />
                   <span>{successMsg}</span>
                 </div>
               )}
@@ -306,7 +303,7 @@ export default function AuthForm() {
                 disabled={loading}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                className="w-full mt-5 rainbow-shimmer-btn text-white font-bold py-3 rounded-xl shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                className="w-full mt-4 sm:mt-5 rainbow-shimmer-btn text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base active:scale-95 transition-transform"
                 style={{ transform: 'translate(0px, 0px) scale(1)', transition: 'transform 0.2s ease-out, box-shadow 0.2s ease-out' }}
               >
                 {loading ? (
@@ -324,11 +321,11 @@ export default function AuthForm() {
             </form>
 
             {/* Footer Links */}
-            <p className="text-center text-[11px] text-slate-400 mt-6 leading-relaxed">
+            <p className="text-center text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-5 sm:mt-6 leading-relaxed">
               जारी रखकर, आप हमारी{" "}
-              <a href="/terms" className="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors">शर्तों</a>
+              <a href="/terms" className="text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:underline font-semibold transition-colors">शर्तों</a>
               {" और "}
-              <a href="/privacy" className="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
+              <a href="/privacy" className="text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:underline font-semibold transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
             </p>
           </div>
         </div>
