@@ -68,7 +68,7 @@ const MagneticButton = ({ children, className, onClick, href, ...props }: any) =
   return <button className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} onClick={onClick} {...props}>{children}</button>;
 };
 
-// 🔥 Dynamic Background Component
+// 🔥 Dynamic Background Component (Ultra-Slow Cinematic Zoom)
 const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -91,7 +91,8 @@ const DynamicBackground = ({ images, zoomType = "in" }: { images: string[], zoom
         <div className="absolute top-1/4 left-1/4 solar-orbit-1" />
         <div className="absolute bottom-1/3 right-1/4 solar-orbit-2" />
         <div className="absolute top-1/2 left-1/2 solar-orbit-3" />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/85 to-slate-950/95" />
+        {/* 🔥 Dark Mode Matte Crystal Clear: Low opacity for strong element visibility */}
+        <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px]" />
       </div>
     </div>
   );
@@ -113,7 +114,7 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
 
   return (
     <div ref={cardRef} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
-      <div className="bg-white/90 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 border border-white/60 dark:border-slate-700/50">
+      <div className="bg-white/90 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 border border-white/60 dark:border-slate-700/50">
         <div className="relative aspect-video bg-slate-100 dark:bg-slate-900">
           {!isIntersecting ? (
             <>
@@ -200,7 +201,6 @@ export default function DashboardPage() {
 
   const handleLogout = async () => { await auth.signOut(); window.location.replace("/"); };
 
-  // 🔥 Loading State
   if (!authChecked || loading) {
     return (
       <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 flex items-center justify-center transition-colors duration-700">
@@ -217,7 +217,6 @@ export default function DashboardPage() {
     );
   }
 
-  // 🔥 Error State
   if (!student) {
     return (
       <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 flex items-center justify-center transition-colors duration-700">
@@ -238,11 +237,29 @@ export default function DashboardPage() {
         @keyframes rainbow-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
         .rainbow-shimmer-bg { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; animation: rainbow-shimmer 3s linear infinite; }
         .rainbow-shimmer-text { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: rainbow-shimmer 3s linear infinite; }
-        @keyframes ken-burns-zoom-in { 0% { transform: translate3d(0, 0, 0) scale(1.0); } 100% { transform: translate3d(-1%, -1%, 0) scale(1.08); } }
-        @keyframes ken-burns-zoom-out { 0% { transform: translate3d(1%, 1%, 0) scale(1.08); } 100% { transform: translate3d(0, 0, 0) scale(1.0); } }
-        .animate-ken-burns-in { animation: ken-burns-zoom-in 60s ease-in-out infinite alternate; will-change: transform; }
-        .animate-ken-burns-out { animation: ken-burns-zoom-out 60s ease-in-out infinite alternate; will-change: transform; }
-        @media (max-width: 768px) { .animate-ken-burns-in { animation-duration: 40s; } .animate-ken-burns-out { animation-duration: 40s; } }
+        
+        /* 🔥 ULTRA-SLOW CINEMATIC ZOOM (Zero Glitch) */
+        @keyframes ken-burns-zoom-in { 
+          0% { transform: translate3d(0, 0, 0) scale(1.0); } 
+          100% { transform: translate3d(-1%, -1%, 0) scale(1.05); } 
+        }
+        @keyframes ken-burns-zoom-out { 
+          0% { transform: translate3d(1%, 1%, 0) scale(1.05); } 
+          100% { transform: translate3d(0, 0, 0) scale(1.0); } 
+        }
+        .animate-ken-burns-in { 
+          animation: ken-burns-zoom-in 120s ease-in-out infinite alternate; 
+          will-change: transform; 
+        }
+        .animate-ken-burns-out { 
+          animation: ken-burns-zoom-out 120s ease-in-out infinite alternate; 
+          will-change: transform; 
+        }
+        @media (max-width: 768px) { 
+          .animate-ken-burns-in { animation-duration: 90s; } 
+          .animate-ken-burns-out { animation-duration: 90s; } 
+        }
+        
         @keyframes marquee-seamless { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
         .animate-marquee-seamless { animation: marquee-seamless 40s linear infinite; will-change: transform; touch-action: pan-y; }
         .animate-marquee-seamless:hover { animation-play-state: paused; }
@@ -290,10 +307,10 @@ export default function DashboardPage() {
 
       <main className="relative w-full pb-8">
         
-        {/* 🔥 1. HERO: WELCOME + LIVE CLASS (EDGELESS & CRYSTAL CLEAR) */}
+        {/* 🔥 1. HERO: WELCOME + LIVE CLASS */}
         <div className="animate-fade-in-up relative w-full overflow-hidden mb-6 sm:mb-10 group">
           <DynamicBackground images={welcomeBgImages} zoomType="in" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent dark:from-slate-950/70 dark:via-slate-950/40 dark:to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent dark:from-slate-950/50 dark:via-slate-950/30 dark:to-transparent" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-10" />
           
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
@@ -311,7 +328,6 @@ export default function DashboardPage() {
                 </p>
               </div>
               
-              {/* Integrated Live Class Card */}
               <div className="w-full lg:w-auto flex-shrink-0">
                 <div className="relative bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 rounded-2xl p-4 sm:p-5 shadow-2xl max-w-sm w-full group-hover:scale-[1.02] transition-transform duration-500">
                   <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-red-600 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse z-20">
@@ -323,16 +339,11 @@ export default function DashboardPage() {
                       <span className="text-red-700">▶️</span>
                     </div>
                     <div>
-                      <h3 className="text-base sm:text-lg font-extrabold text-white drop-shadow-md">
-                        दैनिक लाइव क्लास
-                      </h3>
+                      <h3 className="text-base sm:text-lg font-extrabold text-white drop-shadow-md">दैनिक लाइव क्लास</h3>
                       <p className="text-white/80 text-xs sm:text-sm">RK Sir के साथ अभी जुड़ें</p>
                     </div>
                   </div>
-                  <MagneticButton 
-                    href="https://www.youtube.com/@JoinWorldofConcept" 
-                    className="w-full inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-sm font-extrabold transition-all duration-300 shadow-lg"
-                  >
+                  <MagneticButton href="https://www.youtube.com/@JoinWorldofConcept" className="w-full inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl text-sm font-extrabold transition-all duration-300 shadow-lg">
                     <PlayCircle className="w-5 h-5" /> अभी लाइव देखें
                   </MagneticButton>
                 </div>
@@ -341,15 +352,16 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 2. STATS CARDS (EDGELESS GLASS BANNER) */}
+        {/* 🔥 2. STATS CARDS */}
         <div className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden" style={{ animationDelay: "0.2s" }}>
           <div className="absolute inset-0 z-0">
             <DynamicBackground images={statsBgImages} zoomType="out" />
-            <div className="absolute inset-0 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md" />
+            {/* 🔥 Matte Crystal Clear Overlay */}
+            <div className="absolute inset-0 bg-slate-50/60 dark:bg-slate-950/30 backdrop-blur-sm" />
           </div>
           <div className="relative z-10 py-8 sm:py-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mb-6 px-1">आपकी प्रगति</h2>
+              <h2 className="text-xl sm:text-2xl font-extrabold rainbow-shimmer-text mb-6 px-1">आपकी प्रगति</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 {[
                   { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-500/20", hoverColor: "hover:shadow-blue-500/20" },
@@ -373,11 +385,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE RAIL (EDGELESS + INFINITE SCROLL) */}
+        {/* 🔥 3. YOUTUBE RAIL */}
         <div className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden" style={{ animationDelay: "0.3s" }}>
           <div className="absolute inset-0 z-0">
             <DynamicBackground images={videosBgImages} zoomType="in" />
-            <div className="absolute inset-0 bg-black/10 dark:bg-slate-950/60" />
+            <div className="absolute inset-0 bg-black/10 dark:bg-slate-950/30" />
           </div>
           <div className="relative z-10 py-8 sm:py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between mb-6">
@@ -385,7 +397,7 @@ export default function DashboardPage() {
                 <div className="w-10 h-10 bg-red-600/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
                   <YoutubeIcon className="w-5 h-5 text-white" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-white drop-shadow-lg">
+                <h2 className="text-xl sm:text-2xl font-extrabold rainbow-shimmer-text drop-shadow-lg">
                   RK Sir के लेटेस्ट वीडियो
                 </h2>
               </div>
@@ -407,15 +419,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 4. COURSES RAIL (EDGELESS + INFINITE SCROLL) */}
+        {/* 🔥 4. COURSES RAIL */}
         <div className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden" style={{ animationDelay: "0.4s" }}>
           <div className="absolute inset-0 z-0">
             <DynamicBackground images={coursesBgImages} zoomType="in" />
-            <div className="absolute inset-0 bg-black/10 dark:bg-slate-950/60" />
+            <div className="absolute inset-0 bg-black/10 dark:bg-slate-950/30" />
           </div>
           <div className="relative z-10 py-8 sm:py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white drop-shadow-lg">उपलब्ध कोर्सेस</h2>
+              <h2 className="text-xl sm:text-2xl font-extrabold rainbow-shimmer-text drop-shadow-lg">उपलब्ध कोर्सेस</h2>
               <MagneticButton href="/courses" className="text-white/90 hover:text-white font-semibold text-sm flex items-center gap-1 bg-black/20 hover:bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-all border border-white/20">
                 सभी देखें <ArrowRight className="w-4 h-4" />
               </MagneticButton>
@@ -428,7 +440,7 @@ export default function DashboardPage() {
               <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
                 {[...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-white/90 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col border border-white/60 dark:border-slate-700/50">
+                    <div className="bg-white/90 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col border border-white/60 dark:border-slate-700/50">
                       <div className="relative h-36 sm:h-44 overflow-hidden">
                         <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -458,15 +470,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. GALLERY RAIL (EDGELESS + INFINITE SCROLL) */}
+        {/* 🔥 5. GALLERY RAIL */}
         <div className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden" style={{ animationDelay: "0.5s" }}>
           <div className="absolute inset-0 z-0">
             <DynamicBackground images={gallerySectionBgImages} zoomType="out" />
-            <div className="absolute inset-0 bg-black/10 dark:bg-slate-950/60" />
+            <div className="absolute inset-0 bg-black/10 dark:bg-slate-950/30" />
           </div>
           <div className="relative z-10 py-8 sm:py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-6">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-white drop-shadow-lg">World of Concept में जीवन</h2>
+              <h2 className="text-xl sm:text-2xl font-extrabold rainbow-shimmer-text drop-shadow-lg">World of Concept में जीवन</h2>
             </div>
 
             <div className="relative w-full overflow-hidden py-2">
@@ -504,15 +516,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. RK SIR UPDATES (EDGELESS GLASS BANNER) */}
+        {/* 🔥 6. RK SIR UPDATES */}
         <div className="mb-8 sm:mb-12 animate-fade-in-up relative w-full overflow-hidden" style={{ animationDelay: "0.6s" }}>
           <div className="absolute inset-0 z-0">
             <DynamicBackground images={updatesBgImages} zoomType="in" />
-            <div className="absolute inset-0 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md" />
+            <div className="absolute inset-0 bg-slate-50/60 dark:bg-slate-950/30 backdrop-blur-sm" />
           </div>
           <div className="relative z-10 py-8 sm:py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
+              <h2 className="text-xl sm:text-2xl font-extrabold rainbow-shimmer-text flex items-center gap-2 mb-6">
                 <MessageCircle className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
                 RK Sir के अपडेट्स
               </h2>
@@ -554,8 +566,8 @@ export default function DashboardPage() {
 
       </main>
 
-      {/* 🔥 WORLD-CLASS FOOTER */}
-      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-orange-100/50 dark:border-slate-800/50">
+      {/* 🔥 WORLD-CLASS FOOTER (Sharp Map Visibility in Light Mode) */}
+      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-orange-100/50 dark:border-slate-800/50">
         <div className="absolute inset-0 z-0">
           <iframe
             src="https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&output=embed"
@@ -566,8 +578,9 @@ export default function DashboardPage() {
               position: 'absolute',
               top: 0,
               left: 0,
-              filter: 'invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.3) saturate(0.6)',
-              opacity: 0.3
+              // 🔥 Light mode: crisp & sharp. Dark mode: matte inverted.
+              filter: 'dark:invert(92%) dark:hue-rotate(180deg) dark:brightness(1.1) dark:contrast(1.15) dark:saturate(0.8)',
+              opacity: 1 // Full sharp visibility
             }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -575,7 +588,8 @@ export default function DashboardPage() {
             title="World of Concept Location"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/95 dark:from-slate-950/95 via-[#FFF9F0]/85 dark:via-slate-950/85 to-[#FFF9F0]/95 dark:to-slate-950/95" />
+          {/* 🔥 White overlay removed for light mode, kept only for dark mode text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent dark:from-slate-950/90 via-transparent dark:via-slate-950/80 to-transparent dark:to-slate-950/90" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
