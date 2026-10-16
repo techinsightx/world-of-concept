@@ -247,12 +247,22 @@ export default function Home() {
           .animate-ken-burns-in { animation: ken-burns-zoom-in 60s ease-in-out infinite alternate; will-change: transform; }
           .animate-ken-burns-out { animation: ken-burns-zoom-out 60s ease-in-out infinite alternate; will-change: transform; }
           @media (max-width: 768px) { .animate-ken-burns-in { animation-duration: 40s; } .animate-ken-burns-out { animation-duration: 40s; } }
-          @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
-          @keyframes marquee-reverse { 0% { transform: translate3d(-50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
+          
+          /* 🔥 FRICTIONLESS SEAMLESS RAILWAY TRACK ANIMATION */
+          @keyframes marquee-seamless { 
+            0% { transform: translate3d(0, 0, 0); } 
+            100% { transform: translate3d(-50%, 0, 0); } 
+          }
+          .animate-marquee-seamless { 
+            animation: marquee-seamless 45s linear infinite; 
+            will-change: transform; 
+            touch-action: pan-y; 
+          }
+          .animate-marquee-seamless:hover { 
+            animation-play-state: paused; 
+          }
+
           @keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
-          .animate-marquee { animation: marquee 60s linear infinite; will-change: transform; touch-action: pan-y; }
-          .animate-marquee-reverse { animation: marquee-reverse 60s linear infinite; will-change: transform; touch-action: pan-y; }
-          .animate-marquee:hover, .animate-marquee-reverse:hover { animation-play-state: paused; }
           @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
           .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
           @keyframes shimmer-text { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
@@ -341,16 +351,17 @@ export default function Home() {
             </div>
           </section>
 
-          {/* 3. CINEMATIC DUAL ROW SCROLLING */}
+          {/* 3. CINEMATIC DUAL ROW SCROLLING (FRICTIONLESS) */}
           <section className="relative py-16 overflow-hidden border-y border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
             <DynamicBackground images={scrollingBgImages} zoomType="in" />
             <div className="absolute inset-0 z-10 bg-slate-950/90 dark:bg-transparent" />
 
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#FFF9F0] dark:from-slate-950 to-transparent z-10 pointer-events-none" />
 
-            <div className="relative z-10 flex gap-4 w-max animate-marquee mb-4">
-              {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
+            {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+            <div className="relative z-10 flex gap-4 w-max animate-marquee-seamless mb-4">
+              {[...row1Images, ...row1Images].map((src, i) => (
                 <div key={`m1-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
                   <Image src={src} alt={`Marquee 1 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -361,8 +372,8 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="relative z-10 flex gap-4 w-max animate-marquee-reverse">
-              {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
+            <div className="relative z-10 flex gap-4 w-max animate-marquee-seamless" style={{ animationDirection: 'reverse' }}>
+              {[...row2Images, ...row2Images].map((src, i) => (
                 <div key={`m2-${i}`} className="relative w-80 h-52 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-800 shadow-xl group">
                   <Image src={src} alt={`Marquee 2 ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -497,11 +508,21 @@ export default function Home() {
         .rainbow-shimmer-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transform: translateX(-100%); transition: transform 0.7s; }
         .rainbow-shimmer-bg:hover::after { transform: translateX(100%); }
         .rainbow-shimmer-text { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: rainbow-shimmer 3s linear infinite; }
-        @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
-        @keyframes marquee-reverse { 0% { transform: translate3d(-50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
-        .animate-marquee { animation: marquee 60s linear infinite; will-change: transform; touch-action: pan-y; }
-        .animate-marquee-reverse { animation: marquee-reverse 60s linear infinite; will-change: transform; touch-action: pan-y; }
-        .animate-marquee:hover, .animate-marquee-reverse:hover { animation-play-state: paused; }
+        
+        /* 🔥 FRICTIONLESS SEAMLESS RAILWAY TRACK ANIMATION */
+        @keyframes marquee-seamless { 
+          0% { transform: translate3d(0, 0, 0); } 
+          100% { transform: translate3d(-50%, 0, 0); } 
+        }
+        .animate-marquee-seamless { 
+          animation: marquee-seamless 45s linear infinite; 
+          will-change: transform; 
+          touch-action: pan-y; 
+        }
+        .animate-marquee-seamless:hover { 
+          animation-play-state: paused; 
+        }
+
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
         @keyframes shimmer-text { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
@@ -605,7 +626,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* AVAILABLE COURSES RAIL */}
+          {/* AVAILABLE COURSES RAIL (FRICTIONLESS) */}
           <div id="available-courses" className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.4s" }}>
             <DynamicBackground images={coursesBgImages} zoomType="in" />
             <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-50/85 via-slate-100/90 to-slate-50/95 dark:from-slate-950/85 dark:via-slate-950/90 dark:to-slate-950/95" />
@@ -625,8 +646,9 @@ export default function Home() {
               </div>
               
               <div className="relative w-full overflow-hidden py-4">
-                <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
-                  {[...courseImages, ...courseImages, ...courseImages].map((src, i) => {
+                {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+                <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y">
+                  {[...courseImages, ...courseImages].map((src, i) => {
                     const courses: CourseItem[] = [
                       { title: "गणित: ऑब्जेक्टिव मास्टरक्लास", price: "₹499", badge: "कक्षा 10", desc: "शॉर्टकट के साथ संपूर्ण गणित की तैयारी।" },
                       { title: "विज्ञान: संपूर्ण रिवीजन", price: "₹699", badge: "कक्षा 10", desc: "भौतिकी, रसायन विज्ञान, जीव विज्ञान का पूर्ण कवरेज।" },
@@ -674,7 +696,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CINEMATIC GALLERY */}
+          {/* CINEMATIC GALLERY (FRICTIONLESS) */}
           <div className="animate-fade-in-up w-full relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
             <DynamicBackground images={gallerySectionBgImages} zoomType="out" />
             <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-50/85 via-slate-100/90 to-slate-50/95 dark:from-slate-950/85 dark:via-slate-950/90 dark:to-slate-950/95" />
@@ -686,8 +708,9 @@ export default function Home() {
               </div>
 
               <div className="relative w-full overflow-hidden py-4 sm:py-6">
-                <div className="flex gap-4 w-max animate-marquee touch-pan-y mb-4 sm:mb-6">
-                  {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
+                {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+                <div className="flex gap-4 w-max animate-marquee-seamless touch-pan-y mb-4 sm:mb-6">
+                  {[...row1Images, ...row1Images].map((src, i) => (
                     <div key={`row1-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
                       <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
@@ -700,8 +723,8 @@ export default function Home() {
                   ))}
                 </div>
 
-                <div className="flex gap-4 w-max animate-marquee-reverse touch-pan-y">
-                  {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
+                <div className="flex gap-4 w-max animate-marquee-seamless touch-pan-y" style={{ animationDirection: 'reverse' }}>
+                  {[...row2Images, ...row2Images].map((src, i) => (
                     <div key={`row2-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
                       <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
