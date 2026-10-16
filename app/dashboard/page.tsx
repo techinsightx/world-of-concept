@@ -336,7 +336,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-slate-950 text-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto">
+    <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto transition-colors duration-500">
       <AdPopup />
 
       <style jsx global>{`
@@ -562,40 +562,29 @@ export default function DashboardPage() {
         }
       `}</style>
 
-      {/* 🔥 DARK HEADER */}
-      <header className="bg-slate-950/90 border-b border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full">
+      {/* 🔥 CLEAN HEADER (Branding Removed, Right-Aligned) */}
+      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 border-b border-orange-100 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-20">
-            <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
-                <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
+          <div className="flex justify-end items-center h-16 sm:h-20 gap-3 sm:gap-6">
+            <button className="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-orange-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 animate-pulse"></span>
+            </button>
+            <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200 dark:border-slate-800">
+              <div className="text-right">
+                <p className="text-sm font-bold text-slate-900 dark:text-white">{student.fullName}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{student.email}</p>
               </div>
-              <span className="text-lg sm:text-2xl font-extrabold tracking-tight animate-shimmer-text drop-shadow-lg">
-                World of Concept
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3 sm:gap-6">
-              <button className="relative p-2 text-slate-400 hover:bg-slate-800 rounded-full transition-colors">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-slate-950 animate-pulse"></span>
-              </button>
-              <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-slate-800">
-                <div className="text-right">
-                  <p className="text-sm font-bold text-white">{student.fullName}</p>
-                  <p className="text-xs text-slate-400">{student.email}</p>
-                </div>
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ring-2 ring-slate-950">
-                  {student.fullName.charAt(0).toUpperCase()}
-                </div>
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
+                {student.fullName.charAt(0).toUpperCase()}
               </div>
-              <MagneticButton 
-                onClick={handleLogout} 
-                className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all duration-300 border border-red-500/30 hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20"
-              >
-                <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
-              </MagneticButton>
             </div>
+            <MagneticButton 
+              onClick={handleLogout} 
+              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300 border border-red-200 dark:border-red-500/30 hover:border-red-300 dark:hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20"
+            >
+              <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
+            </MagneticButton>
           </div>
         </div>
       </header>
@@ -603,7 +592,7 @@ export default function DashboardPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
         
         {/* 🔥 1. WELCOME CARD */}
-        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/20">
+        <div className="animate-fade-in-up mb-8 relative overflow-hidden rounded-3xl shadow-2xl shadow-blue-900/10 dark:shadow-blue-900/20">
           <DynamicBackground images={welcomeBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
           <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-950/80 via-indigo-950/80 to-purple-950/80 dark:bg-transparent" />
@@ -625,7 +614,7 @@ export default function DashboardPage() {
 
         {/* 🔥 2. LIVE CLASS BANNER */}
         <div className="animate-fade-in-up mb-12 w-full" style={{ animationDelay: "0.1s" }}>
-          <div className="relative overflow-hidden rounded-2xl w-full border border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/40 group">
+          <div className="relative overflow-hidden rounded-2xl w-full border border-red-200 dark:border-red-800/50 hover:border-orange-500/50 transition-all duration-500 shadow-2xl shadow-red-950/20 dark:shadow-red-950/40 group bg-white dark:bg-slate-900">
             <DynamicBackground images={liveClassBgImages} zoomType="out" />
             <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/85 via-red-900/80 to-orange-900/75 dark:bg-transparent" />
@@ -662,16 +651,16 @@ export default function DashboardPage() {
                 <span className="text-red-700">▶️</span>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg sm:text-2xl font-extrabold text-white mb-2 w-full leading-tight drop-shadow-lg">
+                <h3 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white mb-2 w-full leading-tight drop-shadow-lg">
                   RK Sir के साथ दैनिक लाइव क्लास
                 </h3>
-                <p className="text-orange-100/95 text-xs sm:text-base w-full max-w-xl font-medium drop-shadow">
+                <p className="text-red-800/90 dark:text-orange-100/95 text-xs sm:text-base w-full max-w-xl font-medium drop-shadow">
                   दैनिक लाइव सत्र में शामिल हों, रियल टाइम में अपने संदेह दूर करें।
                 </p>
               </div>
               <MagneticButton 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
-                className="inline-flex items-center justify-center gap-2 bg-white text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-orange-50 transition-all duration-300 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-white/50 hover:border-orange-300"
+                className="inline-flex items-center justify-center gap-2 bg-red-600 dark:bg-white text-white dark:text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-red-700 dark:hover:bg-orange-50 transition-all duration-300 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-transparent dark:border-white/50 hover:border-orange-300"
               >
                 <PlayCircle className="w-5 h-5" />
                 अभी जुड़ें
@@ -690,18 +679,18 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center shadow-lg shadow-red-600/30">
-                  <YoutubeIcon className="w-7 h-7" />
+                  <YoutubeIcon className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-extrabold flex items-center gap-2 rainbow-shimmer-text">
+                  <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 rainbow-shimmer-text">
                     RK Sir के लेटेस्ट वीडियो
                   </h2>
-                  <p className="text-sm text-slate-400 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">नए लेक्चर और मोटिवेशनल कंटेंट</p>
                 </div>
               </div>
               <MagneticButton 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
-                className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-semibold text-sm transition-colors group"
+                className="inline-flex items-center gap-2 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 font-semibold text-sm transition-colors group"
               >
                 चैनल देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </MagneticButton>
@@ -724,16 +713,16 @@ export default function DashboardPage() {
           <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 dark:bg-transparent" />
           
           <div className="relative z-10 p-6 sm:p-8">
-            <h2 className="text-2xl font-extrabold text-white mb-6 rainbow-shimmer-text px-2">आपकी प्रगति</h2>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 rainbow-shimmer-text px-2">आपकी प्रगति</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               {[
-                { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-500/10 text-blue-400 border-blue-500/20", delay: "0.3s" },
-                { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-500/10 text-green-400 border-green-500/20", delay: "0.4s" },
-                { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", delay: "0.5s" },
+                { icon: BookOpen, label: "उपलब्ध कोर्सेस", value: availableCourses.length, color: "bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20", delay: "0.3s" },
+                { icon: CheckCircle2, label: "पूर्ण किए", value: "0", color: "bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20", delay: "0.4s" },
+                { icon: Target, label: "प्रगति में", value: "0", color: "bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20", delay: "0.5s" },
               ].map((stat, i) => (
                 <div 
                   key={i} 
-                  className="bg-slate-800/60 dark:bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-600 transition-all duration-300" 
+                  className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300" 
                   style={{ animationDelay: stat.delay }}
                 >
                   <div className="flex items-center gap-4">
@@ -741,8 +730,8 @@ export default function DashboardPage() {
                       <stat.icon className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 font-medium mb-1">{stat.label}</p>
-                      <p className="text-2xl sm:text-3xl font-extrabold text-white">{stat.value}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">{stat.label}</p>
+                      <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">{stat.value}</p>
                     </div>
                   </div>
                 </div>
@@ -760,12 +749,12 @@ export default function DashboardPage() {
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 px-2 pt-4">
               <div>
-                <h2 className="text-2xl font-extrabold text-white rainbow-shimmer-text">उपलब्ध कोर्सेस</h2>
-                <p className="text-slate-400 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
+                <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text">उपलब्ध कोर्सेस</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">अपनी तैयारी को अगले स्तर पर ले जाएं</p>
               </div>
               <MagneticButton 
                 href="/courses" 
-                className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group"
+                className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm transition-colors group"
               >
                 सभी देखें <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </MagneticButton>
@@ -775,7 +764,7 @@ export default function DashboardPage() {
               <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
                 {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                    <div className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-200 dark:border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                       <div className="relative h-40 sm:h-48 overflow-hidden">
                         <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -788,10 +777,10 @@ export default function DashboardPage() {
                           <h3 className="text-white font-bold text-sm sm:text-base drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
                         </div>
                       </div>
-                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-800/50 to-slate-900/50">
-                        <p className="text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
+                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-900/50">
+                        <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{course.desc}</p>
                         <div className="flex items-center justify-between mt-auto">
-                          <span className="text-lg sm:text-xl font-extrabold text-white">{course.price}</span>
+                          <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">{course.price}</span>
                           <MagneticButton 
                             href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
                             className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xs sm:text-sm whitespace-nowrap"
@@ -818,8 +807,8 @@ export default function DashboardPage() {
 
           <div className="relative z-10">
             <div className="text-center mb-10 px-2 pt-4">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 rainbow-shimmer-text">World of Concept में जीवन</h2>
-              <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-3 rainbow-shimmer-text">World of Concept में जीवन</h2>
+              <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm sm:text-base">हमारी कक्षाओं, इंटरैक्टिव सत्रों और छात्रों की सफलता की कहानियों की झलकियां</p>
             </div>
 
             <div className="relative w-full overflow-hidden py-4 sm:py-6">
@@ -827,7 +816,7 @@ export default function DashboardPage() {
                 {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
                   <div 
                     key={`row1-${i}`} 
-                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2"
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2"
                   >
                     <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
@@ -844,7 +833,7 @@ export default function DashboardPage() {
                 {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
                   <div 
                     key={`row2-${i}`} 
-                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 hover:-translate-y-2"
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 hover:-translate-y-2"
                   >
                     <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
@@ -868,20 +857,20 @@ export default function DashboardPage() {
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6 px-2 pt-4">
-              <h2 className="text-2xl font-extrabold text-white flex items-center gap-2 rainbow-shimmer-text">
-                <MessageCircle className="w-6 h-6 text-indigo-400" />
+              <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2 rainbow-shimmer-text">
+                <MessageCircle className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
                 RK Sir के अपडेट्स
               </h2>
             </div>
             
             {updates.length === 0 ? (
-              <div className="bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl p-8 text-center border border-slate-700/50">
-                <p className="text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
+              <div className="bg-white dark:bg-slate-800/60 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700/50">
+                <p className="text-slate-500 dark:text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="group bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
+                  <div key={update.id} className="group bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
                     {update.imageUrl && (
                       <div className="relative h-48 overflow-hidden">
                         <Image 
@@ -903,9 +892,9 @@ export default function DashboardPage() {
                       </div>
                     )}
                     <div className="p-5">
-                      <h3 className="font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors line-clamp-2">{update.title}</h3>
-                      <p className="text-slate-300 text-sm mb-3 line-clamp-3">{update.description}</p>
-                      <p className="text-xs text-slate-500 flex items-center gap-1">
+                      <h3 className="font-bold text-slate-900 dark:text-white mb-2 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">{update.title}</h3>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm mb-3 line-clamp-3">{update.description}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {update.timestamp?.toDate().toLocaleDateString("hi-IN", { day: 'numeric', month: 'long', year: 'numeric' })}
                       </p>
@@ -920,8 +909,8 @@ export default function DashboardPage() {
       </main>
 
       {/* 🔥 FOOTER */}
-      <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-slate-800">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-500">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
         
         <div className="absolute inset-0 z-0">
           <iframe
@@ -942,65 +931,65 @@ export default function DashboardPage() {
             title="World of Concept Location"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/85" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/85 dark:from-slate-950/85 via-[#FFF9F0]/75 dark:via-slate-950/75 to-[#FFF9F0]/85 dark:to-slate-950/85" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
             <MagneticButton 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700 hover:border-orange-400 hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-orange-200 dark:border-slate-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
               </span>
-              <span className="text-sm font-extrabold tracking-wide animate-shimmer-text text-white">
+              <span className="text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
                 आलमनगर, बिहार
               </span>
-              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
+              <ExternalLink className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
             </MagneticButton>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
             <div className="sm:col-span-2 lg:col-span-1 space-y-4 sm:space-y-6">
-              <div className="flex items-center gap-3 text-white">
+              <div className="flex items-center gap-3 text-slate-900 dark:text-white">
                 <div className="relative w-10 h-10 flex-shrink-0">
                   <Image src="/logo.png" alt="World of Concept" fill className="object-contain" />
                 </div>
                 <span className="font-extrabold text-lg sm:text-xl tracking-tight">World of Concept</span>
               </div>
-              <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
+              <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-600 dark:text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
               </div>
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
+              <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="#available-courses" className="hover:text-blue-400 transition-colors duration-300">सभी कोर्सेस</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
+                <li><a href="#available-courses" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सभी कोर्सेस</a></li>
+                <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
+                <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">कानूनी</h4>
+              <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">कानूनी</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="/privacy" className="hover:text-blue-400 transition-colors duration-300">गोपनीयता नीति</a></li>
-                <li><a href="/terms" className="hover:text-blue-400 transition-colors duration-300">सेवा की शर्तें</a></li>
-                <li><a href="/refund" className="hover:text-blue-400 transition-colors duration-300">रिफंड नीति</a></li>
-                <li><a href="/contact" className="hover:text-blue-400 transition-colors duration-300">संपर्क करें</a></li>
+                <li><a href="/privacy" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">गोपनीयता नीति</a></li>
+                <li><a href="/terms" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सेवा की शर्तें</a></li>
+                <li><a href="/refund" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">रिफंड नीति</a></li>
+                <li><a href="/contact" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">संपर्क करें</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">सहायता</h4>
+              <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">सहायता</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
                 <li className="flex items-center gap-2 sm:gap-3"><span>📧</span> support@worldofconcept.in</li>
                 <li className="flex items-center gap-2 sm:gap-3"><span>📞</span> +91 7979096954</li>
@@ -1009,7 +998,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="pt-6 sm:pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 px-2">
+          <div className="pt-6 sm:pt-8 border-t border-orange-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 px-2">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <MagneticButton 
               href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
@@ -1020,7 +1009,7 @@ export default function DashboardPage() {
               <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
-              <span>द्वारा <span className="font-bold animate-shimmer-text">Mukesh Kumar Malakar</span></span>
+              <span>द्वारा <span className="font-bold text-slate-900 dark:text-white">Mukesh Kumar Malakar</span></span>
             </MagneticButton>
           </div>
         </div>

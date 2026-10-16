@@ -8,7 +8,6 @@ import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
-// 🔥 ThemeToggle import removed as it is now global in layout.tsx
 import Logo from "@/components/logo";
 import { 
   BookOpen, CheckCircle2, Target, ExternalLink, PlayCircle, 
@@ -212,7 +211,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="relative min-h-[100dvh] flex flex-col items-center justify-center bg-white dark:bg-slate-950">
+      <main className="relative min-h-[100dvh] flex flex-col items-center justify-center bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
         <div className="text-center space-y-6 px-4">
           <PureLogo size="lg" />
           <div className="space-y-2">
@@ -231,7 +230,7 @@ export default function Home() {
   // ==========================================
   if (!user) {
     return (
-      <main className="relative min-h-[100dvh] bg-white dark:bg-slate-950 overflow-x-hidden flex flex-col" itemScope itemType="https://schema.org/WebPage">
+      <main className="relative min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 overflow-x-hidden flex flex-col transition-colors duration-700" itemScope itemType="https://schema.org/WebPage">
         <style jsx global>{`
           @keyframes tricolor-shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
           .tricolor-text { background: linear-gradient(90deg, #FF9933 0%, #FFFFFF 30%, #FFFFFF 70%, #138808 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: tricolor-shimmer 4s linear infinite; }
@@ -272,8 +271,6 @@ export default function Home() {
           .solar-orbit-3 { width: 6px; height: 6px; background: #f472b6; border-radius: 50%; box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777; animation: orbit-slow 18s linear infinite; }
         `}</style>
 
-        {/* 🔥 Local header removed to avoid duplication with Global Layout Header */}
-        
         {/* Added pt-20 to prevent content from hiding behind the fixed global header */}
         <div className="pt-20">
           {/* 1. HERO SECTION */}
@@ -315,7 +312,7 @@ export default function Home() {
           </section>
 
           {/* 2. WHY CHOOSE US SECTION */}
-          <section className="relative py-24 overflow-hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+          <section className="relative py-24 overflow-hidden border-t border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
             <DynamicBackground images={whyChooseBgImages} zoomType="out" />
             <div className="absolute inset-0 z-10 bg-slate-950/90 dark:bg-transparent" />
 
@@ -332,8 +329,8 @@ export default function Home() {
                   { icon: "📊", title: "टेस्ट सीरीज", desc: "विस्तृत प्रदर्शन विश्लेषण के साथ अध्याय-वार और पूर्ण मॉक टेस्ट।" },
                   { icon: "💬", title: "डाउट सपोर्ट", desc: "RK Sir और उनकी समर्पित मेंटर टीम से सीधी और त्वरित सहायता।" },
                 ].map((feature, i) => (
-                  <div key={i} className="group bg-slate-100 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 text-center hover:bg-slate-200 dark:hover:bg-slate-800/80 hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-300">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
+                  <div key={i} className="group bg-white dark:bg-slate-800/40 border border-orange-100 dark:border-slate-700/50 rounded-2xl p-6 text-center hover:bg-orange-50 dark:hover:bg-slate-800/80 hover:border-orange-300 dark:hover:border-blue-500/50 hover:-translate-y-2 transition-all duration-500">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-blue-500/10 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-500">
                       {feature.icon}
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{feature.title}</h3>
@@ -345,7 +342,7 @@ export default function Home() {
           </section>
 
           {/* 3. CINEMATIC DUAL ROW SCROLLING */}
-          <section className="relative py-16 overflow-hidden border-y border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+          <section className="relative py-16 overflow-hidden border-y border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700">
             <DynamicBackground images={scrollingBgImages} zoomType="in" />
             <div className="absolute inset-0 z-10 bg-slate-950/90 dark:bg-transparent" />
 
@@ -378,8 +375,8 @@ export default function Home() {
           </section>
 
           {/* 4. WORLD-CLASS FOOTER */}
-          <footer className="relative bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-slate-200 dark:border-slate-900">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+          <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-700">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
             
             <div className="absolute inset-0 z-0">
               <iframe
@@ -400,14 +397,14 @@ export default function Home() {
                 title="World of Concept Location"
                 allowFullScreen
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-slate-100/85 dark:from-slate-950/85 via-slate-100/75 dark:via-slate-950/75 to-slate-100/85 dark:to-slate-950/85" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/85 dark:from-slate-950/85 via-[#FFF9F0]/75 dark:via-slate-950/75 to-[#FFF9F0]/85 dark:to-slate-950/85" />
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto">
               <div className="mb-8 flex items-center justify-center">
                 <MagneticButton 
                   href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-                  className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-slate-300 dark:border-slate-700 hover:border-orange-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
+                  className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-orange-200 dark:border-slate-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-slate-800 transition-all duration-500 shadow-lg shadow-orange-500/10 overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                   <span className="relative flex h-3 w-3">
@@ -417,7 +414,7 @@ export default function Home() {
                   <span className="text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
                     आलमनगर, बिहार
                   </span>
-                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
+                  <ExternalLink className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
                 </MagneticButton>
               </div>
 
@@ -431,29 +428,29 @@ export default function Home() {
                     बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।
                   </p>
                   <div className="flex gap-3 sm:gap-4 pt-2">
-                    <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                    <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                    <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                    <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                    <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                    <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                    <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                    <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
                   </div>
                 </div>
 
                 <div>
                   <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
                   <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                    <li><a href="#available-courses" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">सभी कोर्सेस</a></li>
-                    <li><a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
-                    <li><a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
+                    <li><a href="#available-courses" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सभी कोर्सेस</a></li>
+                    <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
+                    <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
                   </ul>
                 </div>
 
                 <div>
                   <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">कानूनी</h4>
                   <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                    <li><a href="/privacy" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">गोपनीयता नीति</a></li>
-                    <li><a href="/terms" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">सेवा की शर्तें</a></li>
-                    <li><a href="/refund" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">रिफंड नीति</a></li>
-                    <li><a href="/contact" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">संपर्क करें</a></li>
+                    <li><a href="/privacy" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">गोपनीयता नीति</a></li>
+                    <li><a href="/terms" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सेवा की शर्तें</a></li>
+                    <li><a href="/refund" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">रिफंड नीति</a></li>
+                    <li><a href="/contact" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">संपर्क करें</a></li>
                   </ul>
                 </div>
 
@@ -467,15 +464,15 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="pt-6 sm:pt-8 border-t border-slate-300 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 px-2">
+              <div className="pt-6 sm:pt-8 border-t border-orange-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 px-2">
                 <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
                 <MagneticButton 
                   href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
-                  className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" 
+                  className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-500 group" 
                   title="Designed and Developed by Mukesh Kumar Malakar"
                 >
                   <span>निर्मित</span>
-                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
                   <span>द्वारा <span className="font-bold text-slate-900 dark:text-white">Mukesh Kumar Malakar</span></span>
@@ -492,7 +489,7 @@ export default function Home() {
   // LOGGED IN VIEW (Dashboard)
   // ==========================================
   return (
-    <main className="min-h-[100dvh] bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 flex flex-col relative overflow-x-hidden w-full transition-colors duration-300">
+    <main className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 flex flex-col relative overflow-x-hidden w-full transition-colors duration-700">
       <style jsx global>{`
         @keyframes rainbow-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
         .rainbow-shimmer-bg { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6); background-size: 200% auto; animation: rainbow-shimmer 3s linear infinite; }
@@ -528,31 +525,26 @@ export default function Home() {
         .solar-orbit-3 { width: 6px; height: 6px; background: #f472b6; border-radius: 50%; box-shadow: 0 0 15px #ec4899, 0 0 30px #db2777; animation: orbit-slow 18s linear infinite; }
       `}</style>
 
-      {/* 🔥 LOGGED IN HEADER (Theme Toggle handled globally in layout.tsx) */}
-      <header className="bg-white/90 dark:bg-slate-950/90 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-300 w-full backdrop-blur-md">
+      {/* 🔥 CLEAN LOGGED IN HEADER (Branding Removed, Right-Aligned) */}
+      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 border-b border-orange-100 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-20">
-            <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
-                <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
-              </div>
-              <span className="text-lg sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-lg">
-                World of Concept
-              </span>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="text-right hidden sm:block">
+          <div className="flex justify-end items-center h-16 sm:h-20 gap-3 sm:gap-6">
+            <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200 dark:border-slate-800">
+              <div className="text-right">
                 <p className="text-sm font-bold text-slate-900 dark:text-white">{student?.fullName || "छात्र"}</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">{student?.email || user?.email}</p>
               </div>
-              
-              <MagneticButton 
-                onClick={handleLogout} 
-                className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-300 border border-red-200 dark:border-red-500/30 hover:border-red-300 dark:hover:border-red-400/50 hover:shadow-md"
-              >
-                <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
-              </MagneticButton>
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
+                {student?.fullName?.charAt(0).toUpperCase() || "छ"}
+              </div>
             </div>
+            
+            <MagneticButton 
+              onClick={handleLogout} 
+              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-500 border border-red-200 dark:border-red-500/30 hover:border-red-300 dark:hover:border-red-400/50 hover:shadow-md"
+            >
+              <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
+            </MagneticButton>
           </div>
         </div>
       </header>
@@ -561,7 +553,7 @@ export default function Home() {
         <div className="relative z-10 space-y-8 sm:space-y-12 lg:space-y-16 w-full">
           <div className="animate-fade-in-up">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-2">
-              वापसी पर स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">{student?.fullName?.split(" ")[0] || "छात्र"}</span> 👋
+              वापसी पर स्वागत है, <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-blue-600 dark:from-orange-400 dark:to-blue-400">{student?.fullName?.split(" ")[0] || "छात्र"}</span> 👋
             </h1>
             <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-lg">RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। आइए आज को उत्पादक बनाएं!</p>
           </div>
@@ -585,7 +577,7 @@ export default function Home() {
               </div>
               <MagneticButton 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
-                className="inline-flex items-center justify-center gap-2 bg-red-600 dark:bg-white text-white dark:text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-red-700 dark:hover:bg-orange-50 transition-all duration-300 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-transparent dark:border-white/50 hover:border-orange-300"
+                className="inline-flex items-center justify-center gap-2 bg-red-600 dark:bg-white text-white dark:text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-red-700 dark:hover:bg-orange-50 transition-all duration-500 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-transparent dark:border-white/50 hover:border-orange-300"
               >
                 <PlayCircle className="w-5 h-5" /> अभी जुड़ें
               </MagneticButton>
@@ -599,7 +591,7 @@ export default function Home() {
               { icon: "✅", label: "पूर्ण", value: "0", color: "bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20", delay: "0.1s" },
               { icon: "🎯", label: "प्रगति में", value: "0", color: "bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-500/20", delay: "0.2s" },
             ].map((stat, i) => (
-              <div key={i} className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300" style={{ animationDelay: stat.delay }}>
+              <div key={i} className="bg-white dark:bg-slate-800/60 border border-orange-100 dark:border-slate-700/50 rounded-2xl p-4 sm:p-5 animate-fade-in-up hover:shadow-xl hover:-translate-y-1 hover:border-orange-300 dark:hover:border-slate-600 transition-all duration-500" style={{ animationDelay: stat.delay }}>
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.color} border rounded-xl flex items-center justify-center shadow-sm`}>
                     <span className="text-xl sm:text-2xl">{stat.icon}</span>
@@ -646,7 +638,7 @@ export default function Home() {
                     
                     return (
                       <div key={`course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 lg:w-96 flex-shrink-0 group" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
-                        <div className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-200 dark:border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                        <div className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-orange-100 dark:border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                           <div className="relative h-40 sm:h-56 overflow-hidden">
                             <Image src={src} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -665,7 +657,7 @@ export default function Home() {
                               <span className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white">{course.price}</span>
                               <MagneticButton 
                                 href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
-                                className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xs sm:text-sm whitespace-nowrap"
+                                className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 text-xs sm:text-sm whitespace-nowrap"
                               >
                                 <span className="relative z-10 flex items-center justify-center gap-1">
                                   अभी नामांकन करें <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -696,7 +688,7 @@ export default function Home() {
               <div className="relative w-full overflow-hidden py-4 sm:py-6">
                 <div className="flex gap-4 w-max animate-marquee touch-pan-y mb-4 sm:mb-6">
                   {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
-                    <div key={`row1-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
+                    <div key={`row1-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
                       <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
                       <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
@@ -710,7 +702,7 @@ export default function Home() {
 
                 <div className="flex gap-4 w-max animate-marquee-reverse touch-pan-y">
                   {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
-                    <div key={`row2-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
+                    <div key={`row2-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-64 md:w-72 h-40 sm:h-48 md:h-56 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 ease-out hover:-translate-y-2">
                       <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
                       <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
@@ -728,8 +720,8 @@ export default function Home() {
       </div>
 
       {/* WORLD-CLASS FOOTER */}
-      <footer className="relative bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-slate-200 dark:border-slate-900">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-700">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
         
         <div className="absolute inset-0 z-0">
           <iframe
@@ -750,14 +742,14 @@ export default function Home() {
             title="World of Concept Location"
             allowFullScreen
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-100/85 dark:from-slate-950/85 via-slate-100/75 dark:via-slate-950/75 to-slate-100/85 dark:to-slate-950/85" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/85 dark:from-slate-950/85 via-[#FFF9F0]/75 dark:via-slate-950/75 to-[#FFF9F0]/85 dark:to-slate-950/85" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-center">
             <MagneticButton 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-slate-300 dark:border-slate-700 hover:border-orange-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-orange-200 dark:border-slate-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-slate-800 transition-all duration-500 shadow-lg shadow-orange-500/10 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
@@ -767,7 +759,7 @@ export default function Home() {
               <span className="text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
                 आलमनगर, बिहार
               </span>
-              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-orange-400 transition-colors" />
+              <ExternalLink className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
             </MagneticButton>
           </div>
 
@@ -779,29 +771,29 @@ export default function Home() {
               </div>
               <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-600 dark:text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
               </div>
             </div>
 
             <div>
               <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">प्लेटफॉर्म</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="#available-courses" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">सभी कोर्सेस</a></li>
-                <li><a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
-                <li><a href="#" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
+                <li><a href="#available-courses" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सभी कोर्सेस</a></li>
+                <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">हमें क्यों चुनें</a></li>
+                <li><a href="#" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">छात्र सफलता की कहानियां</a></li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-slate-900 dark:text-white font-bold mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-wider">कानूनी</h4>
               <ul className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
-                <li><a href="/privacy" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">गोपनीयता नीति</a></li>
-                <li><a href="/terms" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">सेवा की शर्तें</a></li>
-                <li><a href="/refund" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">रिफंड नीति</a></li>
-                <li><a href="/contact" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">संपर्क करें</a></li>
+                <li><a href="/privacy" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">गोपनीयता नीति</a></li>
+                <li><a href="/terms" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">सेवा की शर्तें</a></li>
+                <li><a href="/refund" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">रिफंड नीति</a></li>
+                <li><a href="/contact" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300">संपर्क करें</a></li>
               </ul>
             </div>
 
@@ -815,15 +807,15 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="pt-6 sm:pt-8 border-t border-slate-300 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 px-2">
+          <div className="pt-6 sm:pt-8 border-t border-orange-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 px-2">
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <MagneticButton 
               href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
-              className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" 
+              className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-500 group" 
               title="Designed and Developed by Mukesh Kumar Malakar"
             >
               <span>निर्मित</span>
-              <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-500" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
               <span>द्वारा <span className="font-bold text-slate-900 dark:text-white">Mukesh Kumar Malakar</span></span>
