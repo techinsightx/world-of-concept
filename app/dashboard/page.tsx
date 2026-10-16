@@ -163,11 +163,11 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
 
   return (
     <div ref={cardRef} className="relative w-[85vw] max-w-[300px] sm:w-80 flex-shrink-0 group">
-      <div className="bg-slate-800/60 dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-700/50 transition-all duration-500 hover:-translate-y-2">
-        <div className="relative aspect-video bg-slate-900">
+      <div className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-orange-100 dark:border-slate-700/50 transition-all duration-500 hover:-translate-y-2">
+        <div className="relative aspect-video bg-slate-100 dark:bg-slate-900">
           {!isIntersecting ? (
             <>
-              {!imageLoaded && <div className="absolute inset-0 bg-slate-800 animate-pulse" />}
+              {!imageLoaded && <div className="absolute inset-0 bg-slate-200 dark:bg-slate-800 animate-pulse" />}
               <Image
                 src={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`}
                 alt={video.title}
@@ -176,7 +176,7 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
                 onLoad={() => setImageLoaded(true)}
                 unoptimized
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-all duration-300">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/10 dark:bg-black/30 group-hover:bg-black/20 transition-all duration-300">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-600/90 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
                   <PlayCircle className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                 </div>
@@ -194,8 +194,8 @@ const YouTubeVideoCard = ({ video }: { video: { id: string; title: string } }) =
           )}
         </div>
         <div className="p-4">
-          <h3 className="font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-2">{video.title}</h3>
-          <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
+          <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">{video.title}</h3>
+          <div className="flex items-center gap-2 mt-2 text-xs text-slate-500 dark:text-slate-400">
             <YoutubeIcon className="w-4 h-4" />
             <span>World of Concept</span>
             <span>•</span>
@@ -299,17 +299,17 @@ export default function DashboardPage() {
 
   if (!authChecked || loading) {
     return (
-      <div className="min-h-[100dvh] bg-slate-950 flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 flex items-center justify-center transition-colors duration-700">
         <div className="text-center space-y-6 px-4">
           <div className="relative w-24 h-24 mx-auto">
-            <div className="absolute inset-0 bg-blue-500/20 rounded-full animate-ping" />
-            <div className="relative w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/30">
+            <div className="absolute inset-0 bg-orange-500/20 rounded-full animate-ping" />
+            <div className="relative w-24 h-24 bg-gradient-to-br from-orange-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-orange-500/30">
               <span className="text-5xl">🎓</span>
             </div>
           </div>
           <div className="space-y-2">
-            <p className="text-slate-300 font-bold text-xl tracking-wide">World of Concept</p>
-            <p className="text-slate-400 font-medium animate-pulse">आपका डैशबोर्ड लोड हो रहा है...</p>
+            <p className="text-slate-600 dark:text-slate-300 font-bold text-xl tracking-wide">World of Concept</p>
+            <p className="text-slate-500 dark:text-slate-400 font-medium animate-pulse">आपका डैशबोर्ड लोड हो रहा है...</p>
           </div>
         </div>
       </div>
@@ -318,15 +318,15 @@ export default function DashboardPage() {
 
   if (!student) {
     return (
-      <div className="min-h-[100dvh] bg-slate-950 flex items-center justify-center">
+      <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 flex items-center justify-center transition-colors duration-700">
         <div className="text-center space-y-6 px-4">
-          <div className="w-20 h-20 mx-auto bg-red-900/50 rounded-full flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center">
             <span className="text-4xl">⚠️</span>
           </div>
-          <p className="text-slate-300 text-lg font-medium">छात्र डेटा लोड करने में असमर्थ</p>
+          <p className="text-slate-600 dark:text-slate-300 text-lg font-medium">छात्र डेटा लोड करने में असमर्थ</p>
           <MagneticButton 
             onClick={() => window.location.replace("/")} 
-            className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
+            className="px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20"
           >
             होम पर जाएं
           </MagneticButton>
@@ -336,7 +336,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto transition-colors duration-500">
+    <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative font-sans w-full overflow-x-hidden overscroll-y-auto transition-colors duration-700">
       <AdPopup />
 
       <style jsx global>{`
@@ -395,26 +395,17 @@ export default function DashboardPage() {
           .animate-ken-burns-out { animation-duration: 40s; }
         }
         
-        /* 🔥 GPU-ACCELERATED MARQUEE */
-        @keyframes marquee { 
+        /* 🔥 FRICTIONLESS SEAMLESS RAILWAY TRACK ANIMATION */
+        @keyframes marquee-seamless { 
           0% { transform: translate3d(0, 0, 0); } 
           100% { transform: translate3d(-50%, 0, 0); } 
         }
-        @keyframes marquee-reverse { 
-          0% { transform: translate3d(-50%, 0, 0); } 
-          100% { transform: translate3d(0, 0, 0); } 
-        }
-        .animate-marquee { 
-          animation: marquee 60s linear infinite; 
+        .animate-marquee-seamless { 
+          animation: marquee-seamless 45s linear infinite; 
           will-change: transform; 
           touch-action: pan-y; 
         }
-        .animate-marquee-reverse { 
-          animation: marquee-reverse 60s linear infinite; 
-          will-change: transform; 
-          touch-action: pan-y; 
-        }
-        .animate-marquee:hover, .animate-marquee-reverse:hover { 
+        .animate-marquee-seamless:hover { 
           animation-play-state: paused; 
         }
         
@@ -581,7 +572,7 @@ export default function DashboardPage() {
             </div>
             <MagneticButton 
               onClick={handleLogout} 
-              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300 border border-red-200 dark:border-red-500/30 hover:border-red-300 dark:hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20"
+              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-500 border border-red-200 dark:border-red-500/30 hover:border-red-300 dark:hover:border-red-400/50 hover:shadow-md hover:shadow-red-500/20"
             >
               <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">लॉगआउट</span>
             </MagneticButton>
@@ -660,7 +651,7 @@ export default function DashboardPage() {
               </div>
               <MagneticButton 
                 href="https://www.youtube.com/@JoinWorldofConcept" 
-                className="inline-flex items-center justify-center gap-2 bg-red-600 dark:bg-white text-white dark:text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-red-700 dark:hover:bg-orange-50 transition-all duration-300 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-transparent dark:border-white/50 hover:border-orange-300"
+                className="inline-flex items-center justify-center gap-2 bg-red-600 dark:bg-white text-white dark:text-red-900 px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl text-sm sm:text-base font-extrabold hover:bg-red-700 dark:hover:bg-orange-50 transition-all duration-500 shadow-2xl shadow-black/40 whitespace-nowrap border-2 border-transparent dark:border-white/50 hover:border-orange-300"
               >
                 <PlayCircle className="w-5 h-5" />
                 अभी जुड़ें
@@ -669,7 +660,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 3. YOUTUBE VIDEO SECTION */}
+        {/* 🔥 3. YOUTUBE VIDEO SECTION (FRICTIONLESS) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.2s" }}>
           <DynamicBackground images={videosBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
@@ -697,8 +688,9 @@ export default function DashboardPage() {
             </div>
             
             <div className="relative w-full overflow-hidden py-4">
-              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse touch-pan-y">
-                {[...youtubeVideos, ...youtubeVideos, ...youtubeVideos].map((video, i) => (
+              {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y" style={{ animationDirection: 'reverse' }}>
+                {[...youtubeVideos, ...youtubeVideos].map((video, i) => (
                   <YouTubeVideoCard key={`yt-${i}`} video={video} />
                 ))}
               </div>
@@ -722,7 +714,7 @@ export default function DashboardPage() {
               ].map((stat, i) => (
                 <div 
                   key={i} 
-                  className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300" 
+                  className="bg-white dark:bg-slate-800/60 border border-orange-100 dark:border-slate-700/50 rounded-2xl p-5 sm:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-orange-300 dark:hover:border-slate-600 transition-all duration-500" 
                   style={{ animationDelay: stat.delay }}
                 >
                   <div className="flex items-center gap-4">
@@ -740,7 +732,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 5. AVAILABLE COURSES */}
+        {/* 🔥 5. AVAILABLE COURSES (FRICTIONLESS) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.6s" }}>
           <DynamicBackground images={coursesBgImages} zoomType="in" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
@@ -761,10 +753,11 @@ export default function DashboardPage() {
             </div>
             
             <div className="relative w-full overflow-hidden py-4">
-              <div className="flex gap-4 sm:gap-5 w-max animate-marquee touch-pan-y">
-                {[...availableCourses, ...availableCourses, ...availableCourses].map((course, i) => (
+              {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y">
+                {[...availableCourses, ...availableCourses].map((course, i) => (
                   <div key={`avail-course-${i}`} className="relative w-[85vw] max-w-[300px] sm:w-72 md:w-80 flex-shrink-0 group">
-                    <div className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-slate-200 dark:border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
+                    <div className="bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-orange-100 dark:border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col">
                       <div className="relative h-40 sm:h-48 overflow-hidden">
                         <Image src={course.image} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
@@ -783,7 +776,7 @@ export default function DashboardPage() {
                           <span className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">{course.price}</span>
                           <MagneticButton 
                             href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
-                            className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-xs sm:text-sm whitespace-nowrap"
+                            className="block w-full text-center rainbow-shimmer-bg text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 text-xs sm:text-sm whitespace-nowrap"
                           >
                             <span className="relative z-10 flex items-center justify-center gap-1">
                               नामांकन करें <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -799,7 +792,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 🔥 6. CINEMATIC GALLERY */}
+        {/* 🔥 6. CINEMATIC GALLERY (FRICTIONLESS) */}
         <div className="mb-16 animate-fade-in-up relative overflow-hidden rounded-3xl" style={{ animationDelay: "0.7s" }}>
           <DynamicBackground images={gallerySectionBgImages} zoomType="out" />
           <div className="absolute inset-0 z-0 animate-living-gradient dark:bg-transparent" />
@@ -812,11 +805,12 @@ export default function DashboardPage() {
             </div>
 
             <div className="relative w-full overflow-hidden py-4 sm:py-6">
-              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-reverse mb-4 sm:mb-6">
-                {[...row1Images, ...row1Images, ...row1Images].map((src, i) => (
+              {/* 🔥 Exactly 2 sets for perfect -50% seamless loop */}
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y mb-4 sm:mb-6" style={{ animationDirection: 'reverse' }}>
+                {[...row1Images, ...row1Images].map((src, i) => (
                   <div 
                     key={`row1-${i}`} 
-                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2"
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 transition-all duration-500 hover:-translate-y-2"
                   >
                     <Image src={src} alt={`Gallery Row 1 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
@@ -829,11 +823,11 @@ export default function DashboardPage() {
                 ))}
               </div>
 
-              <div className="flex gap-4 sm:gap-5 w-max animate-marquee">
-                {[...row2Images, ...row2Images, ...row2Images].map((src, i) => (
+              <div className="flex gap-4 sm:gap-5 w-max animate-marquee-seamless touch-pan-y">
+                {[...row2Images, ...row2Images].map((src, i) => (
                   <div 
                     key={`row2-${i}`} 
-                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 hover:-translate-y-2"
+                    className="relative w-[85vw] max-w-[300px] sm:w-80 h-48 sm:h-52 rounded-2xl overflow-hidden group flex-shrink-0 border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 hover:-translate-y-2"
                   >
                     <Image src={src} alt={`Gallery Row 2 Image ${i}`} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
@@ -864,13 +858,13 @@ export default function DashboardPage() {
             </div>
             
             {updates.length === 0 ? (
-              <div className="bg-white dark:bg-slate-800/60 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700/50">
+              <div className="bg-white dark:bg-slate-800/60 rounded-2xl p-8 text-center border border-orange-100 dark:border-slate-700/50">
                 <p className="text-slate-500 dark:text-slate-400">अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2 pb-4">
                 {updates.map((update) => (
-                  <div key={update.id} className="group bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-300 hover:-translate-y-1">
+                  <div key={update.id} className="group bg-white dark:bg-slate-800/60 rounded-2xl overflow-hidden border border-orange-100 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:border-indigo-500/50 transition-all duration-500 hover:-translate-y-1">
                     {update.imageUrl && (
                       <div className="relative h-48 overflow-hidden">
                         <Image 
@@ -909,7 +903,7 @@ export default function DashboardPage() {
       </main>
 
       {/* 🔥 FOOTER */}
-      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-500">
+      <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12 lg:mt-20 w-full overflow-hidden border-t border-orange-100 dark:border-slate-800 transition-colors duration-700">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
         
         <div className="absolute inset-0 z-0">
@@ -938,7 +932,7 @@ export default function DashboardPage() {
           <div className="mb-8 flex items-center justify-center">
             <MagneticButton 
               href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar" 
-              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-orange-200 dark:border-slate-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-lg shadow-orange-500/10 overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-slate-900/80 rounded-full border border-orange-200 dark:border-slate-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-slate-800 transition-all duration-500 shadow-lg shadow-orange-500/10 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <span className="relative flex h-3 w-3">
@@ -962,10 +956,10 @@ export default function DashboardPage() {
               </div>
               <p className="text-xs sm:text-sm leading-relaxed max-w-xs text-slate-600 dark:text-slate-400">बिहार के छात्रों को विश्व स्तरीय शिक्षा, संरचित मार्गदर्शन और सफलता का सिद्ध मार्ग प्रदान करना।</p>
               <div className="flex gap-3 sm:gap-4 pt-2">
-                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
-                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-300 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://youtube.com/@JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-red-600 hover:border-red-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><YoutubeIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://instagram.com/join_world_of_concept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-pink-600 hover:border-pink-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><InstagramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://facebook.com/worldofconcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><FacebookIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
+                <MagneticButton href="https://t.me/JoinWorldofConcept" className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-800 flex items-center justify-center hover:bg-sky-500 hover:border-sky-400 hover:text-white dark:hover:text-white transition-all duration-500 hover:-translate-y-1 hover:scale-110"><TelegramIcon className="w-5 h-5 sm:w-6 sm:h-6" /></MagneticButton>
               </div>
             </div>
 
@@ -1002,11 +996,11 @@ export default function DashboardPage() {
             <p>© {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।</p>
             <MagneticButton 
               href="https://www.google.com/search?q=Mukesh+Kumar+Malakar" 
-              className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-300 group" 
+              className="flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-all duration-500 group" 
               title="Designed and Developed by Mukesh Kumar Malakar"
             >
               <span>निर्मित</span>
-              <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-300" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 group-hover:text-orange-500 group-hover:scale-125 transition-all duration-500" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
               <span>द्वारा <span className="font-bold text-slate-900 dark:text-white">Mukesh Kumar Malakar</span></span>
