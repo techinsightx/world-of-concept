@@ -8,6 +8,7 @@ export async function GET() {
   try {
     const SITE_URL = 'https://worldofconcept.in';
     const FOUNDER_NAME = 'Mukesh Kumar Malakar';
+    const CURRENT_YEAR = new Date().getFullYear();
 
     const q = query(
       collection(db, 'updates'),
@@ -20,47 +21,64 @@ export async function GET() {
 
     snapshot.forEach((doc) => {
       const data = doc.data();
-      const dateObj = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-      const pubDate = dateObj.toUTCString();
+      
+      // 🔥 ROBUST DATE HANDLING: Prevents 500 errors if createdAt is missing/malformed
+      let pubDate = new Date().toUTCString();
+      if (data.createdAt) {
+        try {
+          const dateObj = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+          if (!isNaN(dateObj.getTime())) {
+            pubDate = dateObj.toUTCString();
+          }
+        } catch (e) {
+          console.warn('Invalid date format for doc:', doc.id);
+        }
+      }
+
       const postUrl = `${SITE_URL}`; 
       const thumbnail = data.imageUrl || `${SITE_URL}/logo.png`;
-      const description = data.description || 'Check out this amazing update from World of Concept!';
-      const title = data.title || 'New Update from World of Concept';
+      
+      // 🔥 XML SAFETY: Basic sanitization to prevent XML breakage
+      const safeTitle = (data.title || 'New Update from World of Concept').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const safeDesc = (data.description || 'Check out this amazing update from World of Concept!').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       const author = 'RK Sir';
       const category = data.type ? data.type.charAt(0).toUpperCase() + data.type.slice(1) : 'Update';
+      const safeImageUrl = data.imageUrl ? data.imageUrl.replace(/&/g, '&amp;') : '';
 
       itemsXml += `
         <item>
-          <title><![CDATA[${title}]]></title>
+          <title><![CDATA[${safeTitle}]]></title>
           <link>${postUrl}</link>
-          <guid isPermaLink="true">${postUrl}</guid>
+          <guid isPermaLink="true">${postUrl}?id=${doc.id}</guid>
           <pubDate>${pubDate}</pubDate>
-          <description><![CDATA[${description}]]></description>
+          <description><![CDATA[${safeDesc}]]></description>
           <content:encoded><![CDATA[
-            <p>${description}</p>
-            ${data.imageUrl ? `<br/><img src="${data.imageUrl}" alt="Update Media" style="max-width: 100%; height: auto; border-radius: 8px;" />` : ''}
+            <p>${safeDesc}</p>
+            ${safeImageUrl ? `<br/><img src="${safeImageUrl}" alt="Update Media" style="max-width: 100%; height: auto; border-radius: 8px;" />` : ''}
+            <br/><p><a href="${postUrl}">Read more on World of Concept</a></p>
           ]]></content:encoded>
           <author><![CDATA[${author}]]></author>
           <category><![CDATA[${category}]]></category>
-          <media:content url="${data.imageUrl || ''}" type="image/jpeg" />
+          ${safeImageUrl ? `<media:content url="${safeImageUrl}" type="image/jpeg" />` : ''}
           <media:thumbnail url="${thumbnail}" width="1200" height="630" />
         </item>
       `;
     });
 
-    // ✅ Fixed: Added proper xmlns for content and media
+    // 🔥 WORLD-CLASS RSS STRUCTURE with Atom namespace for modern compatibility
     const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>World of Concept | RK Sir's Latest Updates & Courses</title>
     <link>${SITE_URL}</link>
+    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
     <description>Discover the latest courses, updates, motivational posts, and educational content from World of Concept by RK Sir.</description>
-    <language>hi-in</language>
-    <copyright>© ${new Date().getFullYear()} World of Concept. All rights reserved.</copyright>
+    <language>hi-IN</language>
+    <copyright>© ${CURRENT_YEAR} World of Concept. All rights reserved.</copyright>
     <managingEditor>support@worldofconcept.in (${FOUNDER_NAME})</managingEditor>
     <webMaster>support@worldofconcept.in (${FOUNDER_NAME})</webMaster>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <generator>Next.js RSS Generator</generator>
+    <generator>Next.js RSS Generator (World of Concept)</generator>
     <image>
       <url>${SITE_URL}/logo.png</url>
       <title>World of Concept</title>
@@ -81,9 +99,18 @@ export async function GET() {
     });
   } catch (error) {
     console.error('❌ RSS Generation Error:', error);
-    return new NextResponse('Error generating RSS feed', { 
+    // 🔥 Return valid XML error instead of plain text to prevent parser crashes
+    const errorXml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Error</title>
+    <link>https://worldofconcept.in</link>
+    <description>Failed to generate RSS feed. Please try again later.</description>
+  </channel>
+</rss>`;
+    return new NextResponse(errorXml, { 
       status: 500,
-      headers: { 'Content-Type': 'text/plain' }
+      headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' }
     });
   }
 }
