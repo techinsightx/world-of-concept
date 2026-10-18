@@ -31,15 +31,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: "World of Concept",
   title: {
-    default: `World of Concept | RK Sir (Dynamic Educator) & Mukesh Kumar Malakar (Tech Expert & Founder) - Best Bihar Board Coaching ${CURRENT_YEAR}`,
-    template: `%s | World of Concept Legacy`,
+    default: `World of Concept | Best Bihar Board Coaching ${CURRENT_YEAR}`,
+    template: `%s | Bihar School Board Preparation (Class 9th, 10th, 11th, 12th)`,
   },
-  description: "Experience EdTech Legacy: RK Sir, the dynamic teacher for Bihar Board preparation, meets Mukesh Kumar Malakar, the Full-Stack Developer & Tech Expert handling platform development, UI/UX, and virality. Join the #1 online coaching for BSEB Matric & Inter.",
+  description: "Experience EdTech Legacy: RK Sir, the dynamic teacher for Bihar Board preparation. Join the #1 online coaching for BSEB Matric & Inter.",
   keywords: [
     "World of Concept", "RK Sir", "RK Sir Classes", "RK Sir Maths", 
     "Dynamic Teacher Bihar Board", "Mukesh Kumar Malakar", "Full-Stack Developer", 
-    "Tech Expert", "EdTech Founder", "Bihar Board Matric Coaching", 
-    "Bihar Board Inter Coaching", "BSEB Online Classes", "Alamnagar Coaching Center", 
+    "Tech Expert", "EdTech Founder", "Bihar Board Matric Coaching", "BSEB Matric & Inter Coaching",
+    "Bihar Board Inter Coaching", "BSEB Online Classes", "Alamnagar Coaching Center", "Bihar government competitive exams",
     "Madhepura Coaching", "बिहार बोर्ड मैट्रिक कोचिंग", "बिहार बोर्ड इंटर कोचिंग", 
     "आरके सर क्लासेस", "वर्ल्ड ऑफ कॉन्सेप्ट", "BSEB Model Paper 2027", "Bihar Board Topper Strategy"
   ],
@@ -64,8 +64,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "hi_IN",
     url: SITE_URL,
-    title: `World of Concept | RK Sir & Mukesh Kumar Malakar - #1 Bihar Board Coaching ${CURRENT_YEAR}`,
-    description: "A revolutionary EdTech legacy by RK Sir (Dynamic Educator) and Mukesh Kumar Malakar (Full-Stack Developer & Tech Expert). HD video lectures, smart notes, and viral educational content.",
+    title: `World of Concept | #1 Bihar Board Coaching ${CURRENT_YEAR}`,
+    description: "A revolutionary EdTech legacy by RK Sir (Dynamic Educator). HD video lectures, smart notes, and viral educational content.",
     siteName: "World of Concept",
     images: [
       {
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `World of Concept | RK Sir & Mukesh Kumar Malakar's Official Platform`,
+    title: `World of Concept | #1 Bihar Board Coaching ${CURRENT_YEAR}`,
     description: "The most trusted platform for Bihar Board Matric and Inter preparation. Dynamic teaching by RK Sir, powered by Mukesh Kumar Malakar's tech expertise.",
     images: [`${SITE_URL}/og-image.jpg`],
     creator: "@JoinWorldofConcept",
@@ -116,6 +116,7 @@ export const metadata: Metadata = {
     "og:site_name": "World of Concept",
     "article:author": `${INSTRUCTOR_NAME} & ${FOUNDER_NAME}`,
     "article:publisher": SITE_URL,
+    "linkedin:profile": "https://www.linkedin.com/in/joinworldofconcept", // 🔥 LinkedIn Integrated
   },
 };
 
@@ -219,7 +220,8 @@ const structuredData = {
         "https://youtube.com/@JoinWorldofConcept",
         "https://instagram.com/join_world_of_concept",
         "https://facebook.com/world.of.concept",
-        "https://t.me/JoinWorldofConcept"
+        "https://t.me/JoinWorldofConcept",
+        "https://www.linkedin.com/in/joinworldofconcept" // 🔥 LinkedIn Handle Integrated
       ]
     },
     {
