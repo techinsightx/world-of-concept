@@ -5,13 +5,10 @@ import { db } from '@/lib/firebase';
 export const revalidate = 3600; // 1 hour cache
 
 export async function GET() {
-  const SITE_URL = 'https://worldofconcept.in';
-  const FOUNDER_NAME = 'Mukesh Kumar Malakar';
-  const CURRENT_YEAR = new Date().getFullYear();
-
-  let itemsXml = '';
-
   try {
+    const SITE_URL = 'https://worldofconcept.in';
+    const FOUNDER_NAME = 'Mukesh Kumar Malakar';
+
     const q = query(
       collection(db, 'updates'),
       orderBy('createdAt', 'desc'),
@@ -19,69 +16,56 @@ export async function GET() {
     );
     
     const snapshot = await getDocs(q);
-    
+    let itemsXml = '';
+
     snapshot.forEach((doc) => {
       const data = doc.data();
       
-      // 🔥 ROBUST DATE HANDLING (Prevents crashes if date is missing/malformed)
-      let pubDate = new Date().toUTCString();
-      if (data.createdAt) {
-        try {
-          const dateObj = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
-          if (!isNaN(dateObj.getTime())) {
-            pubDate = dateObj.toUTCString();
-          }
-        } catch (e) {
-          // Fallback to current date
-        }
-      }
-
+      // 🔥 Safe Date Handling
+      const dateObj = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
+      const pubDate = dateObj.toUTCString();
+      
       const postUrl = `${SITE_URL}`; 
       const thumbnail = data.imageUrl || `${SITE_URL}/logo.png`;
-      
-      // 🔥 XML SAFETY: Escapes special characters that break XML parsers
-      const safeTitle = (data.title || 'New Update from World of Concept').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      const safeDesc = (data.description || 'Check out this amazing update from World of Concept!').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const description = data.description || 'Check out this amazing update from World of Concept!';
+      const title = data.title || 'New Update from World of Concept';
       const author = 'RK Sir';
       const category = data.type ? data.type.charAt(0).toUpperCase() + data.type.slice(1) : 'Update';
-      const safeImageUrl = data.imageUrl ? data.imageUrl.replace(/&/g, '&amp;') : '';
 
       itemsXml += `
         <item>
-          <title><![CDATA[${safeTitle}]]></title>
+          <title><![CDATA[${title}]]></title>
           <link>${postUrl}</link>
-          <guid isPermaLink="true">${postUrl}?id=${doc.id}</guid>
+          <guid isPermaLink="true">${postUrl}</guid>
           <pubDate>${pubDate}</pubDate>
-          <description><![CDATA[${safeDesc}]]></description>
+          <description><![CDATA[${description}]]></description>
           <content:encoded><![CDATA[
-            <p>${safeDesc}</p>
-            ${safeImageUrl ? `<br/><img src="${safeImageUrl}" alt="Update Media" style="max-width: 100%; height: auto; border-radius: 8px;" />` : ''}
-            <br/><p><a href="${postUrl}">Read more on World of Concept</a></p>
+            <p>${description}</p>
+            <br/>
+            <p><strong>Read on World of Concept:</strong> <a href="${postUrl}">${postUrl}</a></p>
           ]]></content:encoded>
-          <author><![CDATA[${author}]]></author>
+          <author>${author}</author>
           <category><![CDATA[${category}]]></category>
-          ${safeImageUrl ? `<media:content url="${safeImageUrl}" type="image/jpeg" />` : ''}
+          ${data.imageUrl ? `<media:content url="${data.imageUrl}" type="image/jpeg" />` : ''}
           <media:thumbnail url="${thumbnail}" width="1200" height="630" />
         </item>
       `;
     });
-  } catch (error) {
-    console.error('❌ Firestore RSS Generation Error:', error);
-  }
 
-  // 🔥 PURE RSS 2.0 STRUCTURE (Removed Atom namespace to prevent Google Parsing Errors)
-  const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
+    // 🔥 PURE RSS 2.0 STRUCTURE (Exactly matching your valid template)
+    const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>World of Concept | RK Sir's Latest Updates & Courses</title>
     <link>${SITE_URL}</link>
     <description>Discover the latest courses, updates, motivational posts, and educational content from World of Concept by RK Sir.</description>
     <language>hi-IN</language>
-    <copyright>© ${CURRENT_YEAR} World of Concept. All rights reserved.</copyright>
+    <copyright>© ${new Date().getFullYear()} World of Concept. All rights reserved.</copyright>
     <managingEditor>support@worldofconcept.in (${FOUNDER_NAME})</managingEditor>
     <webMaster>support@worldofconcept.in (${FOUNDER_NAME})</webMaster>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <generator>Next.js RSS Generator</generator>
+    
     <image>
       <url>${SITE_URL}/logo.png</url>
       <title>World of Concept</title>
@@ -89,16 +73,25 @@ export async function GET() {
       <width>144</width>
       <height>144</height>
     </image>
+
     ${itemsXml}
   </channel>
 </rss>`;
 
-  // 🔥 ALWAYS RETURN 200 OK with valid XML
-  return new NextResponse(rssXml, {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/rss+xml; charset=utf-8',
-      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-    },
-  });
+    // 🔥 THE MAGIC FIX: 'application/xml' instead of 'application/rss+xml'
+    return new NextResponse(rssXml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    });
+
+  } catch (error) {
+    console.error('❌ RSS Generation Error:', error);
+    return new NextResponse('Error generating RSS feed', { 
+      status: 500,
+      headers: { 'Content-Type': 'text/plain' }
+    });
+  }
 }
