@@ -23,7 +23,7 @@ export async function GET() {
     snapshot.forEach((doc) => {
       const data = doc.data();
       
-      // 🔥 ROBUST DATE HANDLING
+      // 🔥 ROBUST DATE HANDLING (Prevents crashes if date is missing/malformed)
       let pubDate = new Date().toUTCString();
       if (data.createdAt) {
         try {
@@ -32,14 +32,14 @@ export async function GET() {
             pubDate = dateObj.toUTCString();
           }
         } catch (e) {
-          // Fallback to current date if parsing fails
+          // Fallback to current date
         }
       }
 
       const postUrl = `${SITE_URL}`; 
       const thumbnail = data.imageUrl || `${SITE_URL}/logo.png`;
       
-      // 🔥 XML SAFETY: Prevents breakage from special characters like &, <, >
+      // 🔥 XML SAFETY: Escapes special characters that break XML parsers
       const safeTitle = (data.title || 'New Update from World of Concept').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       const safeDesc = (data.description || 'Check out this amazing update from World of Concept!').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       const author = 'RK Sir';
@@ -66,25 +66,22 @@ export async function GET() {
       `;
     });
   } catch (error) {
-    // 🔥 BULLETPROOF FALLBACK: Even if Firebase fails, we log it but return a VALID empty RSS feed.
-    // This ensures validators NEVER see an "Error" title or invalid XML structure.
-    console.error('❌ Firestore RSS Generation Error (Returning empty valid feed):', error);
+    console.error('❌ Firestore RSS Generation Error:', error);
   }
 
-  // 🔥 WORLD-CLASS RSS STRUCTURE
+  // 🔥 PURE RSS 2.0 STRUCTURE (Removed Atom namespace to prevent Google Parsing Errors)
   const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>World of Concept | RK Sir's Latest Updates & Courses</title>
     <link>${SITE_URL}</link>
-    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
     <description>Discover the latest courses, updates, motivational posts, and educational content from World of Concept by RK Sir.</description>
     <language>hi-IN</language>
     <copyright>© ${CURRENT_YEAR} World of Concept. All rights reserved.</copyright>
     <managingEditor>support@worldofconcept.in (${FOUNDER_NAME})</managingEditor>
     <webMaster>support@worldofconcept.in (${FOUNDER_NAME})</webMaster>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <generator>Next.js RSS Generator (World of Concept)</generator>
+    <generator>Next.js RSS Generator</generator>
     <image>
       <url>${SITE_URL}/logo.png</url>
       <title>World of Concept</title>
@@ -96,7 +93,7 @@ export async function GET() {
   </channel>
 </rss>`;
 
-  // 🔥 ALWAYS RETURN 200 OK with valid XML, even if itemsXml is empty
+  // 🔥 ALWAYS RETURN 200 OK with valid XML
   return new NextResponse(rssXml, {
     status: 200,
     headers: {
