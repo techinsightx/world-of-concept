@@ -31,14 +31,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: "World of Concept",
   title: {
-    default: `World of Concept | Best Bihar Board Coaching ${CURRENT_YEAR}`,
-    template: `%s | Bihar School Board Preparation (Class 9th, 10th, 11th, 12th)`,
+    default: `World of Concept | Bihar Board Coaching Excellence ${CURRENT_YEAR}`,
+    template: `%s | Bihar Board Exam Preparation (Class 9th, 10th, 11th, 12th)`,
   },
   description: "Experience EdTech Legacy: RK Sir, the dynamic teacher for Bihar Board preparation. Join the #1 online coaching for BSEB Matric & Inter.",
   keywords: [
-    "World of Concept", "RK Sir", "RK Sir Classes", "RK Sir Maths", 
-    "Dynamic Teacher Bihar Board", "Mukesh Kumar Malakar", "Full-Stack Developer", 
-    "Tech Expert", "EdTech Founder", "Bihar Board Matric Coaching", "BSEB Matric & Inter Coaching",
+    "World of Concept", "RK Sir", "RK Sir Classes", "RK Sir Maths", "Bihar Board Coaching Excellence",
+    "Dynamic Teacher Bihar Board", "Mukesh Kumar Malakar", "Full-Stack Developer","Bihar Board Preparation Live Streaming","Bihar Board Online Coaching",
+    "Tech Expert", "EdTech Founder","bihar board 10th","Bihar Board 12th", "Bihar Board Matric Coaching", "BSEB Matric & Inter Coaching",
     "Bihar Board Inter Coaching", "BSEB Online Classes", "Alamnagar Coaching Center", "Bihar government competitive exams",
     "Madhepura Coaching", "बिहार बोर्ड मैट्रिक कोचिंग", "बिहार बोर्ड इंटर कोचिंग", 
     "आरके सर क्लासेस", "वर्ल्ड ऑफ कॉन्सेप्ट", "BSEB Model Paper 2027", "Bihar Board Topper Strategy"
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `World of Concept | #1 Bihar Board Coaching ${CURRENT_YEAR}`,
+    title: `World of Concept | #1 Bihar Board Coaching Excellence ${CURRENT_YEAR}`,
     description: "The most trusted platform for Bihar Board Matric and Inter preparation. Dynamic teaching by RK Sir, powered by Mukesh Kumar Malakar's tech expertise.",
     images: [`${SITE_URL}/og-image.jpg`],
     creator: "@JoinWorldofConcept",
@@ -116,7 +116,7 @@ export const metadata: Metadata = {
     "og:site_name": "World of Concept",
     "article:author": `${INSTRUCTOR_NAME} & ${FOUNDER_NAME}`,
     "article:publisher": SITE_URL,
-    "linkedin:profile": "https://www.linkedin.com/in/joinworldofconcept", // 🔥 LinkedIn Integrated
+    "linkedin:profile": "https://www.linkedin.com/in/JoinWorldofConcept", // 🔥 LinkedIn Integrated
   },
 };
 
@@ -142,7 +142,7 @@ const structuredData = {
       "@type": "Person",
       "@id": `${SITE_URL}#instructor`,
       "name": INSTRUCTOR_NAME,
-      "jobTitle": "Dynamic Educator & Master Teacher for Bihar Board",
+      "jobTitle": "Dynamic Educator & Viral Master Teacher for Bihar Board",
       "description": "Dedicated teacher providing complete content, live telecasts, and proven strategies for Bihar Board Matric and Inter students.",
       "url": "https://youtube.com/@JoinWorldofConcept",
       "sameAs": [
@@ -200,7 +200,15 @@ const structuredData = {
         "Mathematics",
         "Science",
         "English",
-        "Social Science"
+        "Social Science",
+        "Online Education",
+        "Bihar Board Coaching Excellence",
+        "Bihar Board Exam Preparation",
+        "Bihar Board Toper Strategy",
+        "Bihar Board Model Paper 2027",
+        "Bihar Board Online Classes",
+        "Bihar Board Live Telecast"
+
       ],
       "makesOffer": {
         "@type": "Offer",
@@ -221,7 +229,7 @@ const structuredData = {
         "https://instagram.com/join_world_of_concept",
         "https://facebook.com/world.of.concept",
         "https://t.me/JoinWorldofConcept",
-        "https://www.linkedin.com/in/joinworldofconcept" // 🔥 LinkedIn Handle Integrated
+        "https://www.linkedin.com/in/JoinWorldofConcept" // 🔥 LinkedIn Handle Integrated
       ]
     },
     {
@@ -241,7 +249,7 @@ const structuredData = {
     {
       "@type": "Course",
       "@id": `${SITE_URL}#course-math`,
-      "name": "Bihar Board Class 10 Mathematics by RK Sir",
+      "name": "Bihar Board Class 10th Mathematics by RK Sir",
       "description": "Complete objective and subjective mathematics preparation with shortcut tricks.",
       "provider": { "@id": `${SITE_URL}#organization` },
       "educationalLevel": "Secondary",
@@ -257,7 +265,7 @@ const structuredData = {
     {
       "@type": "Course",
       "@id": `${SITE_URL}#course-science`,
-      "name": "Bihar Board Class 10 Science by RK Sir",
+      "name": "Bihar Board Class 10th Science by RK Sir",
       "description": "Complete physics, chemistry, and biology preparation with practical guides.",
       "provider": { "@id": `${SITE_URL}#organization` },
       "educationalLevel": "Secondary",
