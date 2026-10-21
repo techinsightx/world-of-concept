@@ -50,7 +50,7 @@ function pickThumbnail(thumbnails: any): string {
 async function callYouTube(
   endpoint: string,
   params: Record<string, string>
-) {
+): Promise<any> {
   if (!API_KEY) {
     throw new Error("YOUTUBE_API_KEY missing");
   }
@@ -158,7 +158,6 @@ async function getPlaylistCandidates(channelId: string): Promise<{
   const errors: string[] = [];
   let channelData: any = null;
 
-  // 1. Direct uploads playlist env
   if (UPLOADS_PLAYLIST_ID) {
     candidates.push({
       id: UPLOADS_PLAYLIST_ID,
@@ -166,7 +165,6 @@ async function getPlaylistCandidates(channelId: string): Promise<{
     });
   }
 
-  // 2. Official YouTube channels API uploads playlist
   try {
     channelData = await callYouTube("channels", {
       part: "contentDetails",
@@ -190,7 +188,6 @@ async function getPlaylistCandidates(channelId: string): Promise<{
     errors.push(`Channels API error: ${getErrorMessage(error)}`);
   }
 
-  // 3. Derived fallback: UCxxxx -> UUxxxx
   if (channelId.startsWith("UC") && channelId.length >= 4) {
     const derivedPlaylist = `UU${channelId.slice(2)}`;
     candidates.push({
@@ -199,8 +196,8 @@ async function getPlaylistCandidates(channelId: string): Promise<{
     });
   }
 
-  // Remove duplicates
   const seen = new Set<string>();
+
   const uniqueCandidates = candidates.filter((candidate) => {
     if (!candidate.id || seen.has(candidate.id)) return false;
     seen.add(candidate.id);
@@ -223,25 +220,39 @@ async function fetchVideosFromPlaylist(
     maxResults: String(MAX_RESULTS),
   });
 
-  const videos: YoutubeVideo[] = (data?.items || [])
-    .map((item: any) => {
-      const id = item?.contentDetails?.videoId;
-      const title = item?.snippet?.title || "Untitled Video";
-      const thumbnail = pickThumbnail(item?.snippet?.thumbnails);
-      const publishedAt = item?.snippet?.publishedAt;
+  const items: any[] = Array.isArray(data?.items) ? data.items : [];
 
-      if (!id) return null;
+  const mappedVideos = items.map((item: any): YoutubeVideo | null => {
+    const id =
+      typeof item?.contentDetails?.videoId === "string"
+        ? item.contentDetails.videoId
+        : null;
 
-      return {
-        id,
-        title,
-        thumbnail,
-        publishedAt,
-      };
-    })
-    .filter((video): video is YoutubeVideo => Boolean(video));
+    if (!id) return null;
 
-  return videos;
+    const title =
+      typeof item?.snippet?.title === "string"
+        ? item.snippet.title
+        : "Untitled Video";
+
+    const thumbnail = pickThumbnail(item?.snippet?.thumbnails);
+
+    const publishedAt =
+      typeof item?.snippet?.publishedAt === "string"
+        ? item.snippet.publishedAt
+        : undefined;
+
+    return {
+      id,
+      title,
+      thumbnail,
+      publishedAt,
+    };
+  });
+
+  return mappedVideos.filter(
+    (video): video is YoutubeVideo => video !== null
+  );
 }
 
 export async function GET(request: Request) {
