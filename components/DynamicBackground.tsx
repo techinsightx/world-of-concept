@@ -5,29 +5,43 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 /* =========================================================
-   DYNAMIC BACKGROUND — Living Education Particle Network
-   A crystal-clear canvas "knowledge graph": idea-nodes
-   (atoms + math glyphs) linked by synaptic edges, guided by
-   a mentor-node that follows the pointer. Theme-aware,
-   reduced-motion safe, performance hardened.
+   DYNAMIC BACKGROUND — CRYSTAL CLEAR MODE-SPLIT ENGINE
+   ---------------------------------------------------------
+   LIGHT MODE:
+   - Only cinematic image slider is visible.
+   - Particle canvas is faded out and animation loop is stopped.
+
+   DARK MODE:
+   - Only cinematic live education particle network is visible.
+   - Image slider is faded out.
+
+   FEATURES:
+   - Smooth 700ms mode crossfade.
+   - Smooth 2500ms image crossfade.
+   - Crystal-clear transparent canvas.
+   - Atom + math-glyph education nodes.
+   - Synaptic node-to-node connections.
+   - Pointer mentor node attracts nearby ideas.
+   - Theme-aware via MutationObserver.
+   - Reduced-motion safe.
+   - Visibility + IntersectionObserver paused.
+   - DPR-capped, normalized physics, no resize jumps.
    ========================================================= */
 
 interface DynamicBackgroundProps {
-  /** Slideshow images (used in light mode only). */
+  /** Slideshow images. Used visually in light mode. */
   images: string[];
-  /** Ken-burns direction for the slideshow. */
+  /** Ken Burns direction for slideshow. */
   zoomType?: "in" | "out";
-  /** Particle density multiplier (0.4 – 1.6). Default 1. */
+  /** Particle density multiplier. 0.4 = light, 1 = normal, 1.6 = rich. */
   density?: number;
-  /** Enable pointer/touch mentor interaction. Default true. */
+  /** Enable pointer/touch mentor interaction. */
   interactive?: boolean;
-  /** Draw the graph-paper / blueprint grid. Default true. */
+  /** Draw subtle graph-paper / blueprint grid behind particles. */
   showGrid?: boolean;
-  /** Extra classes on the wrapper. */
+  /** Extra wrapper classes. */
   className?: string;
 }
-
-type Theme = "light" | "dark";
 
 interface Particle {
   nx: number; // normalized x [0..1]
@@ -38,92 +52,79 @@ interface Particle {
   phase: number; // pulse / orbit phase
   spin: number; // electron-shell rotation speed
   glyph: string | null; // null = atom node, else concept glyph
-  hue: number; // palette index 0..n-1
+  hue: number; // palette index
 }
 
-interface Palette {
-  bgGrid: string;
-  link: [number, number, number]; // rgb
-  linkStrong: [number, number, number];
-  node: Array<[number, number, number]>; // per-hue core rgb
-  nodeGlow: Array<[number, number, number]>;
-  glyph: string;
-  mentor: [number, number, number];
-  composite: GlobalCompositeOperation;
-}
-
-const PALETTES: Record<Theme, Palette> = {
-  light: {
-    bgGrid: "rgba(99,102,241,0.07)",
-    link: [99, 102, 241],
-    linkStrong: [217, 70, 239],
-    node: [
-      [67, 56, 202], // indigo-800
-      [124, 58, 237], // violet-600
-      [13, 148, 136], // teal-600
-      [217, 70, 239], // fuchsia-600
-      [2, 132, 199], // sky-700
-    ],
-    nodeGlow: [
-      [99, 102, 241],
-      [139, 92, 246],
-      [20, 184, 166],
-      [232, 121, 249],
-      [14, 165, 233],
-    ],
-    glyph: "rgba(30,27,75,0.92)",
-    mentor: [234, 88, 12], // orange-600 (RK brand)
-    composite: "source-over",
-  },
-  dark: {
-    bgGrid: "rgba(129,140,248,0.06)",
-    link: [99, 102, 241],
-    linkStrong: [34, 211, 238],
-    node: [
-      [129, 140, 248], // indigo-400
-      [192, 132, 252], // purple-400
-      [45, 212, 191], // teal-400
-      [244, 114, 182], // pink-400
-      [56, 189, 248], // sky-400
-    ],
-    nodeGlow: [
-      [99, 102, 241],
-      [168, 85, 247],
-      [20, 184, 166],
-      [236, 72, 153],
-      [14, 165, 233],
-    ],
-    glyph: "rgba(226,232,240,0.95)",
-    mentor: [251, 146, 60], // orange-400
-    composite: "lighter",
-  },
-};
-
+/* ---------- Education-themed concept glyphs ---------- */
 const GLYPHS = [
-  "π", "Σ", "√", "∫", "α", "β", "Δ", "Ω",
-  "∞", "x²", "e", "i", "θ", "λ", "μ", "φ",
-  "ƒ", "", "≈", "±",
+  "π",
+  "Σ",
+  "√",
+  "∫",
+  "α",
+  "β",
+  "Δ",
+  "Ω",
+  "∞",
+  "x²",
+  "e",
+  "i",
+  "θ",
+  "λ",
+  "μ",
+  "φ",
+  "ƒ",
+  "≈",
+  "±",
+  "∇",
 ];
 
-/* ---------- tuning constants ---------- */
-const LINK_DIST = 132; // px
+/* ---------- Dark-mode crystal neon palette ---------- */
+const NODE_RGB: Array<[number, number, number]> = [
+  [129, 140, 248], // indigo-400
+  [34, 211, 238],  // cyan-400
+  [244, 114, 182], // pink-400
+  [167, 139, 250], // violet-400
+  [45, 212, 191],  // teal-400
+];
+
+const GLOW_RGB: Array<[number, number, number]> = [
+  [99, 102, 241],   // indigo-500
+  [14, 165, 233],   // sky-500
+  [236, 72, 153],   // pink-500
+  [139, 92, 246],   // violet-500
+  [20, 184, 166],   // teal-500
+];
+
+const LINK_RGB: [number, number, number] = [99, 102, 241];
+const LINK_STRONG_RGB: [number, number, number] = [34, 211, 238];
+const MENTOR_RGB: [number, number, number] = [251, 146, 60];
+
+const GLYPH_FILL = "rgba(226, 232, 240, 0.95)";
+const GRID_STROKE = "rgba(129, 140, 248, 0.055)";
+
+/* ---------- Physics / render tuning ---------- */
+const LINK_DIST = 132;
 const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
-const MENTOR_RADIUS = 168; // px
+
+const MENTOR_RADIUS = 170;
 const MENTOR_RADIUS_SQ = MENTOR_RADIUS * MENTOR_RADIUS;
-const GLYPH_RATIO = 0.24; // fraction of nodes that are glyphs
-const MAX_DT = 0.05; // seconds, clamp after tab-switch
+
+const GLYPH_RATIO = 0.24;
+const MAX_DT = 0.05;
 const DPR_CAP = 2;
 
-function clamp01(v: number) {
-  return v < 0 ? 0 : v > 1 ? 1 : v;
+function clamp(value: number, min: number, max: number) {
+  return value < min ? min : value > max ? max : value;
 }
 
 function rand(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-function makeParticle(hueCount: number): Particle {
+function createParticle(): Particle {
   const isGlyph = Math.random() < GLYPH_RATIO;
+
   return {
     nx: Math.random(),
     ny: Math.random(),
@@ -133,14 +134,23 @@ function makeParticle(hueCount: number): Particle {
     phase: rand(0, Math.PI * 2),
     spin: rand(0.25, 0.9) * (Math.random() < 0.5 ? -1 : 1),
     glyph: isGlyph ? GLYPHS[(Math.random() * GLYPHS.length) | 0] : null,
-    hue: (Math.random() * hueCount) | 0,
+    hue: (Math.random() * NODE_RGB.length) | 0,
   };
 }
 
-function targetCount(w: number) {
-  // responsive density: fewer on phones, richer on desktop
-  const base = w < 480 ? 30 : w < 768 ? 46 : w < 1280 ? 66 : 84;
-  return base;
+function desiredParticleCount(width: number, density: number) {
+  const safeDensity = clamp(density, 0.4, 1.6);
+
+  const base =
+    width < 480
+      ? 28
+      : width < 768
+        ? 42
+        : width < 1280
+          ? 62
+          : 78;
+
+  return Math.max(14, Math.round(base * safeDensity));
 }
 
 export default function DynamicBackground({
@@ -151,179 +161,132 @@ export default function DynamicBackground({
   showGrid = true,
   className = "",
 }: DynamicBackgroundProps) {
-  const [index, setIndex] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // mutable animation state (no re-renders)
   const particlesRef = useRef<Particle[]>([]);
   const sizeRef = useRef({ w: 0, h: 0, dpr: 1 });
-  const themeRef = useRef<Theme>("light");
   const mouseRef = useRef({ x: 0, y: 0, active: false });
+
   const rafRef = useRef<number | null>(null);
   const lastTsRef = useRef(0);
+
   const reducedRef = useRef(false);
   const visibleRef = useRef(true);
   const onScreenRef = useRef(true);
+  const themeRef = useRef<"light" | "dark">("light");
 
-  /* ---------- slideshow rotation (light mode) ---------- */
+  /* =====================================================
+     1. REDUCED MOTION DETECTION
+     ===================================================== */
   useEffect(() => {
-    if (images.length <= 1) return;
+    if (typeof window === "undefined") return;
+
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const update = () => {
+      reducedRef.current = mq.matches;
+      setReducedMotion(mq.matches);
+    };
+
+    update();
+
+    if (mq.addEventListener) {
+      mq.addEventListener("change", update);
+      return () => mq.removeEventListener("change", update);
+    }
+
+    // Legacy Safari fallback
+    mq.addListener(update);
+    return () => mq.removeListener(update);
+  }, []);
+
+  /* =====================================================
+     2. LIGHT-MODE IMAGE SLIDESHOW
+     ===================================================== */
+  useEffect(() => {
+    if (images.length <= 1 || reducedMotion) return;
+
     const id = window.setInterval(() => {
-      setIndex((p) => (p + 1) % images.length);
+      setSlideIndex((prev) => (prev + 1) % images.length);
     }, 8000);
-    return () => window.clearInterval(id);
-  }, [images.length]);
 
-  /* ---------- main engine ---------- */
+    return () => window.clearInterval(id);
+  }, [images.length, reducedMotion]);
+
+  /* =====================================================
+     3. DARK-MODE PARTICLE ENGINE
+     ===================================================== */
   useEffect(() => {
-    const canvas = canvasRef.current;
     const wrap = wrapRef.current;
-    if (!canvas || !wrap) return;
+    const canvas = canvasRef.current;
+
+    if (!wrap || !canvas) return;
+
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    /* ----- theme detection (class strategy) ----- */
-    const readTheme = (): Theme =>
+    let disposed = false;
+
+    const readTheme = (): "light" | "dark" =>
       document.documentElement.classList.contains("dark") ? "dark" : "light";
+
     themeRef.current = readTheme();
 
-    const themeObs = new MutationObserver(() => {
-      const t = readTheme();
-      if (t !== themeRef.current) {
-        themeRef.current = t;
-        if (reducedRef.current) drawFrame(performance.now() / 1000, true);
-      }
-    });
-    themeObs.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
+    /* ---------------- Drawing helpers ---------------- */
 
-    /* ----- reduced motion ----- */
-    const rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const applyReduced = () => {
-      reducedRef.current = rmq.matches;
-      if (rmq.matches) stopLoop();
-      else startLoop();
-    };
-    applyReduced();
-    if (rmq.addEventListener) rmq.addEventListener("change", applyReduced);
-    else rmq.addListener(applyReduced);
-
-    /* ----- sizing (normalized physics => resize is jump-free) ----- */
-    const resize = () => {
-      const rect = wrap.getBoundingClientRect();
-      const w = Math.max(1, Math.floor(rect.width));
-      const h = Math.max(1, Math.floor(rect.height));
-      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-      sizeRef.current = { w, h, dpr };
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // reconcile particle count to width * density
-      const want = Math.round(targetCount(w) * clamp01((density + 0.6) / 1.6) * 1.4 + targetCount(w) * (density - 1) * 0.4);
-      const target = Math.max(14, Math.round(targetCount(w) * density));
-      const arr = particlesRef.current;
-      if (arr.length < target) {
-        const hueCount = PALETTES[themeRef.current].node.length;
-        while (arr.length < target) arr.push(makeParticle(hueCount));
-      } else if (arr.length > target) {
-        arr.length = target;
-      }
-
-      if (reducedRef.current) drawFrame(0, true);
-    };
-
-    const ro = new ResizeObserver(resize);
-    ro.observe(wrap);
-    resize();
-
-    /* ----- pointer / touch mentor ----- */
-    const onPointer = (e: PointerEvent) => {
-      if (!interactive) return;
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
-      mouseRef.current.active = true;
-    };
-    const onLeave = () => {
-      mouseRef.current.active = false;
-    };
-    if (interactive) {
-      window.addEventListener("pointermove", onPointer, { passive: true });
-      window.addEventListener("pointerdown", onPointer, { passive: true });
-      document.addEventListener("pointerleave", onLeave);
-      window.addEventListener("blur", onLeave);
-    }
-
-    /* ----- visibility + on-screen pause ----- */
-    const onVis = () => {
-      visibleRef.current = !document.hidden;
-      if (visibleRef.current && onScreenRef.current && !reducedRef.current) {
-        lastTsRef.current = 0;
-        startLoop();
-      } else stopLoop();
-    };
-    document.addEventListener("visibilitychange", onVis);
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        onScreenRef.current = entry.isIntersecting;
-        if (entry.isIntersecting && visibleRef.current && !reducedRef.current) {
-          lastTsRef.current = 0;
-          startLoop();
-        } else stopLoop();
-      },
-      { threshold: 0.01 }
-    );
-    io.observe(wrap);
-
-    /* ================= DRAW ================= */
-
-    function drawGrid(p: Palette, w: number, h: number) {
+    function drawGrid(w: number, h: number) {
       if (!showGrid) return;
-      const step = 42;
-      ctx!.strokeStyle = p.bgGrid;
+
+      const step = 44;
+
+      ctx!.strokeStyle = GRID_STROKE;
       ctx!.lineWidth = 1;
       ctx!.beginPath();
+
       for (let x = step; x < w; x += step) {
         ctx!.moveTo(x + 0.5, 0);
         ctx!.lineTo(x + 0.5, h);
       }
+
       for (let y = step; y < h; y += step) {
         ctx!.moveTo(0, y + 0.5);
         ctx!.lineTo(w, y + 0.5);
       }
+
       ctx!.stroke();
     }
 
-    function drawEdges(
-      pts: Array<{ x: number; y: number }>,
-      p: Palette,
-      t: number
-    ) {
-      const n = pts.length;
+    function drawEdges(points: Array<{ x: number; y: number }>, time: number) {
+      const n = points.length;
+
       for (let i = 0; i < n; i++) {
-        const a = pts[i];
+        const a = points[i];
+
         for (let j = i + 1; j < n; j++) {
-          const b = pts[j];
+          const b = points[j];
+
           const dx = a.x - b.x;
           const dy = a.y - b.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 > LINK_DIST_SQ) continue;
-          const d = Math.sqrt(d2);
-          const k = 1 - d / LINK_DIST; // 0..1
-          // travelling "impulse" makes links feel alive
-          const pulse = 0.55 + 0.45 * Math.sin(t * 1.6 + (i + j) * 0.7);
-          const alpha = k * k * (0.18 + 0.5 * pulse);
-          const mix = k > 0.62 ? p.linkStrong : p.link;
-          ctx!.strokeStyle = `rgba(${mix[0]},${mix[1]},${mix[2]},${alpha})`;
-          ctx!.lineWidth = 0.6 + k * 1.1;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq > LINK_DIST_SQ) continue;
+
+          const dist = Math.sqrt(distSq);
+          const strength = 1 - dist / LINK_DIST;
+
+          const pulse =
+            0.55 + 0.45 * Math.sin(time * 1.45 + (i + j) * 0.55);
+
+          const alpha = strength * strength * (0.12 + 0.42 * pulse);
+          const color = strength > 0.62 ? LINK_STRONG_RGB : LINK_RGB;
+
+          ctx!.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+          ctx!.lineWidth = 0.55 + strength * 0.95;
+
           ctx!.beginPath();
           ctx!.moveTo(a.x, a.y);
           ctx!.lineTo(b.x, b.y);
@@ -333,25 +296,28 @@ export default function DynamicBackground({
     }
 
     function drawMentorEdges(
-      pts: Array<{ x: number; y: number }>,
-      p: Palette,
+      points: Array<{ x: number; y: number }>,
       mx: number,
-      my: number
+      my: number,
     ) {
-      for (let i = 0; i < pts.length; i++) {
-        const a = pts[i];
-        const dx = a.x - mx;
-        const dy = a.y - my;
-        const d2 = dx * dx + dy * dy;
-        if (d2 > MENTOR_RADIUS_SQ) continue;
-        const d = Math.sqrt(d2);
-        const k = 1 - d / MENTOR_RADIUS;
-        const [r, g, b] = p.mentor;
-        ctx!.strokeStyle = `rgba(${r},${g},${b},${k * k * 0.7})`;
-        ctx!.lineWidth = 0.8 + k * 1.6;
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+
+        const dx = p.x - mx;
+        const dy = p.y - my;
+        const distSq = dx * dx + dy * dy;
+
+        if (distSq > MENTOR_RADIUS_SQ) continue;
+
+        const dist = Math.sqrt(distSq);
+        const strength = 1 - dist / MENTOR_RADIUS;
+
+        ctx!.strokeStyle = `rgba(${MENTOR_RGB[0]}, ${MENTOR_RGB[1]}, ${MENTOR_RGB[2]}, ${strength * strength * 0.55})`;
+        ctx!.lineWidth = 0.75 + strength * 1.35;
+
         ctx!.beginPath();
         ctx!.moveTo(mx, my);
-        ctx!.lineTo(a.x, a.y);
+        ctx!.lineTo(p.x, p.y);
         ctx!.stroke();
       }
     }
@@ -359,45 +325,62 @@ export default function DynamicBackground({
     function drawAtom(
       x: number,
       y: number,
-      r: number,
+      radius: number,
       core: [number, number, number],
       glow: [number, number, number],
-      t: number,
+      time: number,
       phase: number,
       spin: number,
-      pulse: number
+      pulse: number,
     ) {
-      const rr = r * (0.85 + 0.3 * pulse);
-      // outer glow
-      const g = ctx!.createRadialGradient(x, y, 0, x, y, rr * 4.2);
-      g.addColorStop(0, `rgba(${glow[0]},${glow[1]},${glow[2]},0.55)`);
-      g.addColorStop(0.4, `rgba(${glow[0]},${glow[1]},${glow[2]},0.12)`);
-      g.addColorStop(1, `rgba(${glow[0]},${glow[1]},${glow[2]},0)`);
-      ctx!.fillStyle = g;
+      const r = radius * (0.88 + 0.22 * pulse);
+
+      // Outer glow
+      const gradient = ctx!.createRadialGradient(x, y, 0, x, y, r * 4.2);
+      gradient.addColorStop(
+        0,
+        `rgba(${glow[0]}, ${glow[1]}, ${glow[2]}, 0.42)`,
+      );
+      gradient.addColorStop(
+        0.42,
+        `rgba(${glow[0]}, ${glow[1]}, ${glow[2]}, 0.10)`,
+      );
+      gradient.addColorStop(
+        1,
+        `rgba(${glow[0]}, ${glow[1]}, ${glow[2]}, 0)`,
+      );
+
+      ctx!.fillStyle = gradient;
       ctx!.beginPath();
-      ctx!.arc(x, y, rr * 4.2, 0, Math.PI * 2);
+      ctx!.arc(x, y, r * 4.2, 0, Math.PI * 2);
       ctx!.fill();
-      // electron shells
-      ctx!.strokeStyle = `rgba(${core[0]},${core[1]},${core[2]},0.5)`;
+
+      // Electron shells
+      ctx!.strokeStyle = `rgba(${core[0]}, ${core[1]}, ${core[2]}, 0.38)`;
       ctx!.lineWidth = 0.8;
-      const rot = t * spin + phase;
-      for (let s = 0; s < 2; s++) {
+
+      const rotation = time * spin + phase;
+
+      for (let shell = 0; shell < 2; shell++) {
         ctx!.save();
         ctx!.translate(x, y);
-        ctx!.rotate(rot + (s * Math.PI) / 2);
+        ctx!.rotate(rotation + (shell * Math.PI) / 2);
         ctx!.beginPath();
-        ctx!.ellipse(0, 0, rr * 2.6, rr * 1.05, 0, 0, Math.PI * 2);
+        ctx!.ellipse(0, 0, r * 2.6, r * 1.05, 0, 0, Math.PI * 2);
         ctx!.stroke();
         ctx!.restore();
       }
-      // core
-      ctx!.fillStyle = `rgba(${core[0]},${core[1]},${core[2]},0.95)`;
+
+      // Core
+      ctx!.fillStyle = `rgba(${core[0]}, ${core[1]}, ${core[2]}, 0.95)`;
       ctx!.beginPath();
-      ctx!.arc(x, y, rr, 0, Math.PI * 2);
+      ctx!.arc(x, y, r, 0, Math.PI * 2);
       ctx!.fill();
-      ctx!.fillStyle = "rgba(255,255,255,0.85)";
+
+      // Crystal highlight
+      ctx!.fillStyle = "rgba(255, 255, 255, 0.82)";
       ctx!.beginPath();
-      ctx!.arc(x - rr * 0.3, y - rr * 0.3, rr * 0.32, 0, Math.PI * 2);
+      ctx!.arc(x - r * 0.3, y - r * 0.3, r * 0.32, 0, Math.PI * 2);
       ctx!.fill();
     }
 
@@ -406,169 +389,251 @@ export default function DynamicBackground({
       y: number,
       size: number,
       text: string,
-      p: Palette,
-      pulse: number
+      glow: [number, number, number],
+      pulse: number,
     ) {
       const s = size * (0.9 + 0.18 * pulse);
-      // halo
-      const [gr, gg, gb] = p.nodeGlow[0];
-      const g = ctx!.createRadialGradient(x, y, 0, x, y, s * 2.4);
-      g.addColorStop(0, `rgba(${gr},${gg},${gb},0.30)`);
-      g.addColorStop(1, `rgba(${gr},${gg},${gb},0)`);
-      ctx!.fillStyle = g;
+
+      // Soft halo
+      const gradient = ctx!.createRadialGradient(x, y, 0, x, y, s * 2.4);
+      gradient.addColorStop(
+        0,
+        `rgba(${glow[0]}, ${glow[1]}, ${glow[2]}, 0.24)`,
+      );
+      gradient.addColorStop(
+        1,
+        `rgba(${glow[0]}, ${glow[1]}, ${glow[2]}, 0)`,
+      );
+
+      ctx!.fillStyle = gradient;
       ctx!.beginPath();
       ctx!.arc(x, y, s * 2.4, 0, Math.PI * 2);
       ctx!.fill();
-      ctx!.font = `700 ${s}px "Noto Sans Devanagari", ui-sans-serif, system-ui, sans-serif`;
+
+      ctx!.font = `700 ${s}px ui-sans-serif, system-ui, "Noto Sans Devanagari", sans-serif`;
       ctx!.textAlign = "center";
       ctx!.textBaseline = "middle";
-      ctx!.fillStyle = p.glyph;
+      ctx!.fillStyle = GLYPH_FILL;
       ctx!.fillText(text, x, y + s * 0.04);
     }
 
-    function drawMentorNode(
-      mx: number,
-      my: number,
-      p: Palette,
-      t: number
-    ) {
-      const [r, g, b] = p.mentor;
-      const pulse = 0.5 + 0.5 * Math.sin(t * 2.4);
-      const rr = 7 + pulse * 3;
-      const halo = ctx!.createRadialGradient(mx, my, 0, mx, my, MENTOR_RADIUS * 0.5);
-      halo.addColorStop(0, `rgba(${r},${g},${b},0.22)`);
-      halo.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    function drawMentorNode(mx: number, my: number, time: number) {
+      const pulse = 0.5 + 0.5 * Math.sin(time * 2.4);
+      const r = 7 + pulse * 3;
+
+      // Mentor halo
+      const halo = ctx!.createRadialGradient(
+        mx,
+        my,
+        0,
+        mx,
+        my,
+        MENTOR_RADIUS * 0.48,
+      );
+      halo.addColorStop(
+        0,
+        `rgba(${MENTOR_RGB[0]}, ${MENTOR_RGB[1]}, ${MENTOR_RGB[2]}, 0.20)`,
+      );
+      halo.addColorStop(
+        1,
+        `rgba(${MENTOR_RGB[0]}, ${MENTOR_RGB[1]}, ${MENTOR_RGB[2]}, 0)`,
+      );
+
       ctx!.fillStyle = halo;
       ctx!.beginPath();
-      ctx!.arc(mx, my, MENTOR_RADIUS * 0.5, 0, Math.PI * 2);
+      ctx!.arc(mx, my, MENTOR_RADIUS * 0.48, 0, Math.PI * 2);
       ctx!.fill();
-      // ring
-      ctx!.strokeStyle = `rgba(${r},${g},${b},0.85)`;
-      ctx!.lineWidth = 1.6;
+
+      // Ring
+      ctx!.strokeStyle = `rgba(${MENTOR_RGB[0]}, ${MENTOR_RGB[1]}, ${MENTOR_RGB[2]}, 0.82)`;
+      ctx!.lineWidth = 1.45;
       ctx!.beginPath();
-      ctx!.arc(mx, my, rr + 6 + pulse * 4, 0, Math.PI * 2);
+      ctx!.arc(mx, my, r + 6 + pulse * 4, 0, Math.PI * 2);
       ctx!.stroke();
-      // core
-      ctx!.fillStyle = `rgba(${r},${g},${b},1)`;
+
+      // Core
+      ctx!.fillStyle = `rgba(${MENTOR_RGB[0]}, ${MENTOR_RGB[1]}, ${MENTOR_RGB[2]}, 1)`;
       ctx!.beginPath();
-      ctx!.arc(mx, my, rr, 0, Math.PI * 2);
+      ctx!.arc(mx, my, r, 0, Math.PI * 2);
       ctx!.fill();
-      ctx!.fillStyle = "rgba(255,255,255,0.9)";
+
+      ctx!.fillStyle = "rgba(255, 255, 255, 0.9)";
       ctx!.beginPath();
-      ctx!.arc(mx, my, rr * 0.4, 0, Math.PI * 2);
+      ctx!.arc(mx, my, r * 0.38, 0, Math.PI * 2);
       ctx!.fill();
     }
 
-    function drawFrame(timeSec: number, staticOnly = false) {
+    function drawFrame(timeSeconds: number, staticFrame = false) {
       const { w, h } = sizeRef.current;
-      if (w <= 0 || h <= 0) return;
-      const p = PALETTES[themeRef.current];
-      const parts = particlesRef.current;
-      const t = timeSec;
+
+      if (disposed || w <= 0 || h <= 0) return;
+
+      const particles = particlesRef.current;
+      const time = timeSeconds;
 
       ctx!.clearRect(0, 0, w, h);
+
+      // Base layer: crisp lines/grid
       ctx!.globalCompositeOperation = "source-over";
-      drawGrid(p, w, h);
+      drawGrid(w, h);
 
-      // pixel positions
-      const pts: Array<{ x: number; y: number }> = new Array(parts.length);
-      for (let i = 0; i < parts.length; i++) {
-        pts[i] = { x: parts[i].nx * w, y: parts[i].ny * h };
+      const points: Array<{ x: number; y: number }> = new Array(
+        particles.length,
+      );
+
+      for (let i = 0; i < particles.length; i++) {
+        points[i] = {
+          x: particles[i].nx * w,
+          y: particles[i].ny * h,
+        };
       }
 
-      ctx!.globalCompositeOperation = p.composite;
-      drawEdges(pts, p, t);
+      drawEdges(points, time);
 
-      const m = mouseRef.current;
-      if (interactive && m.active && !staticOnly) {
-        drawMentorEdges(pts, p, m.x, m.y);
+      const mouse = mouseRef.current;
+      const mentorActive = interactive && mouse.active && !staticFrame;
+
+      if (mentorActive) {
+        drawMentorEdges(points, mouse.x, mouse.y);
       }
 
-      for (let i = 0; i < parts.length; i++) {
-        const pt = parts[i];
-        const { x, y } = pts[i];
-        const pulse = staticOnly ? 0.6 : 0.5 + 0.5 * Math.sin(t * 1.8 + pt.phase);
-        if (pt.glyph) {
-          drawGlyph(x, y, pt.base, pt.glyph, p, pulse);
+      // Glow layer: additive for crystal neon feel
+      ctx!.globalCompositeOperation = "lighter";
+
+      for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i];
+        const point = points[i];
+
+        const pulse = staticFrame
+          ? 0.62
+          : 0.5 + 0.5 * Math.sin(time * 1.8 + particle.phase);
+
+        const core = NODE_RGB[particle.hue % NODE_RGB.length];
+        const glow = GLOW_RGB[particle.hue % GLOW_RGB.length];
+
+        if (particle.glyph) {
+          drawGlyph(
+            point.x,
+            point.y,
+            particle.base,
+            particle.glyph,
+            glow,
+            pulse,
+          );
         } else {
           drawAtom(
-            x,
-            y,
-            pt.base,
-            p.node[pt.hue % p.node.length],
-            p.nodeGlow[pt.hue % p.nodeGlow.length],
-            t,
-            pt.phase,
-            pt.spin,
-            pulse
+            point.x,
+            point.y,
+            particle.base,
+            core,
+            glow,
+            time,
+            particle.phase,
+            particle.spin,
+            pulse,
           );
         }
       }
 
-      if (interactive && m.active && !staticOnly) {
-        drawMentorNode(m.x, m.y, p, t);
+      if (mentorActive) {
+        drawMentorNode(mouse.x, mouse.y, time);
       }
+
       ctx!.globalCompositeOperation = "source-over";
     }
 
-    /* ================= STEP ================= */
+    /* ---------------- Simulation ---------------- */
 
-    function step(timeMs: number) {
-      const { w, h } = sizeRef.current;
-      const t = timeMs / 1000;
-      let dt = lastTsRef.current ? (timeMs - lastTsRef.current) / 1000 : 0.016;
-      if (dt > MAX_DT) dt = MAX_DT;
-      lastTsRef.current = timeMs;
+    function step(timestamp: number) {
+      if (disposed) return;
 
-      const parts = particlesRef.current;
-      const m = mouseRef.current;
-      const useMouse = interactive && m.active;
-
-      for (let i = 0; i < parts.length; i++) {
-        const pt = parts[i];
-        if (useMouse) {
-          const px = pt.nx * w;
-          const py = pt.ny * h;
-          const dx = m.x - px;
-          const dy = m.y - py;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < MENTOR_RADIUS_SQ && d2 > 1) {
-            const d = Math.sqrt(d2);
-            const force = (1 - d / MENTOR_RADIUS) * 0.9; // gentle pull
-            pt.vx += (dx / d) * force * dt * 0.6;
-            pt.vy += (dy / d) * force * dt * 0.6;
-          }
-        }
-        // damping so it never runs away
-        pt.vx *= 0.992;
-        pt.vy *= 0.992;
-        // keep a minimum drift so the field stays alive
-        const sp = Math.hypot(pt.vx, pt.vy);
-        if (sp < 0.006) {
-          pt.vx += rand(-0.004, 0.004);
-          pt.vy += rand(-0.004, 0.004);
-        }
-
-        pt.nx += pt.vx * dt;
-        pt.ny += pt.vy * dt;
-
-        // bounce inside the box
-        if (pt.nx < 0) { pt.nx = 0; pt.vx = Math.abs(pt.vx); }
-        else if (pt.nx > 1) { pt.nx = 1; pt.vx = -Math.abs(pt.vx); }
-        if (pt.ny < 0) { pt.ny = 0; pt.vy = Math.abs(pt.vy); }
-        else if (pt.ny > 1) { pt.ny = 1; pt.vy = -Math.abs(pt.vy); }
+      // Critical: never animate particles in light mode.
+      if (themeRef.current !== "dark") {
+        stopLoop();
+        return;
       }
 
-      drawFrame(t, false);
+      const { w, h } = sizeRef.current;
+      const time = timestamp / 1000;
+
+      let dt = lastTsRef.current ? (timestamp - lastTsRef.current) / 1000 : 0.016;
+      if (dt > MAX_DT) dt = MAX_DT;
+
+      lastTsRef.current = timestamp;
+
+      const particles = particlesRef.current;
+      const mouse = mouseRef.current;
+      const useMouse = interactive && mouse.active;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+
+        if (useMouse) {
+          const px = p.nx * w;
+          const py = p.ny * h;
+
+          const dx = mouse.x - px;
+          const dy = mouse.y - py;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < MENTOR_RADIUS_SQ && distSq > 1) {
+            const dist = Math.sqrt(distSq);
+            const force = (1 - dist / MENTOR_RADIUS) * 0.9;
+
+            p.vx += (dx / dist) * force * dt * 0.6;
+            p.vy += (dy / dist) * force * dt * 0.6;
+          }
+        }
+
+        // Damping
+        p.vx *= 0.992;
+        p.vy *= 0.992;
+
+        // Keep field alive
+        const speed = Math.hypot(p.vx, p.vy);
+        if (speed < 0.006) {
+          p.vx += rand(-0.004, 0.004);
+          p.vy += rand(-0.004, 0.004);
+        }
+
+        p.nx += p.vx * dt;
+        p.ny += p.vy * dt;
+
+        // Bounce inside container
+        if (p.nx < 0) {
+          p.nx = 0;
+          p.vx = Math.abs(p.vx);
+        } else if (p.nx > 1) {
+          p.nx = 1;
+          p.vx = -Math.abs(p.vx);
+        }
+
+        if (p.ny < 0) {
+          p.ny = 0;
+          p.vy = Math.abs(p.vy);
+        } else if (p.ny > 1) {
+          p.ny = 1;
+          p.vy = -Math.abs(p.vy);
+        }
+      }
+
+      drawFrame(time, false);
+
       rafRef.current = requestAnimationFrame(step);
     }
 
     function startLoop() {
-      if (rafRef.current != null || reducedRef.current) return;
+      if (disposed) return;
+      if (themeRef.current !== "dark") return;
+      if (reducedRef.current) return;
       if (!visibleRef.current || !onScreenRef.current) return;
-      lastTsRef.current = 0;
-      rafRef.current = requestAnimationFrame(step);
+
+      if (rafRef.current == null) {
+        lastTsRef.current = 0;
+        rafRef.current = requestAnimationFrame(step);
+      }
     }
+
     function stopLoop() {
       if (rafRef.current != null) {
         cancelAnimationFrame(rafRef.current);
@@ -576,35 +641,158 @@ export default function DynamicBackground({
       }
     }
 
-    startLoop();
+    /* ---------------- Resize ---------------- */
 
-    /* ================= CLEANUP ================= */
-    return () => {
-      stopLoop();
-      ro.disconnect();
-      io.disconnect();
-      themeObs.disconnect();
-      document.removeEventListener("visibilitychange", onVis);
-      document.removeEventListener("pointerleave", onLeave);
-      window.removeEventListener("blur", onLeave);
-      if (interactive) {
-        window.removeEventListener("pointermove", onPointer);
-        window.removeEventListener("pointerdown", onPointer);
+    function resize() {
+      const rect = wrap!.getBoundingClientRect();
+
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+
+      sizeRef.current = { w, h, dpr };
+
+      canvas!.width = Math.floor(w * dpr);
+      canvas!.height = Math.floor(h * dpr);
+      canvas!.style.width = `${w}px`;
+      canvas!.style.height = `${h}px`;
+
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const target = desiredParticleCount(w, density);
+      const particles = particlesRef.current;
+
+      if (particles.length < target) {
+        while (particles.length < target) {
+          particles.push(createParticle());
+        }
+      } else if (particles.length > target) {
+        particles.length = target;
       }
-      if (rmq.removeEventListener) rmq.removeEventListener("change", applyReduced);
-      else rmq.removeListener(applyReduced);
+
+      if (themeRef.current === "dark" && reducedRef.current) {
+        drawFrame(0, true);
+      }
+    }
+
+    const resizeObserver = new ResizeObserver(() => resize());
+    resizeObserver.observe(wrap);
+    resize();
+
+    /* ---------------- Pointer mentor ---------------- */
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!interactive) return;
+
+      const rect = canvas!.getBoundingClientRect();
+
+      mouseRef.current.x = event.clientX - rect.left;
+      mouseRef.current.y = event.clientY - rect.top;
+      mouseRef.current.active = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [density, interactive, showGrid]);
+
+    const onPointerLeave = () => {
+      mouseRef.current.active = false;
+    };
+
+    if (interactive) {
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("pointerdown", onPointerMove, { passive: true });
+      document.addEventListener("pointerleave", onPointerLeave);
+      window.addEventListener("blur", onPointerLeave);
+    }
+
+    /* ---------------- Visibility / intersection ---------------- */
+
+    const onVisibilityChange = () => {
+      visibleRef.current = !document.hidden;
+
+      if (visibleRef.current) startLoop();
+      else stopLoop();
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        onScreenRef.current = entry.isIntersecting;
+
+        if (entry.isIntersecting) startLoop();
+        else stopLoop();
+      },
+      { threshold: 0.01 },
+    );
+
+    intersectionObserver.observe(wrap);
+
+    /* ---------------- Theme observer ---------------- */
+
+    const themeObserver = new MutationObserver(() => {
+      const nextTheme = readTheme();
+
+      if (nextTheme === themeRef.current) return;
+
+      themeRef.current = nextTheme;
+
+      if (nextTheme === "dark") {
+        if (reducedRef.current) {
+          drawFrame(performance.now() / 1000, true);
+        } else {
+          startLoop();
+        }
+      } else {
+        stopLoop();
+      }
+    });
+
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    /* ---------------- Initial state ---------------- */
+
+    if (themeRef.current === "dark") {
+      if (reducedRef.current) drawFrame(0, true);
+      else startLoop();
+    }
+
+    /* ---------------- Cleanup ---------------- */
+
+    return () => {
+      disposed = true;
+
+      stopLoop();
+
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+      themeObserver.disconnect();
+
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      document.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("blur", onPointerLeave);
+
+      if (interactive) {
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerdown", onPointerMove);
+      }
+    };
+  }, [density, interactive, showGrid, reducedMotion]);
 
   return (
     <div
       ref={wrapRef}
       aria-hidden="true"
-      className={`absolute inset-0 z-0 overflow-hidden ${className}`}
+      className={`pointer-events-none absolute inset-0 z-0 overflow-hidden ${className}`}
     >
-      {/* ---- LIGHT: image slideshow + readability wash ---- */}
-      <div className="dark:hidden absolute inset-0">
+      {/* =====================================================
+          LIGHT MODE LAYER
+          Only cinematic image slider. Crystal clear.
+          ===================================================== */}
+      <div
+        className="absolute inset-0 opacity-100 transition-opacity duration-700 ease-out dark:opacity-0"
+        style={{ willChange: "opacity" }}
+      >
         {images.map((src, i) => (
           <Image
             key={src}
@@ -613,32 +801,46 @@ export default function DynamicBackground({
             fill
             priority={i === 0}
             sizes="100vw"
-            className={`absolute inset-0 object-cover transition-opacity duration-[3000ms] ease-in-out ${
-              i === index ? "opacity-100" : "opacity-0"
-            } ${zoomType === "in" ? "animate-ken-burns-in" : "animate-ken-burns-out"}`}
+            className={`absolute inset-0 object-cover transition-opacity duration-[2500ms] ease-in-out ${
+              i === slideIndex ? "opacity-100" : "opacity-0"
+            } ${
+              zoomType === "in"
+                ? "animate-ken-burns-in"
+                : "animate-ken-burns-out"
+            }`}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/45 to-white/75" />
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_0%,transparent_30%,rgba(255,255,255,0.6)_100%)]" />
+
+        {/* Very subtle glass edge vignette — does not muddy the image */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-white/10" />
+        <div className="absolute inset-0 bg-[radial-gradient(115%_85%_at_50%_50%,transparent_62%,rgba(255,255,255,0.16)_100%)]" />
       </div>
 
-      {/* ---- DARK: nebula backdrop (particles draw on top via canvas) ---- */}
-      <div className="hidden dark:block absolute inset-0">
+      {/* =====================================================
+          DARK MODE LAYER
+          Only cinematic live particle network.
+          Light mode में यह layer opacity-0 है और loop stop है।
+          ===================================================== */}
+      <div
+        className="absolute inset-0 opacity-0 transition-opacity duration-700 ease-out dark:opacity-100"
+        style={{ willChange: "opacity" }}
+      >
+        {/* Deep but clean nebula base */}
         <div className="absolute inset-0 animate-nebula-shift" />
-        <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_20%_15%,rgba(99,102,241,0.18),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_85%_85%,rgba(34,211,238,0.14),transparent_60%)]" />
-        <div className="absolute inset-0 bg-slate-950/25 backdrop-blur-[1px]" />
+
+        {/* Soft color depth, not heavy scrim */}
+        <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_18%_12%,rgba(99,102,241,0.18),transparent_62%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(65%_50%_at_88%_86%,rgba(34,211,238,0.13),transparent_62%)]" />
+
+        {/* Crystal-clear transparent particle canvas */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 h-full w-full"
+        />
+
+        {/* Edge vignette only, center remains clear */}
+        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_50%,transparent_58%,rgba(2,6,23,0.38)_100%)]" />
       </div>
-
-      {/* ---- CANVAS: living education particle network ---- */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-10 h-full w-full"
-        style={{ pointerEvents: "none" }}
-      />
-
-      {/* ---- top vignette for text legibility (theme aware via dark:) ---- */}
-      <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/15 via-transparent to-transparent dark:from-slate-950/40" />
     </div>
   );
 }
