@@ -11,9 +11,9 @@ import MagneticButton from "@/components/MagneticButton";
 import DynamicBackground from "@/components/DynamicBackground";
 import SiteFooter from "@/components/SiteFooter";
 import FaqSection from "@/components/FaqSection";
+import StudentHeader from "@/components/StudentHeader";
 import {
   PlayCircle,
-  LogOut,
   Sparkles,
   Trophy,
   ArrowRight,
@@ -30,7 +30,6 @@ const CURRENT_YEAR = new Date().getFullYear();
 const BOARD_SESSION_YEAR = CURRENT_YEAR + 1;
 
 // Deterministic fallback to avoid hydration mismatch.
-// Agar tu build time env set करे, तो वो use होगा।
 const LAST_UPDATED_ISO =
   (typeof process !== "undefined" &&
     process.env &&
@@ -168,7 +167,7 @@ const ROW2_IMAGES = [
   "/gallery10.jpg",
 ];
 
-// Pre-duplicated loops for seamless marquee — avoids re-creating arrays every render
+// Pre-duplicated loops for seamless marquee
 const ROW1_LOOP = [...ROW1_IMAGES, ...ROW1_IMAGES];
 const ROW2_LOOP = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
@@ -335,7 +334,6 @@ function useReducedMotion() {
       return () => mq.removeEventListener("change", update);
     }
 
-    // Legacy Safari fallback
     mq.addListener(update);
     return () => mq.removeListener(update);
   }, []);
@@ -434,7 +432,7 @@ export default function Home() {
   }, []);
 
   // ==============================
-  // LOADING STATE — NO BRAND LOGO
+  // LOADING STATE
   // ==============================
 
   if (loading) {
@@ -477,7 +475,6 @@ export default function Home() {
         <>
           {/* ==============================
               1. HERO SECTION
-              Cinematic title + opposite shimmer subtitle
               ============================== */}
           <section className="relative min-h-[86dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden">
             <DynamicBackground images={HERO_BG_IMAGES} zoomType="in" />
@@ -493,10 +490,8 @@ export default function Home() {
                 </div>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight leading-none text-white flex items-center justify-center lg:justify-start">
-                  {/* SEO + screen-reader friendly full title */}
                   <span className="sr-only">{FULL_TITLE}</span>
 
-                  {/* Visual animated title */}
                   <span
                     aria-hidden="true"
                     className="relative inline-block align-top max-w-full"
@@ -549,7 +544,7 @@ export default function Home() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                {WHY_CHOOSE_FEATURES.map((feature, i) => (
+                {WHY_CHOOSE_FEATURES.map((feature) => (
                   <div
                     key={feature.title}
                     className="group bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl p-4 sm:p-6 text-center hover:bg-orange-50 dark:hover:bg-slate-800/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
@@ -697,15 +692,13 @@ export default function Home() {
 
           {/* ==============================
               5. BIHAR DISTRICT COVERAGE
-              Light mode: Bihar map background
-              Dark mode: cinematic cosmic background
               ============================== */}
           <section
             id="bihar-districts"
             className="relative py-12 sm:py-20 overflow-hidden border-t border-orange-100 dark:border-slate-800 bg-[#FFF9F0] dark:bg-slate-950 transition-colors duration-700"
           >
             <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
-              {/* Light mode map background */}
+              {/* Light mode: Bihar map background */}
               <div className="dark:hidden absolute inset-0">
                 <iframe
                   className="district-map-bg"
@@ -721,7 +714,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-b from-[#FFF9F0]/85 via-[#FFF9F0]/55 to-[#FFF9F0]/92" />
               </div>
 
-              {/* Dark mode cinematic background */}
+              {/* Dark mode: cinematic particle background */}
               <div className="hidden dark:block absolute inset-0">
                 <DynamicBackground images={DISTRICT_BG_IMAGES} zoomType="out" />
                 <div className="absolute inset-0 bg-slate-950/55 backdrop-blur-[1px]" />
@@ -775,47 +768,17 @@ export default function Home() {
       ) : (
         <>
           {/* ==============================
-              LOGGED IN HEADER — NO LOGO
+              LOGGED IN HEADER
+              - No left logo
+              - No left brand text
+              - Mobile logout visible
+              - Hide on scroll, layout navbar stable
               ============================== */}
-          <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 sticky top-16 sm:top-20 z-40 shadow-sm transition-all duration-500 w-full backdrop-blur-xl border-b border-orange-100/50 dark:border-slate-800/50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center h-14 sm:h-16 gap-3 sm:gap-6">
-                <div className="min-w-0">
-                  <p className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
-                    World of Concept
-                  </p>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                    Student Home
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-3 sm:gap-6">
-                  <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">
-                        {student?.fullName || "छात्र"}
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        {student?.email || user?.email || ""}
-                      </p>
-                    </div>
-
-                    <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
-                      {(student?.fullName || "छ").charAt(0).toUpperCase()}
-                    </div>
-                  </div>
-
-                  <MagneticButton
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span className="hidden sm:inline">Logout</span>
-                  </MagneticButton>
-                </div>
-              </div>
-            </div>
-          </header>
+          <StudentHeader
+            fullName={student?.fullName ?? null}
+            email={student?.email ?? user?.email ?? null}
+            onLogout={handleLogout}
+          />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1 relative w-full">
             <div className="relative z-10 space-y-6 sm:space-y-12 w-full">
@@ -1092,7 +1055,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* FAQ SECTION — VISIBLE ON LOGGED-IN HOME TOO */}
+          {/* FAQ SECTION */}
           <FaqSection />
 
           {/* FOOTER */}

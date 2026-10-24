@@ -26,13 +26,13 @@ import MagneticButton from "@/components/MagneticButton";
 import DynamicBackground from "@/components/DynamicBackground";
 import SiteFooter from "@/components/SiteFooter";
 import FaqSection from "@/components/FaqSection";
+import StudentHeader from "@/components/StudentHeader";
 import {
   BookOpen,
   CheckCircle2,
   Target,
   PlayCircle,
   Bell,
-  LogOut,
   Sparkles,
   Trophy,
   ArrowRight,
@@ -207,11 +207,7 @@ const dashboardSchema = {
     "Daily study planning",
     "RK Sir updates",
   ],
-  relatedLink: [
-    YOUTUBE_CHANNEL_URL,
-    TELEGRAM_URL,
-    INSTAGRAM_URL,
-  ],
+  relatedLink: [YOUTUBE_CHANNEL_URL, TELEGRAM_URL, INSTAGRAM_URL],
   significantLink: [
     `${SITE_URL}/dashboard#youtube-videos`,
     `${SITE_URL}/dashboard#courses`,
@@ -290,9 +286,15 @@ function normalizeStreak(input: any): StreakData {
 
   return {
     lastVisit: typeof input.lastVisit === "string" ? input.lastVisit : "",
-    current: Number.isFinite(input.current) ? Math.max(0, Number(input.current)) : 0,
-    longest: Number.isFinite(input.longest) ? Math.max(0, Number(input.longest)) : 0,
-    visits: Number.isFinite(input.visits) ? Math.max(0, Number(input.visits)) : 0,
+    current: Number.isFinite(input.current)
+      ? Math.max(0, Number(input.current))
+      : 0,
+    longest: Number.isFinite(input.longest)
+      ? Math.max(0, Number(input.longest))
+      : 0,
+    visits: Number.isFinite(input.visits)
+      ? Math.max(0, Number(input.visits))
+      : 0,
   };
 }
 
@@ -469,11 +471,15 @@ type ToneKey = "red" | "blue" | "purple" | "orange" | "sky" | "green" | "indigo"
 const TONE_CLASSES: Record<ToneKey, string> = {
   red: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 hover:bg-red-500/20",
   blue: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 hover:bg-blue-500/20",
-  purple: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:bg-purple-500/20",
-  orange: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20 hover:bg-orange-500/20",
+  purple:
+    "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:bg-purple-500/20",
+  orange:
+    "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20 hover:bg-orange-500/20",
   sky: "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20 hover:bg-sky-500/20",
-  green: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:bg-green-500/20",
-  indigo: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20",
+  green:
+    "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:bg-green-500/20",
+  indigo:
+    "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20",
 };
 
 interface QuickAction {
@@ -698,7 +704,10 @@ const YoutubeIcon = ({ className }: { className?: string }) => (
       d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
       fill="#FF0000"
     />
-    <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FFFFFF" />
+    <path
+      d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+      fill="#FFFFFF"
+    />
   </svg>
 );
 
@@ -725,7 +734,13 @@ const StreakRing = memo(function StreakRing({
     <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
       <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
         <defs>
-          <linearGradient id="dashboardStreakGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient
+            id="dashboardStreakGradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor="#f97316" />
             <stop offset="50%" stopColor="#8b5cf6" />
             <stop offset="100%" stopColor="#06b6d4" />
@@ -780,7 +795,9 @@ const YouTubeVideoCard = memo(function YouTubeVideoCard({
   const [thumbFailed, setThumbFailed] = useState(false);
 
   useEffect(() => {
-    setThumbSrc(video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`);
+    setThumbSrc(
+      video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
+    );
     setThumbFailed(false);
     setImageLoaded(false);
   }, [video.id, video.thumbnail]);
@@ -891,7 +908,11 @@ const UpdatesSkeletonCard = memo(function UpdatesSkeletonCard() {
   );
 });
 
-const CourseCard = memo(function CourseCard({ course }: { course: CourseItem }) {
+const CourseCard = memo(function CourseCard({
+  course,
+}: {
+  course: CourseItem;
+}) {
   return (
     <article className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
       <div className="bg-white/90 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 ease-out hover:-translate-y-2 h-full flex flex-col border border-white/60 dark:border-slate-700/50">
@@ -980,7 +1001,11 @@ const GalleryCard = memo(function GalleryCard({
   );
 });
 
-const UpdateCard = memo(function UpdateCard({ update }: { update: UpdateData }) {
+const UpdateCard = memo(function UpdateCard({
+  update,
+}: {
+  update: UpdateData;
+}) {
   const updateDate = getUpdateDate(update);
   const dateLabel = formatDateHi(updateDate);
   const meta = UPDATE_TYPE_META[update.type] ?? UPDATE_TYPE_META.announcement;
@@ -1047,7 +1072,9 @@ export default function DashboardPage() {
 
   const [updates, setUpdates] = useState<UpdateData[]>([]);
   const [updatesLoading, setUpdatesLoading] = useState(true);
-  const [updateFilter, setUpdateFilter] = useState<"all" | UpdateData["type"]>("all");
+  const [updateFilter, setUpdateFilter] = useState<
+    "all" | UpdateData["type"]
+  >("all");
 
   const [youtubeVideos, setYoutubeVideos] = useState<YoutubeVideo[]>([]);
   const [ytLoading, setYtLoading] = useState(true);
@@ -1147,7 +1174,8 @@ export default function DashboardPage() {
         query(collection(db, "updates"), limit(50))
       );
 
-      if (!mountedRef.current || requestId !== updatesRequestIdRef.current) return;
+      if (!mountedRef.current || requestId !== updatesRequestIdRef.current)
+        return;
 
       const parsedUpdates: UpdateData[] = updatesSnapshot.docs.map((d) => {
         const data = d.data() as any;
@@ -1251,7 +1279,9 @@ export default function DashboardPage() {
     try {
       const res = await fetch(
         "/api/youtube",
-        controller ? { signal: controller.signal, cache: "no-store" } : { cache: "no-store" }
+        controller
+          ? { signal: controller.signal, cache: "no-store" }
+          : { cache: "no-store" }
       );
 
       const data = await res.json().catch(() => ({}));
@@ -1260,7 +1290,8 @@ export default function DashboardPage() {
 
       if (!res.ok) {
         throw new Error(
-          data?.message || `YouTube API route failed with status ${res.status}`
+          data?.message ||
+            `YouTube API route failed with status ${res.status}`
         );
       }
 
@@ -1494,7 +1525,6 @@ export default function DashboardPage() {
   }
 
   const firstName = student.fullName?.split(" ")[0] || "छात्र";
-  const initial = (student.fullName || "छ").charAt(0).toUpperCase();
 
   return (
     <div className="relative min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-sans transition-colors duration-700">
@@ -1506,65 +1536,25 @@ export default function DashboardPage() {
       />
 
       {/* ==============================
-          HEADER — NO LOGO
+          HEADER
+          - No left logo
+          - No left brand text
+          - Mobile logout visible
+          - Desktop logout visible
+          - Hide on scroll, layout navbar stable
           ============================== */}
-      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 sticky top-16 sm:top-20 z-40 shadow-sm transition-all duration-500 w-full backdrop-blur-xl border-b border-orange-100/50 dark:border-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16 gap-3 sm:gap-6">
-            <div className="min-w-0">
-              <p className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
-                World of Concept
-              </p>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                Student Dashboard
-              </p>
-            </div>
+      <StudentHeader
+        fullName={student.fullName}
+        email={student.email}
+        updatesCount={updates.length}
+        onNotifications={scrollToUpdates}
+        onLogout={handleLogout}
+      />
 
-            <div className="flex items-center gap-2 sm:gap-6">
-              <button
-                type="button"
-                onClick={scrollToUpdates}
-                aria-label="RK Sir updates देखें"
-                className="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-orange-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-              >
-                <Bell className="w-5 h-5" />
-                {updates.length > 0 ? (
-                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 flex items-center justify-center shadow">
-                    {updates.length > 9 ? "9+" : updates.length}
-                  </span>
-                ) : (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 animate-pulse" />
-                )}
-              </button>
-
-              <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
-                <div className="text-right">
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">
-                    {student.fullName}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {student.email}
-                  </p>
-                </div>
-
-                <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
-                  {initial}
-                </div>
-              </div>
-
-              <MagneticButton
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </MagneticButton>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="relative w-full pb-8">
+      <main
+        className="relative w-full pb-8"
+        aria-label="Student dashboard main content"
+      >
         {/* ==============================
             1. CINEMATIC HERO / OVERVIEW
             ============================== */}
@@ -1617,7 +1607,7 @@ export default function DashboardPage() {
                       </p>
                       <p className="text-white/75 text-xs sm:text-sm leading-relaxed">
                         प्रतिभा सिर्फ महानगरों में नहीं होती। सही platform, सही guidance
-                        और रोज़ की मेहनत से गाँव का छात्र भी global standard बना सकता है।
+                        और रोज़ की मेहनत से गाँव का छात्र भी global standard बन सकता है।
                       </p>
                     </div>
                   </div>
@@ -1653,7 +1643,9 @@ export default function DashboardPage() {
                     return (
                       <MagneticButton
                         key={action.id}
-                        onClick={() => action.targetId && scrollToId(action.targetId)}
+                        onClick={() =>
+                          action.targetId && scrollToId(action.targetId)
+                        }
                         className={className}
                       >
                         {content}
@@ -1882,7 +1874,9 @@ export default function DashboardPage() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-xs sm:text-sm text-white/75">
                       <span>Weekly progress</span>
-                      <span className="font-black text-orange-300">{weekProgress}%</span>
+                      <span className="font-black text-orange-300">
+                        {weekProgress}%
+                      </span>
                     </div>
 
                     <div className="h-2 rounded-full bg-white/10 overflow-hidden">
@@ -2111,7 +2105,10 @@ export default function DashboardPage() {
 
               <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
                 {COURSES_LOOP.map((course, i) => (
-                  <CourseCard key={`avail-course-${i}`} course={course} />
+                  <CourseCard
+                    key={`avail-course-${i}`}
+                    course={course}
+                  />
                 ))}
               </div>
             </div>
@@ -2202,7 +2199,11 @@ export default function DashboardPage() {
                   onClick={() => fetchUpdates()}
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/80 dark:bg-slate-900/70 border border-orange-100 dark:border-slate-700/50 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 shadow-sm hover:shadow-md transition-all"
                 >
-                  <RefreshCw className={`w-4 h-4 ${updatesLoading ? "animate-spin" : ""}`} />
+                  <RefreshCw
+                    className={`w-4 h-4 ${
+                      updatesLoading ? "animate-spin" : ""
+                    }`}
+                  />
                   Refresh
                 </MagneticButton>
               </div>
@@ -2216,14 +2217,18 @@ export default function DashboardPage() {
               ) : updates.length === 0 ? (
                 <div className="bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl p-6 text-center shadow-sm">
                   <p className="text-slate-500 dark:text-slate-400 text-sm">
-                    अभी कोई update नहीं है। जल्द ही RK Sir से नई updates आने वाली हैं!
+                    अभी कोई update नहीं है। जल्दी ही RK Sir से नई updates आने वाली हैं!
                   </p>
                 </div>
               ) : (
                 <>
                   <div className="flex flex-wrap gap-2 mb-5">
                     {[
-                      { key: "all" as const, label: "सभी", count: updateCounts.all },
+                      {
+                        key: "all" as const,
+                        label: "सभी",
+                        count: updateCounts.all,
+                      },
                       {
                         key: "announcement" as const,
                         label: "घोषणा",
@@ -2234,7 +2239,11 @@ export default function DashboardPage() {
                         label: "प्रेरणा",
                         count: updateCounts.motivation,
                       },
-                      { key: "tip" as const, label: "टिप", count: updateCounts.tip },
+                      {
+                        key: "tip" as const,
+                        label: "टिप",
+                        count: updateCounts.tip,
+                      },
                     ].map((chip) => {
                       const active = updateFilter === chip.key;
                       return (
@@ -2251,7 +2260,9 @@ export default function DashboardPage() {
                           {chip.label}
                           <span
                             className={`min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] ${
-                              active ? "bg-white/20" : "bg-slate-200 dark:bg-slate-800"
+                              active
+                                ? "bg-white/20"
+                                : "bg-slate-200 dark:bg-slate-800"
                             }`}
                           >
                             {chip.count}
@@ -2289,7 +2300,10 @@ export default function DashboardPage() {
           style={{ animationDelay: "0.7s" }}
         >
           <div className="absolute inset-0 z-0">
-            <DynamicBackground images={ACHIEVEMENT_BG_IMAGES} zoomType="out" />
+            <DynamicBackground
+              images={ACHIEVEMENT_BG_IMAGES}
+              zoomType="out"
+            />
             <div className="absolute inset-0 bg-slate-50/75 dark:bg-slate-950/45 backdrop-blur-sm" />
           </div>
 
