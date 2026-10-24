@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Bell, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import MagneticButton from "@/components/MagneticButton";
 
 interface StudentHeaderProps {
@@ -14,9 +14,7 @@ interface StudentHeaderProps {
 }
 
 /**
- * Layout navbar का exact height detect करता है ताकि
- * student header उसके ठीक नीचे stick हो।
- *
+ * Layout navbar का exact bottom offset detect करता है।
  * Priority:
  * 1. CSS variable: --site-navbar-height
  * 2. Element: [data-site-navbar]
@@ -89,9 +87,6 @@ function getNavbarOffset(): number {
 
 export default function StudentHeader({
   fullName,
-  email,
-  updatesCount,
-  onNotifications,
   onLogout,
 }: StudentHeaderProps) {
   const headerRef = useRef<HTMLElement | null>(null);
@@ -122,15 +117,15 @@ export default function StudentHeader({
 
     measure();
 
-    // Fonts / late layout settle के लिए एक बार फिर measure
-    const timer = window.setTimeout(measure, 120);
+    // Late layout/fonts settle के लिए दोबारा measure
+    const timer1 = window.setTimeout(measure, 120);
     const timer2 = window.setTimeout(measure, 400);
 
     window.addEventListener("resize", measure);
     window.addEventListener("orientationchange", measure);
 
     return () => {
-      window.clearTimeout(timer);
+      window.clearTimeout(timer1);
       window.clearTimeout(timer2);
       window.removeEventListener("resize", measure);
       window.removeEventListener("orientationchange", measure);
@@ -178,92 +173,47 @@ export default function StudentHeader({
     };
   }, []);
 
-  const initial = (fullName || "छ").charAt(0).toUpperCase();
-  const hasUpdates = typeof updatesCount === "number" && updatesCount > 0;
-
-  // पूरी तरह ऊपर ले जाने के लिए translate distance
-  const hideTranslateY = -(headerHeight + offsetTop + 18);
+  const firstName = fullName?.split(" ")[0] || "Student";
+  const hideTranslateY = -(headerHeight + offsetTop + 24);
 
   return (
     <header
       ref={headerRef}
       data-student-header
-      className="sticky z-40 w-full bg-[#FFF9F0]/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-orange-100/60 dark:border-slate-800/60 shadow-sm"
+      className="sticky z-40 w-full pointer-events-none"
       style={{
         top: `${offsetTop}px`,
         transform: hidden ? `translateY(${hideTranslateY}px)` : "translateY(0)",
         opacity: hidden ? 0 : 1,
-        pointerEvents: hidden ? "none" : "auto",
         transition:
           "transform 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 220ms ease-out",
         willChange: "transform, opacity",
       }}
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-center px-3 sm:h-16 sm:px-6 lg:px-8">
         {/*
-          IMPORTANT:
-          Left corner brand/logo/text completely removed.
-          सिर्फ right-side utility controls.
+          NOTIFICATION BELL REMOVE.
+          LOGOUT CENTER ME.
+          LEFT CORNER BRAND/TEXT COMPLETELY REMOVE.
         */}
-        <div className="flex items-center justify-end gap-2 sm:gap-3 h-14 sm:h-16 min-w-0">
-          {onNotifications ? (
-            <button
-              type="button"
-              onClick={onNotifications}
-              aria-label="RK Sir updates देखें"
-              className="relative inline-flex shrink-0 items-center justify-center w-11 h-11 sm:w-11 sm:h-11 rounded-full text-slate-600 dark:text-slate-300 hover:bg-orange-100 dark:hover:bg-slate-800 active:scale-95 transition-all duration-200"
-            >
-              <Bell className="w-5 h-5" />
+        <div
+          className="relative z-10"
+          style={{ pointerEvents: hidden ? "none" : "auto" }}
+        >
+          <MagneticButton
+            onClick={onLogout}
+            aria-label={`Logout from ${firstName}`}
+            className="group/logout relative inline-flex h-12 min-w-[142px] items-center justify-center gap-2 rounded-full border border-red-500/25 bg-white/85 px-5 text-sm font-extrabold text-red-600 shadow-lg shadow-red-500/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-red-500/45 hover:bg-red-50 hover:shadow-xl hover:shadow-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0] active:scale-95 dark:border-red-400/25 dark:bg-slate-950/80 dark:text-red-300 dark:shadow-red-500/10 dark:hover:border-red-400/45 dark:hover:bg-red-500/10 dark:hover:shadow-red-500/20 dark:focus-visible:ring-offset-slate-950 sm:min-w-[160px]"
+          >
+            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/0 via-red-500/0 to-purple-500/0 opacity-0 transition-opacity duration-300 group-hover/logout:from-orange-500/10 group-hover/logout:via-red-500/10 group-hover/logout:to-purple-500/10 group-hover/logout:opacity-100" />
 
-              {hasUpdates ? (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 flex items-center justify-center shadow">
-                  {updatesCount! > 9 ? "9+" : updatesCount}
-                </span>
-              ) : (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 animate-pulse" />
-              )}
-            </button>
-          ) : null}
+            <LogOut
+              className="relative z-10 h-5 w-5 shrink-0"
+              aria-hidden="true"
+            />
 
-          {/* Desktop/tablet user identity — mobile पर compact रखने के लिए hidden */}
-          <div className="hidden md:flex shrink-0 items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
-            <div className="text-right min-w-0 max-w-[180px] lg:max-w-[240px]">
-              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                {fullName || "छात्र"}
-              </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                {email || ""}
-              </p>
-            </div>
-
-            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950 shrink-0">
-              {initial}
-            </div>
-          </div>
-
-          {/*
-            LOGOUT FIX:
-            - Mobile पर 44x44 touch target
-            - Icon हमेशा visible
-            - Desktop पर icon + text
-            - shrink-0 से compress नहीं होगा
-            - relative z-10 से नीचे छिपेगा नहीं
-          */}
-          <div className="relative z-10 shrink-0">
-            <MagneticButton
-              onClick={onLogout}
-              aria-label="Logout"
-              className="group/logout inline-flex items-center justify-center gap-2 h-11 w-11 sm:h-10 sm:w-auto sm:px-3 rounded-xl text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 active:scale-95 transition-all duration-200 shadow-sm"
-            >
-              <LogOut className="w-5 h-5 shrink-0" aria-hidden="true" />
-
-              {/* Mobile screen-reader label */}
-              <span className="sr-only sm:hidden">Logout</span>
-
-              {/* Desktop visible label */}
-              <span className="hidden sm:inline">Logout</span>
-            </MagneticButton>
-          </div>
+            <span className="relative z-10">Logout</span>
+          </MagneticButton>
         </div>
       </div>
     </header>
