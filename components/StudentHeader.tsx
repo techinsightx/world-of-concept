@@ -13,6 +13,80 @@ interface StudentHeaderProps {
   onLogout: () => void;
 }
 
+/**
+ * Layout navbar का exact height detect करता है ताकि
+ * student header उसके ठीक नीचे stick हो।
+ *
+ * Priority:
+ * 1. CSS variable: --site-navbar-height
+ * 2. Element: [data-site-navbar]
+ * 3. First fixed/sticky header/nav near top
+ * 4. Fallback: mobile 64px, desktop 80px
+ */
+function getNavbarOffset(): number {
+  if (typeof window === "undefined") return 64;
+
+  try {
+    const rootStyles = window.getComputedStyle(document.documentElement);
+    const cssVar = rootStyles.getPropertyValue("--site-navbar-height").trim();
+
+    if (cssVar) {
+      const parsed = Number.parseFloat(cssVar);
+      if (Number.isFinite(parsed) && parsed > 0) {
+        return Math.round(parsed);
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  try {
+    const markedNavbar = document.querySelector(
+      "[data-site-navbar]",
+    ) as HTMLElement | null;
+
+    if (markedNavbar) {
+      const styles = window.getComputedStyle(markedNavbar);
+      const rect = markedNavbar.getBoundingClientRect();
+
+      if (
+        styles.position === "fixed" ||
+        styles.position === "sticky" ||
+        rect.top <= 8
+      ) {
+        return Math.round(rect.bottom);
+      }
+
+      return Math.round(markedNavbar.offsetHeight);
+    }
+  } catch {
+    // ignore
+  }
+
+  try {
+    const candidates = Array.from(
+      document.querySelectorAll("header, nav"),
+    ) as HTMLElement[];
+
+    for (const el of candidates) {
+      const styles = window.getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+
+      if (
+        (styles.position === "fixed" || styles.position === "sticky") &&
+        rect.top <= 8 &&
+        rect.height > 0
+      ) {
+        return Math.round(rect.bottom);
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  return window.innerWidth < 640 ? 64 : 80;
+}
+
 export default function StudentHeader({
   fullName,
   email,
@@ -20,11 +94,55 @@ export default function StudentHeader({
   onNotifications,
   onLogout,
 }: StudentHeaderProps) {
-  const [hidden, setHidden] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
 
+  const [hidden, setHidden] = useState(false);
+  const [offsetTop, setOffsetTop] = useState(64);
+  const [headerHeight, setHeaderHeight] = useState(56);
+
+  const offsetTopRef = useRef(64);
+  const headerHeightRef = useRef(56);
   const lastYRef = useRef(0);
   const tickingRef = useRef(false);
 
+  /* =====================================================
+     MEASURE LAYOUT NAVBAR + HEADER HEIGHT
+     ===================================================== */
+  useEffect(() => {
+    const measure = () => {
+      const nextOffset = getNavbarOffset();
+      const nextHeight = headerRef.current?.offsetHeight ?? 56;
+
+      offsetTopRef.current = nextOffset;
+      headerHeightRef.current = nextHeight;
+
+      setOffsetTop(nextOffset);
+      setHeaderHeight(nextHeight);
+    };
+
+    measure();
+
+    // Fonts / late layout settle के लिए एक बार फिर measure
+    const timer = window.setTimeout(measure, 120);
+    const timer2 = window.setTimeout(measure, 400);
+
+    window.addEventListener("resize", measure);
+    window.addEventListener("orientationchange", measure);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(timer2);
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("orientationchange", measure);
+    };
+  }, []);
+
+  /* =====================================================
+     SCROLL AWARE HIDE / SHOW
+     - नीचे scroll = hide
+     - ऊपर scroll = show
+     - navbar के पास always show
+     ===================================================== */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -35,19 +153,15 @@ export default function StudentHeader({
 
       tickingRef.current = true;
 
-      requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
         const currentY = window.scrollY;
+        const showZone = offsetTopRef.current + 28;
 
-        // Top के पास हमेशा visible
-        if (currentY < 72) {
+        if (currentY < showZone) {
           setHidden(false);
-        }
-        // नीचे scroll = page upar khisak raha hai -> hide
-        else if (currentY > lastYRef.current + 8) {
+        } else if (currentY > lastYRef.current + 8) {
           setHidden(true);
-        }
-        // ऊपर scroll = user वापस आ रहा है -> show
-        else if (currentY < lastYRef.current - 8) {
+        } else if (currentY < lastYRef.current - 8) {
           setHidden(false);
         }
 
@@ -67,11 +181,17 @@ export default function StudentHeader({
   const initial = (fullName || "छ").charAt(0).toUpperCase();
   const hasUpdates = typeof updatesCount === "number" && updatesCount > 0;
 
+  // पूरी तरह ऊपर ले जाने के लिए translate distance
+  const hideTranslateY = -(headerHeight + offsetTop + 18);
+
   return (
     <header
-      className="sticky top-16 sm:top-20 z-30 w-full bg-[#FFF9F0]/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-orange-100/50 dark:border-slate-800/50 shadow-sm"
+      ref={headerRef}
+      data-student-header
+      className="sticky z-40 w-full bg-[#FFF9F0]/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-orange-100/60 dark:border-slate-800/60 shadow-sm"
       style={{
-        transform: hidden ? "translateY(calc(-100% - 6rem))" : "translateY(0)",
+        top: `${offsetTop}px`,
+        transform: hidden ? `translateY(${hideTranslateY}px)` : "translateY(0)",
         opacity: hidden ? 0 : 1,
         pointerEvents: hidden ? "none" : "auto",
         transition:
@@ -82,16 +202,16 @@ export default function StudentHeader({
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/*
           IMPORTANT:
-          Left corner brand/logo/text पूरी तरह remove.
+          Left corner brand/logo/text completely removed.
           सिर्फ right-side utility controls.
         */}
-        <div className="flex items-center justify-end gap-2 sm:gap-4 h-14 sm:h-16">
+        <div className="flex items-center justify-end gap-2 sm:gap-3 h-14 sm:h-16 min-w-0">
           {onNotifications ? (
             <button
               type="button"
               onClick={onNotifications}
               aria-label="RK Sir updates देखें"
-              className="relative inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full text-slate-500 dark:text-slate-400 hover:bg-orange-100 dark:hover:bg-slate-800 transition-colors"
+              className="relative inline-flex shrink-0 items-center justify-center w-11 h-11 sm:w-11 sm:h-11 rounded-full text-slate-600 dark:text-slate-300 hover:bg-orange-100 dark:hover:bg-slate-800 active:scale-95 transition-all duration-200"
             >
               <Bell className="w-5 h-5" />
 
@@ -106,8 +226,8 @@ export default function StudentHeader({
           ) : null}
 
           {/* Desktop/tablet user identity — mobile पर compact रखने के लिए hidden */}
-          <div className="hidden md:flex items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
-            <div className="text-right min-w-0">
+          <div className="hidden md:flex shrink-0 items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
+            <div className="text-right min-w-0 max-w-[180px] lg:max-w-[240px]">
               <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
                 {fullName || "छात्र"}
               </p>
@@ -116,25 +236,34 @@ export default function StudentHeader({
               </p>
             </div>
 
-            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950 flex-shrink-0">
+            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950 shrink-0">
               {initial}
             </div>
           </div>
 
           {/*
-            Logout:
-            - Mobile पर icon-only but clearly visible
+            LOGOUT FIX:
+            - Mobile पर 44x44 touch target
+            - Icon हमेशा visible
             - Desktop पर icon + text
-            - Minimum 40px touch target
+            - shrink-0 से compress नहीं होगा
+            - relative z-10 से नीचे छिपेगा नहीं
           */}
-          <MagneticButton
-            onClick={onLogout}
-            aria-label="Logout"
-            className="inline-flex items-center justify-center gap-2 min-h-10 min-w-10 px-2.5 sm:px-3 py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300"
-          >
-            <LogOut className="w-5 h-5" />
-            <span className="hidden sm:inline">Logout</span>
-          </MagneticButton>
+          <div className="relative z-10 shrink-0">
+            <MagneticButton
+              onClick={onLogout}
+              aria-label="Logout"
+              className="group/logout inline-flex items-center justify-center gap-2 h-11 w-11 sm:h-10 sm:w-auto sm:px-3 rounded-xl text-sm font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 active:scale-95 transition-all duration-200 shadow-sm"
+            >
+              <LogOut className="w-5 h-5 shrink-0" aria-hidden="true" />
+
+              {/* Mobile screen-reader label */}
+              <span className="sr-only sm:hidden">Logout</span>
+
+              {/* Desktop visible label */}
+              <span className="hidden sm:inline">Logout</span>
+            </MagneticButton>
+          </div>
         </div>
       </div>
     </header>
