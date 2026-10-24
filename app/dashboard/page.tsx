@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, collection, query, limit, getDocs } from "firebase/firestore";
@@ -21,7 +21,60 @@ import {
   ArrowRight,
   Calendar,
   MessageCircle,
+  RefreshCw,
 } from "lucide-react";
+
+// ==============================
+// YOUTUBE CACHE HELPERS
+// ==============================
+
+const YOUTUBE_CACHE_KEY = "worldofconcept_youtube_cache_v1";
+const YOUTUBE_CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+interface YoutubeVideo {
+  id: string;
+  title: string;
+  thumbnail?: string;
+  publishedAt?: string;
+}
+
+interface YoutubeCachePayload {
+  savedAt: number;
+  videos: YoutubeVideo[];
+}
+
+function readYoutubeCache(): YoutubeVideo[] | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.sessionStorage.getItem(YOUTUBE_CACHE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as YoutubeCachePayload;
+
+    if (!parsed?.videos || !Array.isArray(parsed.videos)) return null;
+    if (Date.now() - parsed.savedAt > YOUTUBE_CACHE_TTL_MS) return null;
+
+    return parsed.videos;
+  } catch {
+    return null;
+  }
+}
+
+function writeYoutubeCache(videos: YoutubeVideo[]) {
+  if (typeof window === "undefined") return;
+
+  try {
+    const payload: YoutubeCachePayload = {
+      savedAt: Date.now(),
+      videos,
+    };
+
+    window.sessionStorage.setItem(YOUTUBE_CACHE_KEY, JSON.stringify(payload));
+  } catch {
+    // Ignore storage errors
+  }
+}
 
 // ==============================
 // ICONS
@@ -151,13 +204,13 @@ const DynamicBackground = ({
   }, [images.length]);
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden">
+    <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
       <div className="dark:hidden absolute inset-0">
         {images.map((src, i) => (
           <img
             key={src}
             src={src}
-            alt={`BG ${i}`}
+            alt=""
             loading={i === 0 ? "eager" : "lazy"}
             decoding="async"
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
@@ -180,31 +233,36 @@ const DynamicBackground = ({
 };
 
 // ==============================
-// YOUTUBE TYPES + CARD
+// YOUTUBE CARD
 // ==============================
-
-interface YoutubeVideo {
-  id: string;
-  title: string;
-  thumbnail?: string;
-  publishedAt?: string;
-}
 
 const YouTubeVideoCard = ({ video }: { video: YoutubeVideo }) => {
   const [playing, setPlaying] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [thumbSrc, setThumbSrc] = useState(
+    video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
+  );
+  const [thumbFailed, setThumbFailed] = useState(false);
 
-  const thumbnail = video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+  useEffect(() => {
+    setThumbSrc(video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`);
+    setThumbFailed(false);
+    setImageLoaded(false);
+  }, [video.id, video.thumbnail]);
 
-  const publishedLabel = video.publishedAt
-    ? new Date(video.publishedAt).toLocaleDateString("hi-IN", {
-        day: "numeric",
-        month: "short",
-      })
-    : "NEW";
+  const fallbackThumb = `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`;
+
+  const parsedDate = video.publishedAt ? new Date(video.publishedAt) : null;
+  const publishedLabel =
+    parsedDate && !isNaN(parsedDate.getTime())
+      ? parsedDate.toLocaleDateString("hi-IN", {
+          day: "numeric",
+          month: "short",
+        })
+      : "NEW";
 
   return (
-    <div className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
+    <article className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
       <div className="bg-white/90 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 border border-white/60 dark:border-slate-700/50">
         <div className="relative aspect-video bg-slate-100 dark:bg-slate-900">
           {playing ? (
@@ -222,11 +280,17 @@ const YouTubeVideoCard = ({ video }: { video: YoutubeVideo }) => {
               )}
 
               <img
-                src={thumbnail}
+                src={thumbSrc}
                 alt={video.title}
                 loading="lazy"
                 decoding="async"
                 onLoad={() => setImageLoaded(true)}
+                onError={() => {
+                  if (!thumbFailed) {
+                    setThumbFailed(true);
+                    setThumbSrc(fallbackThumb);
+                  }
+                }}
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
                   imageLoaded ? "opacity-100" : "opacity-0"
                 }`}
@@ -235,7 +299,7 @@ const YouTubeVideoCard = ({ video }: { video: YoutubeVideo }) => {
               <button
                 type="button"
                 onClick={() => setPlaying(true)}
-                aria-label={`Play ${video.title}`}
+                aria-label={`${video.title} play करें`}
                 className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 dark:bg-black/30 group-hover:bg-black/20 transition-all duration-300"
               >
                 <div className="w-12 h-12 sm:w-14 sm:h-14 bg-red-600/90 rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
@@ -261,7 +325,7 @@ const YouTubeVideoCard = ({ video }: { video: YoutubeVideo }) => {
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
@@ -314,6 +378,17 @@ const getUpdateDate = (data: any): Date => {
   return isNaN(parsed.getTime()) ? new Date(0) : parsed;
 };
 
+const UpdatesSkeletonCard = () => (
+  <div className="bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl overflow-hidden shadow-sm">
+    <div className="relative h-36 sm:h-40 bg-slate-200 dark:bg-slate-800 animate-pulse" />
+    <div className="p-4 space-y-2">
+      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse w-3/4" />
+      <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded animate-pulse w-full" />
+      <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded animate-pulse w-1/2" />
+    </div>
+  </div>
+);
+
 // ==============================
 // MAIN DASHBOARD PAGE
 // ==============================
@@ -322,11 +397,16 @@ export default function DashboardPage() {
   const [student, setStudent] = useState<StudentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
+
   const [updates, setUpdates] = useState<UpdateData[]>([]);
+  const [updatesLoading, setUpdatesLoading] = useState(true);
 
   const [youtubeVideos, setYoutubeVideos] = useState<YoutubeVideo[]>([]);
   const [ytLoading, setYtLoading] = useState(true);
   const [ytError, setYtError] = useState<string | null>(null);
+
+  const mountedRef = useRef(true);
+  const ytRequestIdRef = useRef(0);
 
   const welcomeBgImages = ["/gallery2.jpg", "/gallery4.jpg", "/gallery6.jpg"];
   const videosBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
@@ -360,17 +440,17 @@ export default function DashboardPage() {
       image: "/course1.jpg",
     },
     {
-      title: "विज्ञान: संपूर्ण रिवीजन",
+      title: "विस्ञान: संपूर्ण रिवीजन",
       price: "₹699",
       badge: "कक्षा 10",
-      desc: "भौतिकी, रसायन, जीव विज्ञान।",
+      desc: "भौतिकी, रसायन, जीव विस्ञान।",
       image: "/course2.jpg",
     },
     {
       title: "इंटर: संपूर्ण टॉपर बैच",
       price: "₹999",
       badge: "कक्षा 12",
-      desc: "मॉक टेस्ट के साथ सभी विषय।",
+      desc: "मॉक टेस्ट के साथ सभी विस्य।",
       image: "/course3.jpg",
     },
     {
@@ -381,13 +461,31 @@ export default function DashboardPage() {
       image: "/course4.jpg",
     },
     {
-      title: "सामाजिक विज्ञान: पूर्ण कोर्स",
+      title: "सामाजिक विस्यन: पूर्ण कोर्स",
       price: "₹599",
       badge: "कक्षा 10",
       desc: "इतिहास, भूगोल और नागरिक शास्त्र।",
       image: "/course5.jpg",
     },
   ];
+
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "सुप्रभात";
+    if (hour < 17) return "नमस्कार";
+    return "शुभ संध्या";
+  }, []);
+
+  // ==============================
+  // MOUNT GUARD
+  // ==============================
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   // ==============================
   // AUTH + UPDATES FETCH
@@ -399,6 +497,8 @@ export default function DashboardPage() {
 
       if (!user) {
         window.location.replace("/");
+        setLoading(false);
+        setUpdatesLoading(false);
         return;
       }
 
@@ -421,10 +521,19 @@ export default function DashboardPage() {
               query(collection(db, "updates"), limit(50))
             );
 
-            const parsedUpdates = updatesSnapshot.docs.map((d) => ({
-              id: d.id,
-              ...d.data(),
-            })) as UpdateData[];
+            const parsedUpdates: UpdateData[] = updatesSnapshot.docs.map((d) => {
+              const data = d.data() as any;
+
+              return {
+                id: d.id,
+                title: data.title || "New Update",
+                description: data.description || "",
+                imageUrl: data.imageUrl || undefined,
+                timestamp: data.timestamp,
+                createdAt: data.createdAt,
+                type: data.type || "announcement",
+              };
+            });
 
             // Client-side sort: latest first
             parsedUpdates.sort(
@@ -434,6 +543,7 @@ export default function DashboardPage() {
             setUpdates(parsedUpdates.slice(0, 6));
           } catch (e) {
             console.log("No updates yet", e);
+            setUpdates([]);
           }
         } else {
           window.location.replace("/");
@@ -443,6 +553,7 @@ export default function DashboardPage() {
         window.location.replace("/");
       } finally {
         setLoading(false);
+        setUpdatesLoading(false);
       }
     });
 
@@ -450,50 +561,77 @@ export default function DashboardPage() {
   }, []);
 
   // ==============================
-  // REAL YOUTUBE API FETCH
+  // REAL YOUTUBE API FETCH + CACHE
   // ==============================
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const loadYoutube = useCallback(async (showLoader = true) => {
+    const requestId = ++ytRequestIdRef.current;
 
-    fetch("/api/youtube", { signal: controller.signal })
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`YouTube API route failed with status ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        // Supports both:
-        // 1) { videos: [...] }
-        // 2) [...]
-        const videos = Array.isArray(data) ? data : data?.videos;
+    if (showLoader) setYtLoading(true);
+    setYtError(null);
 
-        if (Array.isArray(videos) && videos.length > 0) {
-          setYoutubeVideos(videos);
-          setYtError(null);
-        } else {
-          setYoutubeVideos([]);
-          setYtError(data?.message || "YouTube videos load नहीं हो पाए।");
-        }
-      })
-      .catch((error) => {
-        if (error.name !== "AbortError") {
-          console.error("YouTube fetch error:", error);
-          setYtError("YouTube API fetch करने में error आया।");
-        }
-      })
-      .finally(() => {
+    try {
+      const res = await fetch("/api/youtube");
+      const data = await res.json().catch(() => ({}));
+
+      if (!mountedRef.current || requestId !== ytRequestIdRef.current) return;
+
+      if (!res.ok) {
+        throw new Error(data?.message || `YouTube API route failed with status ${res.status}`);
+      }
+
+      const videos = Array.isArray(data) ? data : data?.videos;
+
+      if (Array.isArray(videos) && videos.length > 0) {
+        setYoutubeVideos(videos);
+        writeYoutubeCache(videos);
+      } else {
+        setYoutubeVideos((prev) => (prev.length > 0 ? prev : []));
+        setYtError(data?.message || "YouTube videos load नहीं हो पाए।");
+      }
+    } catch (error) {
+      if (!mountedRef.current || requestId !== ytRequestIdRef.current) return;
+
+      console.error("YouTube fetch error:", error);
+      setYtError(
+        error instanceof Error
+          ? error.message
+          : "YouTube API fetch करने में network error आया।"
+      );
+    } finally {
+      if (mountedRef.current && requestId === ytRequestIdRef.current) {
         setYtLoading(false);
-      });
-
-    return () => controller.abort();
+      }
+    }
   }, []);
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    const cached = readYoutubeCache();
+
+    if (cached && cached.length > 0) {
+      setYoutubeVideos(cached);
+      setYtLoading(false);
+      setYtError(null);
+    }
+
+    void loadYoutube(!(cached && cached.length > 0));
+  }, [loadYoutube]);
+
+  // ==============================
+  // ACTIONS
+  // ==============================
+
+  const handleLogout = useCallback(async () => {
     await auth.signOut();
     window.location.replace("/");
-  };
+  }, []);
+
+  const scrollToUpdates = useCallback(() => {
+    document.getElementById("updates")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, []);
 
   // ==============================
   // LOADING STATE
@@ -676,14 +814,7 @@ export default function DashboardPage() {
         }
 
         .animate-nebula-shift {
-          background: linear-gradient(
-            135deg,
-            #020617 0%,
-            #0f172a 25%,
-            #1e1b4b 50%,
-            #312e81 75%,
-            #020617 100%
-          );
+          background: linear-gradient(135deg, #020617 0%, #0f172a 25%, #1e1b4b 50%, #312e81 75%, #020617 100%);
           background-size: 400% 400%;
           animation: nebula-shift 10s ease infinite;
         }
@@ -797,46 +928,109 @@ export default function DashboardPage() {
           filter: invert(92%) hue-rotate(180deg) brightness(1.1) contrast(1.15)
             saturate(0.8);
         }
+
+        /* Sticky header scroll offset */
+        [id] {
+          scroll-margin-top: 5.5rem;
+        }
+
+        /* Reduced motion accessibility + performance */
+        @media (prefers-reduced-motion: reduce) {
+          .animate-marquee-seamless,
+          .animate-ken-burns-in,
+          .animate-ken-burns-out,
+          .animate-nebula-shift,
+          .space-stars::before,
+          .space-stars::after,
+          .solar-orbit-1,
+          .solar-orbit-2,
+          .solar-orbit-3,
+          .animate-pulse,
+          .animate-ping,
+          .shimmer-effect,
+          .rainbow-shimmer-bg,
+          .rainbow-shimmer-text {
+            animation: none !important;
+          }
+
+          .animate-fade-in-up {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+          }
+        }
       `}</style>
 
       {/* HEADER */}
       <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full backdrop-blur-xl border-b border-orange-100/50 dark:border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-end items-center h-14 sm:h-16 gap-3 sm:gap-6">
-            <button className="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-orange-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 animate-pulse" />
-            </button>
-
-            <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
-              <div className="text-right">
-                <p className="text-sm font-bold text-slate-900 dark:text-white">
-                  {student.fullName}
+          <div className="flex justify-between items-center h-14 sm:h-16 gap-3 sm:gap-6">
+            <div className="flex items-center gap-2 min-w-0">
+              <Image
+                src="/logo.png"
+                alt="World of Concept"
+                width={32}
+                height={32}
+                className="object-contain flex-shrink-0"
+                sizes="32px"
+              />
+              <div className="hidden sm:block min-w-0">
+                <p className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                  World of Concept
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {student.email}
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                  Student Dashboard
                 </p>
-              </div>
-
-              <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
-                {student.fullName.charAt(0).toUpperCase()}
               </div>
             </div>
 
-            <MagneticButton
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="hidden sm:inline">लॉगआउट</span>
-            </MagneticButton>
+            <div className="flex items-center gap-3 sm:gap-6">
+              <button
+                type="button"
+                onClick={scrollToUpdates}
+                aria-label="RK Sir updates देखें"
+                className="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-orange-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+              >
+                <Bell className="w-5 h-5" />
+                {updates.length > 0 ? (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 flex items-center justify-center shadow">
+                    {updates.length > 9 ? "9+" : updates.length}
+                  </span>
+                ) : (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#FFF9F0] dark:border-slate-950 animate-pulse" />
+                )}
+              </button>
+
+              <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-orange-200/50 dark:border-slate-800">
+                <div className="text-right">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">
+                    {student.fullName}
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    {student.email}
+                  </p>
+                </div>
+
+                <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-[#FFF9F0] dark:ring-slate-950">
+                  {student.fullName.charAt(0).toUpperCase()}
+                </div>
+              </div>
+
+              <MagneticButton
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">लॉगआउट</span>
+              </MagneticButton>
+            </div>
           </div>
         </div>
       </header>
 
       <main className="relative w-full pb-8">
         {/* 1. HERO */}
-        <div className="animate-fade-in-up relative w-full overflow-hidden mb-6 sm:mb-10 group">
+        <section className="animate-fade-in-up relative w-full overflow-hidden mb-6 sm:mb-10 group">
           <DynamicBackground images={welcomeBgImages} zoomType="in" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent dark:from-slate-950/50 dark:via-slate-950/30 dark:to-transparent" />
           <div className="absolute inset-0 z-0 shimmer-effect opacity-10" />
@@ -850,7 +1044,7 @@ export default function DashboardPage() {
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl font-extrabold mb-3 leading-tight text-white drop-shadow-2xl">
-                  वापसी पर स्वागत है, {student.fullName.split(" ")[0]} 👋
+                  {greeting}, {student.fullName.split(" ")[0]} 👋
                 </h1>
 
                 <p className="text-white/90 text-base sm:text-xl max-w-xl drop-shadow-xl font-medium mb-6">
@@ -891,10 +1085,10 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* 2. STATS */}
-        <div
+        <section
           className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden"
           style={{ animationDelay: "0.2s" }}
         >
@@ -961,10 +1155,11 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* 3. REAL YOUTUBE RAIL */}
-        <div
+        <section
+          id="youtube-videos"
           className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden"
           style={{ animationDelay: "0.3s" }}
         >
@@ -1030,22 +1225,33 @@ export default function DashboardPage() {
                         "फिलहाल YouTube API response खाली आया। आप RK Sir का YouTube चैनल visit कर सकते हैं।"}
                     </p>
 
-                    <MagneticButton
-                      href="https://www.youtube.com/@JoinWorldofConcept"
-                      className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all duration-300 shadow-lg"
-                    >
-                      <PlayCircle className="w-5 h-5" />
-                      YouTube चैनल खोलें
-                    </MagneticButton>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                      <MagneticButton
+                        onClick={() => loadYoutube(true)}
+                        className="inline-flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all duration-300 shadow-lg hover:scale-105"
+                      >
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        फिर कोशिश करें
+                      </MagneticButton>
+
+                      <MagneticButton
+                        href="https://www.youtube.com/@JoinWorldofConcept"
+                        className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all duration-300 shadow-lg"
+                      >
+                        <PlayCircle className="w-5 h-5" />
+                        YouTube चैनल खोलें
+                      </MagneticButton>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
           </div>
-        </div>
+        </section>
 
         {/* 4. COURSES RAIL */}
-        <div
+        <section
+          id="courses"
           className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden"
           style={{ animationDelay: "0.4s" }}
         >
@@ -1074,7 +1280,7 @@ export default function DashboardPage() {
 
               <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
                 {[...availableCourses, ...availableCourses].map((course, i) => (
-                  <div
+                  <article
                     key={`avail-course-${i}`}
                     className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group"
                   >
@@ -1085,6 +1291,7 @@ export default function DashboardPage() {
                           alt={course.title}
                           fill
                           className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                          sizes="(max-width: 640px) 75vw, (max-width: 768px) 280px, 320px"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
@@ -1122,15 +1329,16 @@ export default function DashboardPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* 5. GALLERY RAIL */}
-        <div
+        <section
+          id="gallery"
           className="mb-6 sm:mb-10 animate-fade-in-up relative w-full overflow-hidden"
           style={{ animationDelay: "0.5s" }}
         >
@@ -1164,6 +1372,7 @@ export default function DashboardPage() {
                       alt={`Gallery Row 1 Image ${i}`}
                       fill
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      sizes="(max-width: 640px) 75vw, (max-width: 768px) 280px, 320px"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
 
@@ -1188,6 +1397,7 @@ export default function DashboardPage() {
                       alt={`Gallery Row 2 Image ${i}`}
                       fill
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      sizes="(max-width: 640px) 75vw, (max-width: 768px) 280px, 320px"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />
 
@@ -1202,10 +1412,11 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* 6. RK SIR UPDATES */}
-        <div
+        <section
+          id="updates"
           className="mb-8 sm:mb-12 animate-fade-in-up relative w-full overflow-hidden"
           style={{ animationDelay: "0.6s" }}
         >
@@ -1221,7 +1432,13 @@ export default function DashboardPage() {
                 RK Sir के अपडेट्स
               </h2>
 
-              {updates.length === 0 ? (
+              {updatesLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <UpdatesSkeletonCard key={`updates-skeleton-${i}`} />
+                  ))}
+                </div>
+              ) : updates.length === 0 ? (
                 <div className="bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl p-6 text-center shadow-sm">
                   <p className="text-slate-500 dark:text-slate-400 text-sm">
                     अभी कोई अपडेट नहीं है। जल्द ही RK Sir से नई अपडेट्स आने वाली हैं!
@@ -1229,66 +1446,76 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {updates.map((update) => (
-                    <div
-                      key={update.id}
-                      className="group bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20 transition-all duration-500 hover:-translate-y-1"
-                    >
-                      {update.imageUrl && (
-                        <div className="relative h-36 sm:h-40 overflow-hidden">
-                          <img
-                            src={update.imageUrl}
-                            alt={update.title}
-                            loading="lazy"
-                            decoding="async"
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-
-                          <div className="absolute top-2 left-2">
-                            <span
-                              className={`px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold text-white backdrop-blur-sm ${
-                                update.type === "announcement"
-                                  ? "bg-blue-500/80"
-                                  : update.type === "motivation"
-                                  ? "bg-purple-500/80"
-                                  : "bg-green-500/80"
-                              }`}
-                            >
-                              {update.type === "announcement"
-                                ? "📢 घोषणा"
-                                : update.type === "motivation"
-                                ? "💪 प्रेरणा"
-                                : "💡 टिप"}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="p-4">
-                        <h3 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 text-sm sm:text-base">
-                          {update.title}
-                        </h3>
-
-                        <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-2 line-clamp-2">
-                          {update.description}
-                        </p>
-
-                        <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {getUpdateDate(update).toLocaleDateString("hi-IN", {
+                  {updates.map((update) => {
+                    const updateDate = getUpdateDate(update);
+                    const dateLabel =
+                      updateDate.getTime() > 0
+                        ? updateDate.toLocaleDateString("hi-IN", {
                             day: "numeric",
                             month: "short",
-                          })}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                          })
+                        : "Recently";
+
+                    const updateType = update.type || "announcement";
+
+                    return (
+                      <article
+                        key={update.id}
+                        className="group bg-white/80 dark:bg-slate-800/60 backdrop-blur-sm border border-orange-100 dark:border-slate-700/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 dark:hover:shadow-indigo-500/20 transition-all duration-500 hover:-translate-y-1"
+                      >
+                        {update.imageUrl && (
+                          <div className="relative h-36 sm:h-40 overflow-hidden">
+                            <img
+                              src={update.imageUrl}
+                              alt={update.title}
+                              loading="lazy"
+                              decoding="async"
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+
+                            <div className="absolute top-2 left-2">
+                              <span
+                                className={`px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-bold text-white backdrop-blur-sm ${
+                                  updateType === "announcement"
+                                    ? "bg-blue-500/80"
+                                    : updateType === "motivation"
+                                    ? "bg-purple-500/80"
+                                    : "bg-green-500/80"
+                                }`}
+                              >
+                                {updateType === "announcement"
+                                  ? "📢 घोषणा"
+                                  : updateType === "motivation"
+                                  ? "💪 प्रेरणा"
+                                  : "💡 टिप"}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="p-4">
+                          <h3 className="font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 text-sm sm:text-base">
+                            {update.title}
+                          </h3>
+
+                          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-2 line-clamp-2">
+                            {update.description}
+                          </p>
+
+                          <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {dateLabel}
+                          </p>
+                        </div>
+                      </article>
+                    );
+                  })}
                 </div>
               )}
             </div>
           </div>
-        </div>
+        </section>
       </main>
 
       {/* FOOTER */}
@@ -1343,6 +1570,7 @@ export default function DashboardPage() {
                   width={32}
                   height={32}
                   className="object-contain"
+                  sizes="32px"
                 />
                 <span className="font-extrabold text-sm sm:text-base tracking-tight">
                   World of Concept
@@ -1399,10 +1627,18 @@ export default function DashboardPage() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="#updates"
                     className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
                   >
-                    हमें क्यों चुनें
+                    RK Sir अपडेट्स
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#youtube-videos"
+                    className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                  >
+                    Latest Videos
                   </a>
                 </li>
               </ul>
