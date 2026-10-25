@@ -3,6 +3,7 @@
 
 import {
   type ComponentType,
+  type CSSProperties,
   memo,
   useCallback,
   useEffect,
@@ -32,6 +33,9 @@ import {
   CheckCircle2,
   Target,
   PlayCircle,
+  Play,
+  Pause,
+  X,
   Bell,
   Sparkles,
   Trophy,
@@ -784,8 +788,10 @@ const StreakRing = memo(function StreakRing({
 
 const YouTubeVideoCard = memo(function YouTubeVideoCard({
   video,
+  onPlayingChange,
 }: {
   video: YoutubeVideo;
+  onPlayingChange?: (playing: boolean) => void;
 }) {
   const [playing, setPlaying] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -793,6 +799,7 @@ const YouTubeVideoCard = memo(function YouTubeVideoCard({
     video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
   );
   const [thumbFailed, setThumbFailed] = useState(false);
+  const wasPlayingRef = useRef(false);
 
   useEffect(() => {
     setThumbSrc(
@@ -801,6 +808,22 @@ const YouTubeVideoCard = memo(function YouTubeVideoCard({
     setThumbFailed(false);
     setImageLoaded(false);
   }, [video.id, video.thumbnail]);
+
+  useEffect(() => {
+    if (playing === wasPlayingRef.current) return;
+
+    wasPlayingRef.current = playing;
+    onPlayingChange?.(playing);
+  }, [playing, onPlayingChange]);
+
+  useEffect(() => {
+    return () => {
+      if (wasPlayingRef.current) {
+        wasPlayingRef.current = false;
+        onPlayingChange?.(false);
+      }
+    };
+  }, [onPlayingChange]);
 
   const fallbackThumb = `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`;
 
@@ -818,13 +841,24 @@ const YouTubeVideoCard = memo(function YouTubeVideoCard({
       <div className="bg-white/90 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 border border-white/60 dark:border-slate-700/50">
         <div className="relative aspect-video bg-slate-100 dark:bg-slate-900">
           {playing ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`}
-              title={video.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            />
+            <>
+              <iframe
+                src={`https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`}
+                title={video.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+
+              <button
+                type="button"
+                onClick={() => setPlaying(false)}
+                aria-label={`${video.title} बंद करें`}
+                className="absolute top-2 right-2 z-30 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/70 text-white backdrop-blur-sm transition-all hover:bg-black/85 active:scale-95"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </>
           ) : (
             <>
               {!imageLoaded && (
@@ -1084,10 +1118,16 @@ export default function DashboardPage() {
   const [now, setNow] = useState<Date | null>(null);
   const [isOffline, setIsOffline] = useState(false);
 
+  // YouTube rail auto-play controls
+  const [ytRailManualPaused, setYtRailManualPaused] = useState(false);
+  const [ytRailHovered, setYtRailHovered] = useState(false);
+  const [ytAnyPlaying, setYtAnyPlaying] = useState(false);
+
   const mountedRef = useRef(true);
   const ytRequestIdRef = useRef(0);
   const updatesRequestIdRef = useRef(0);
   const ytAbortRef = useRef<AbortController | null>(null);
+  const ytPlayingCountRef = useRef(0);
 
   const reducedMotion = useReducedMotion();
 
@@ -1332,6 +1372,57 @@ export default function DashboardPage() {
 
     void loadYoutube(!(cached && cached.length > 0));
   }, [loadYoutube]);
+
+  // ==============================
+  // YOUTUBE RAIL AUTO PLAY CONTROLS
+  // ==============================
+
+  const handleVideoPlayingChange = useCallback((playing: boolean) => {
+    ytPlayingCountRef.current = Math.max(
+      0,
+      ytPlayingCountRef.current + (playing ? 1 : -1)
+    );
+    setYtAnyPlaying(ytPlayingCountRef.current > 0);
+  }, []);
+
+  const ytRailRunning =
+    youtubeVideos.length > 0 &&
+    !reducedMotion &&
+    !ytRailManualPaused &&
+    !ytRailHovered &&
+    !ytAnyPlaying;
+
+  const ytRailStyle: CSSProperties = {
+    animationDirection: "reverse",
+    animationPlayState: ytRailRunning ? "running" : "paused",
+    willChange: "transform",
+  };
+
+  const ytRailVideos = useMemo(
+    () =>
+      youtubeVideos.length > 0
+        ? [...youtubeVideos, ...youtubeVideos]
+        : [],
+    [youtubeVideos]
+  );
+
+  const ytRailStatus = useMemo(() => {
+    if (ytLoading) return "YouTube API से videos load हो रहे हैं...";
+    if (youtubeVideos.length === 0)
+      return "Videos sync नहीं हुए — retry available";
+    if (ytAnyPlaying) return "Video play हो रहा है — rail pause";
+    if (reducedMotion) return "Reduced motion — manual scroll enabled";
+    if (ytRailManualPaused) return "Rail manual pause — left → right auto play";
+    if (ytRailHovered) return "Hover pause — छोड़ते ही left → right auto play";
+    return "Auto play — left → right";
+  }, [
+    ytLoading,
+    youtubeVideos.length,
+    ytAnyPlaying,
+    reducedMotion,
+    ytRailManualPaused,
+    ytRailHovered,
+  ]);
 
   // ==============================
   // LOGOUT
@@ -1592,7 +1683,7 @@ export default function DashboardPage() {
 
                 <p className="cinematic-hero-subtitle cinematic-rainbow-subtitle text-base sm:text-xl max-w-2xl drop-shadow-xl mb-5">
                   RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। निरंतरता बनाए रखें —
-                  सफलत वहीं मिलती है जहाँ मेहनत रुकती नहीं।
+                  सफलता वहीं मिलती है जहाँ मेहनत रुकती नहीं।
                 </p>
 
                 <div className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl p-4 shadow-xl mb-6">
@@ -1952,7 +2043,7 @@ export default function DashboardPage() {
         </section>
 
         {/* ==============================
-            4. REAL YOUTUBE RAIL
+            4. REAL YOUTUBE RAIL — LEFT → RIGHT AUTO PLAY
             ============================== */}
         <section
           id="youtube-videos"
@@ -1965,7 +2056,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="relative z-10 py-8 sm:py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between mb-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-red-600/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
                   <YoutubeIcon className="w-5 h-5 text-white" />
@@ -1975,22 +2066,46 @@ export default function DashboardPage() {
                   <h2 className="text-xl sm:text-3xl font-extrabold rainbow-shimmer-text drop-shadow-lg">
                     RK Sir के latest video
                   </h2>
-                  <p className="text-white/75 text-xs sm:text-sm">
-                    {ytLoading
-                      ? "YouTube API से videos load हो रहे हैं..."
-                      : `${youtubeVideos.length} videos synced`}
+                  <p
+                    className="text-white/75 text-xs sm:text-sm"
+                    aria-live="polite"
+                  >
+                    {ytRailStatus}
                   </p>
                 </div>
               </div>
 
-              <MagneticButton
-                href={YOUTUBE_CHANNEL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/90 hover:text-white font-semibold text-sm flex items-center gap-1 bg-black/20 hover:bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-all border border-white/20"
-              >
-                देखें <ArrowRight className="w-4 h-4" />
-              </MagneticButton>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setYtRailManualPaused((v) => !v)}
+                  aria-label={
+                    ytRailManualPaused
+                      ? "Video rail play करें"
+                      : "Video rail pause करें"
+                  }
+                  aria-pressed={ytRailManualPaused}
+                  className="inline-flex h-10 min-w-10 items-center justify-center gap-2 rounded-xl border border-white/20 bg-black/20 px-3 text-xs font-bold text-white/90 backdrop-blur-sm transition-all hover:bg-black/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-95 sm:text-sm"
+                >
+                  {ytRailManualPaused ? (
+                    <Play className="h-4 w-4" />
+                  ) : (
+                    <Pause className="h-4 w-4" />
+                  )}
+                  <span className="hidden sm:inline">
+                    {ytRailManualPaused ? "Play" : "Pause"}
+                  </span>
+                </button>
+
+                <MagneticButton
+                  href={YOUTUBE_CHANNEL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/90 hover:text-white font-semibold text-sm flex items-center gap-1 bg-black/20 hover:bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-all border border-white/20"
+                >
+                  देखें <ArrowRight className="w-4 h-4" />
+                </MagneticButton>
+              </div>
             </div>
 
             {isOffline && youtubeVideos.length > 0 && (
@@ -2002,7 +2117,24 @@ export default function DashboardPage() {
               </div>
             )}
 
-            <div className="relative w-full overflow-hidden py-2">
+            <div
+              className={`relative w-full py-2 ${
+                reducedMotion ? "overflow-x-auto no-scrollbar" : "overflow-hidden"
+              }`}
+              onMouseEnter={() => setYtRailHovered(true)}
+              onMouseLeave={() => setYtRailHovered(false)}
+              onFocusCapture={() => setYtRailHovered(true)}
+              onBlurCapture={(e) => {
+                const next = e.relatedTarget as Node | null;
+                if (!e.currentTarget.contains(next)) {
+                  setYtRailHovered(false);
+                }
+              }}
+              onTouchStart={() => setYtRailHovered(true)}
+              onTouchEnd={() => setYtRailHovered(false)}
+              onTouchCancel={() => setYtRailHovered(false)}
+              aria-roledescription="auto playing video rail"
+            >
               {ytLoading ? (
                 <div className="flex gap-3 sm:gap-4 w-max pl-4 sm:pl-6 lg:pl-8">
                   {Array.from({ length: 4 }).map((_, i) => (
@@ -2014,14 +2146,32 @@ export default function DashboardPage() {
                   <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-black/20 dark:from-slate-950/60 to-transparent z-10 pointer-events-none" />
                   <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-black/20 dark:from-slate-950/60 to-transparent z-10 pointer-events-none" />
 
-                  <div className="flex gap-3 sm:gap-4 w-max animate-marquee-seamless touch-pan-y pl-4 sm:pl-6 lg:pl-8">
-                    {[...youtubeVideos, ...youtubeVideos].map((video, i) => (
+                  <div
+                    className={`flex gap-3 sm:gap-4 w-max touch-pan-y pl-4 sm:pl-6 lg:pl-8 ${
+                      reducedMotion ? "" : "animate-marquee-seamless"
+                    }`}
+                    style={reducedMotion ? undefined : ytRailStyle}
+                  >
+                    {ytRailVideos.map((video, i) => (
                       <YouTubeVideoCard
                         key={`yt-${video.id}-${i}`}
                         video={video}
+                        onPlayingChange={handleVideoPlayingChange}
                       />
                     ))}
                   </div>
+
+                  {!ytRailRunning && !reducedMotion && (
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-1">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-bold text-white/90 backdrop-blur-sm">
+                        {ytAnyPlaying
+                          ? "▶ Video playing — rail paused"
+                          : ytRailHovered
+                          ? "⏸ Hover paused"
+                          : "⏸ Rail paused"}
+                      </span>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="mx-4 sm:mx-6 lg:mx-8">
