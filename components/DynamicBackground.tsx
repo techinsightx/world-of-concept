@@ -14,6 +14,8 @@ import { useEffect, useRef, useState } from "react";
    DARK MODE:
    - Only cinematic live education particle network is visible.
    - Image slider is faded out.
+   - Background cycles through dark matte rainbow colors.
+   - No blur anywhere. Fully cinematic.
 
    FEATURES:
    - Smooth 700ms mode crossfade.
@@ -22,6 +24,8 @@ import { useEffect, useRef, useState } from "react";
    - Atom + math-glyph education nodes.
    - Synaptic node-to-node connections.
    - Pointer mentor node attracts nearby ideas.
+   - Dark matte rainbow background cycle: 9 seconds per color.
+   - Synchronized color cycle across all DynamicBackground instances.
    - Theme-aware via MutationObserver.
    - Reduced-motion safe.
    - Visibility + IntersectionObserver paused.
@@ -101,7 +105,9 @@ const LINK_STRONG_RGB: [number, number, number] = [34, 211, 238];
 const MENTOR_RGB: [number, number, number] = [251, 146, 60];
 
 const GLYPH_FILL = "rgba(226, 232, 240, 0.95)";
-const GRID_STROKE = "rgba(129, 140, 248, 0.055)";
+
+// Neutral grid works beautifully on every dark matte rainbow background.
+const GRID_STROKE = "rgba(255, 255, 255, 0.04)";
 
 /* ---------- Physics / render tuning ---------- */
 const LINK_DIST = 132;
@@ -113,6 +119,120 @@ const MENTOR_RADIUS_SQ = MENTOR_RADIUS * MENTOR_RADIUS;
 const GLYPH_RATIO = 0.24;
 const MAX_DT = 0.05;
 const DPR_CAP = 2;
+
+/* =========================================================
+   DARK MATTE RAINBOW CYCLE
+   Order: Red → Orange → Yellow → Green → Blue → Indigo → Violet
+   Each color stays for 9 seconds, then smoothly fades.
+   ========================================================= */
+
+const CYCLE_INTERVAL_MS = 9000;
+const CYCLE_TRANSITION_MS = 2200;
+const STATIC_CYCLE_INDEX = 5; // Indigo for reduced-motion users
+
+interface CycleColor {
+  base: string;
+  accent: string;
+  accent2: string;
+}
+
+const RAINBOW_DARK_MATTE: CycleColor[] = [
+  {
+    // Red
+    base: "#170709",
+    accent: "rgba(239, 68, 68, 0.20)",
+    accent2: "rgba(248, 113, 113, 0.12)",
+  },
+  {
+    // Orange
+    base: "#180d06",
+    accent: "rgba(249, 115, 22, 0.18)",
+    accent2: "rgba(251, 146, 60, 0.12)",
+  },
+  {
+    // Yellow
+    base: "#171406",
+    accent: "rgba(234, 179, 8, 0.16)",
+    accent2: "rgba(250, 204, 21, 0.10)",
+  },
+  {
+    // Green
+    base: "#06160e",
+    accent: "rgba(34, 197, 94, 0.18)",
+    accent2: "rgba(74, 222, 128, 0.12)",
+  },
+  {
+    // Blue
+    base: "#061020",
+    accent: "rgba(59, 130, 246, 0.20)",
+    accent2: "rgba(96, 165, 250, 0.12)",
+  },
+  {
+    // Indigo
+    base: "#0a0a1f",
+    accent: "rgba(99, 102, 241, 0.22)",
+    accent2: "rgba(129, 140, 248, 0.14)",
+  },
+  {
+    // Violet
+    base: "#13081d",
+    accent: "rgba(168, 85, 247, 0.22)",
+    accent2: "rgba(192, 132, 252, 0.14)",
+  },
+];
+
+type CycleListener = (index: number) => void;
+
+const cycleListeners = new Set<CycleListener>();
+let cycleIndex = 0;
+let cycleTimer: number | null = null;
+
+function applyCycleToElement(el: HTMLElement, index: number) {
+  const color = RAINBOW_DARK_MATTE[index % RAINBOW_DARK_MATTE.length];
+
+  el.style.setProperty("--cycle-bg", color.base);
+  el.style.setProperty("--cycle-accent", color.accent);
+  el.style.setProperty("--cycle-accent-2", color.accent2);
+}
+
+function ensureCycleTimer() {
+  if (typeof window === "undefined") return;
+  if (cycleTimer !== null) return;
+
+  cycleTimer = window.setInterval(() => {
+    cycleIndex = (cycleIndex + 1) % RAINBOW_DARK_MATTE.length;
+
+    cycleListeners.forEach((listener) => {
+      listener(cycleIndex);
+    });
+  }, CYCLE_INTERVAL_MS);
+}
+
+function subscribeCycle(listener: CycleListener) {
+  cycleListeners.add(listener);
+
+  // Immediately sync this instance to the current global cycle.
+  listener(cycleIndex);
+
+  ensureCycleTimer();
+
+  return () => {
+    cycleListeners.delete(listener);
+
+    if (cycleListeners.size === 0 && cycleTimer !== null) {
+      window.clearInterval(cycleTimer);
+      cycleTimer = null;
+    }
+  };
+}
+
+const cycleTransition = `background-color ${CYCLE_TRANSITION_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+
+const AURA_MASK_TOP =
+  "radial-gradient(72% 58% at 16% 12%, #000 0%, rgba(0,0,0,0.48) 36%, transparent 68%)";
+
+const AURA_MASK_BOTTOM =
+  "radial-gradient(68% 54% at 86% 86%, #000 0%, rgba(0,0,0,0.42) 34%, transparent 66%)";
 
 function clamp(value: number, min: number, max: number) {
   return value < min ? min : value > max ? max : value;
@@ -166,6 +286,7 @@ export default function DynamicBackground({
 
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const darkLayerRef = useRef<HTMLDivElement | null>(null);
 
   const particlesRef = useRef<Particle[]>([]);
   const sizeRef = useRef({ w: 0, h: 0, dpr: 1 });
@@ -218,7 +339,29 @@ export default function DynamicBackground({
   }, [images.length, reducedMotion]);
 
   /* =====================================================
-     3. DARK-MODE PARTICLE ENGINE
+     3. DARK-MODE RAINBOW MATTE COLOR CYCLE
+     - Synchronized across all DynamicBackground instances
+     - No React re-render, direct CSS variable updates
+     - Reduced motion gets a calm static indigo matte
+     ===================================================== */
+  useEffect(() => {
+    const el = darkLayerRef.current;
+    if (!el) return;
+
+    if (reducedMotion) {
+      applyCycleToElement(el, STATIC_CYCLE_INDEX);
+      return;
+    }
+
+    const unsubscribe = subscribeCycle((index) => {
+      applyCycleToElement(el, index);
+    });
+
+    return unsubscribe;
+  }, [reducedMotion]);
+
+  /* =====================================================
+     4. DARK-MODE PARTICLE ENGINE
      ===================================================== */
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -787,7 +930,7 @@ export default function DynamicBackground({
     >
       {/* =====================================================
           LIGHT MODE LAYER
-          Only cinematic image slider. Crystal clear.
+          Only cinematic image slider. Crystal clear. No blur.
           ===================================================== */}
       <div
         className="absolute inset-0 opacity-100 transition-opacity duration-700 ease-out dark:opacity-0"
@@ -818,19 +961,64 @@ export default function DynamicBackground({
 
       {/* =====================================================
           DARK MODE LAYER
-          Only cinematic live particle network.
-          Light mode में यह layer opacity-0 है और loop stop है।
+          Dynamic dark matte rainbow background + particle canvas.
+          No blur. Fully cinematic.
           ===================================================== */}
       <div
+        ref={darkLayerRef}
         className="absolute inset-0 opacity-0 transition-opacity duration-700 ease-out dark:opacity-100"
         style={{ willChange: "opacity" }}
       >
-        {/* Deep but clean nebula base */}
-        <div className="absolute inset-0 animate-nebula-shift" />
+        {/* Matte rainbow base color */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: "var(--cycle-bg, #0a0a1f)",
+            transition: cycleTransition,
+          }}
+        />
 
-        {/* Soft color depth, not heavy scrim */}
-        <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_18%_12%,rgba(99,102,241,0.18),transparent_62%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(65%_50%_at_88%_86%,rgba(34,211,238,0.13),transparent_62%)]" />
+        {/* Top-left cinematic color aura */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: "var(--cycle-accent, rgba(99, 102, 241, 0.22))",
+            WebkitMaskImage: AURA_MASK_TOP,
+            maskImage: AURA_MASK_TOP,
+            transition: cycleTransition,
+            opacity: 0.95,
+          }}
+        />
+
+        {/* Bottom-right cinematic color aura */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: "var(--cycle-accent-2, rgba(129, 140, 248, 0.14))",
+            WebkitMaskImage: AURA_MASK_BOTTOM,
+            maskImage: AURA_MASK_BOTTOM,
+            transition: cycleTransition,
+            opacity: 0.9,
+          }}
+        />
+
+        {/* Subtle diagonal cinema sheen — no blur, just light sweep */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.025) 38%, transparent 58%, rgba(255,255,255,0.018) 78%, transparent 100%)",
+          }}
+        />
+
+        {/* Horizon depth — keeps text/content readable without blur */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(to top, rgba(0,0,0,0.42) 0%, transparent 38%, transparent 72%, rgba(0,0,0,0.18) 100%)",
+          }}
+        />
 
         {/* Crystal-clear transparent particle canvas */}
         <canvas
@@ -839,7 +1027,13 @@ export default function DynamicBackground({
         />
 
         {/* Edge vignette only, center remains clear */}
-        <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_50%,transparent_58%,rgba(2,6,23,0.38)_100%)]" />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(120% 90% at 50% 50%, transparent 58%, rgba(2,6,23,0.42) 100%)",
+          }}
+        />
       </div>
     </div>
   );
