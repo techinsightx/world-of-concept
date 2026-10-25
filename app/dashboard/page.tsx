@@ -35,7 +35,8 @@ import {
   PlayCircle,
   Play,
   Pause,
-  X,
+  Volume2,
+  VolumeX,
   Bell,
   Sparkles,
   Trophy,
@@ -64,8 +65,6 @@ const SITE_URL = "https://worldofconcept.in";
 const CURRENT_YEAR = new Date().getFullYear();
 const BOARD_SESSION_YEAR = CURRENT_YEAR + 1;
 
-// Deterministic fallback to reduce hydration mismatch risk.
-// If you set NEXT_PUBLIC_BUILD_TIME during build, it will be used.
 const LAST_UPDATED_ISO =
   (typeof process !== "undefined" &&
     process.env &&
@@ -75,6 +74,26 @@ const LAST_UPDATED_ISO =
 const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@JoinWorldofConcept";
 const TELEGRAM_URL = "https://t.me/JoinWorldofConcept";
 const INSTAGRAM_URL = "https://instagram.com/join_world_of_concept";
+
+// Self-contained marquee keyframe name (injected below) → no globals.css dependency.
+const MARQUEE_KEYFRAME = "wocMarqueeLTR";
+function marqueeDuration(uniqueCount: number) {
+  // Steady, cinematic speed; scales gently with content length.
+  return Math.min(72, Math.max(34, uniqueCount * 6));
+}
+
+// ==============================
+// INJECTED KEYFRAMES (YT rail + waving hand + live fx)
+// ==============================
+
+const DASH_KEYFRAMES = `
+@keyframes wocMarqueeLTR{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes wocWave{0%,100%{transform:rotate(0deg)}12%{transform:rotate(16deg)}24%{transform:rotate(-10deg)}36%{transform:rotate(14deg)}48%{transform:rotate(-7deg)}60%{transform:rotate(9deg)}72%{transform:rotate(-4deg)}84%{transform:rotate(5deg)}}
+@keyframes wocWaveGlow{0%,100%{opacity:.30;transform:scale(.85)}50%{opacity:.85;transform:scale(1.15)}}
+@keyframes wocPulseRing{0%{transform:scale(.7);opacity:.55}100%{transform:scale(1.7);opacity:0}}
+@keyframes wocSparkle{0%{opacity:0;transform:translateY(2px) scale(.3) rotate(0)}25%{opacity:1}100%{opacity:0;transform:translateY(-12px) scale(1) rotate(140deg)}}
+@keyframes wocSoundRing{0%{box-shadow:0 0 0 0 rgba(239,68,68,.50)}70%{box-shadow:0 0 0 12px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+`;
 
 // ==============================
 // TYPES
@@ -428,7 +447,7 @@ const AVAILABLE_COURSES: CourseItem[] = [
     image: "/course1.jpg",
   },
   {
-    title: "विज्ञान: संपूर्ण Revision",
+    title: "विस्ञान: संपूर्ण Revision",
     price: "₹699",
     badge: "Class 10",
     desc: "Physics, Chemistry, Biology।",
@@ -438,7 +457,7 @@ const AVAILABLE_COURSES: CourseItem[] = [
     title: "Inter: संपूर्ण Topper Batch",
     price: "₹999",
     badge: "Class 12",
-    desc: "Mock tests के साथ सभी विषय।",
+    desc: "Mock tests के साथ सभী विस्य।",
     image: "/course3.jpg",
   },
   {
@@ -716,6 +735,151 @@ const YoutubeIcon = ({ className }: { className?: string }) => (
 );
 
 // ==============================
+// PURE-CSS WAVING HAND (live feeling)
+// ==============================
+
+const SKIN = "linear-gradient(150deg,#ffe3c6 0%,#ffc49b 46%,#f6a072 100%)";
+const SKIN_SHADOW =
+  "inset 0 -0.05em 0.1em rgba(168,86,48,.28), 0 0.05em 0.16em rgba(0,0,0,.28)";
+
+const WavingHand = memo(function WavingHand() {
+  const fingers = [
+    { left: "0.05em", height: "0.30em", rotate: "-7deg" },
+    { left: "0.21em", height: "0.37em", rotate: "-2deg" },
+    { left: "0.37em", height: "0.35em", rotate: "3deg" },
+    { left: "0.53em", height: "0.28em", rotate: "8deg" },
+  ];
+
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+        width: "1.5em",
+        height: "1.5em",
+        marginLeft: "0.14em",
+        verticalAlign: "-0.22em",
+      }}
+    >
+      {/* Soft live glow */}
+      <span
+        style={{
+          position: "absolute",
+          inset: "-0.15em",
+          borderRadius: "9999px",
+          background:
+            "radial-gradient(circle at 50% 60%, rgba(251,146,60,.55), rgba(236,72,153,.25) 45%, transparent 72%)",
+          filter: "blur(2px)",
+          animation: "wocWaveGlow 2.4s ease-in-out infinite",
+        }}
+      />
+
+      {/* Pulse ring */}
+      <span
+        style={{
+          position: "absolute",
+          inset: "0.05em",
+          borderRadius: "9999px",
+          border: "1.5px solid rgba(251,146,60,.55)",
+          animation: "wocPulseRing 2.4s ease-out infinite",
+        }}
+      />
+
+      {/* The hand */}
+      <span
+        style={{
+          position: "relative",
+          width: "0.74em",
+          height: "0.96em",
+          transformOrigin: "62% 94%",
+          animation: "wocWave 2.6s ease-in-out infinite",
+          filter: "drop-shadow(0 0.04em 0.1em rgba(0,0,0,.35))",
+        }}
+      >
+        {/* Palm */}
+        <span
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "0.62em",
+            height: "0.46em",
+            borderRadius: "0.2em 0.2em 0.26em 0.26em",
+            background: SKIN,
+            boxShadow: SKIN_SHADOW,
+          }}
+        />
+
+        {/* Fingers */}
+        {fingers.map((f, i) => (
+          <span
+            key={i}
+            style={{
+              position: "absolute",
+              bottom: "0.34em",
+              left: f.left,
+              width: "0.13em",
+              height: f.height,
+              borderRadius: "0.07em 0.07em 0.03em 0.03em",
+              background: SKIN,
+              boxShadow: SKIN_SHADOW,
+              transform: `rotate(${f.rotate})`,
+              transformOrigin: "bottom center",
+            }}
+          />
+        ))}
+
+        {/* Thumb */}
+        <span
+          style={{
+            position: "absolute",
+            bottom: "0.16em",
+            left: "-0.04em",
+            width: "0.17em",
+            height: "0.3em",
+            borderRadius: "0.09em",
+            background: SKIN,
+            boxShadow: SKIN_SHADOW,
+            transform: "rotate(-40deg)",
+            transformOrigin: "bottom right",
+          }}
+        />
+      </span>
+
+      {/* Sparkles */}
+      {[
+        { top: "0.05em", right: "0.02em", delay: "0s", size: "0.16em" },
+        { top: "0.32em", right: "-0.06em", delay: "0.6s", size: "0.12em" },
+        { top: "-0.04em", left: "0.18em", delay: "1.1s", size: "0.1em" },
+      ].map((s, i) => (
+        <span
+          key={i}
+          style={{
+            position: "absolute",
+            top: s.top,
+            right: s.right,
+            left: s.left,
+            width: s.size,
+            height: s.size,
+            background:
+              "linear-gradient(135deg,#fff7ed,#fdba74 45%,#f472b6)",
+            borderRadius: "2px",
+            transform: "rotate(45deg)",
+            boxShadow: "0 0 6px rgba(251,146,60,.8)",
+            animation: `wocSparkle 1.9s ease-out ${s.delay} infinite`,
+            opacity: 0,
+          }}
+        />
+      ))}
+    </span>
+  );
+});
+
+// ==============================
 // UI COMPONENTS
 // ==============================
 
@@ -786,21 +950,41 @@ const StreakRing = memo(function StreakRing({
   );
 });
 
+/* ---------------------------------------------------------
+   YOUTUBE VIDEO CARD — muted autoplay wall + per-video sound
+   ---------------------------------------------------------
+   • Default (sound off): जैसे ही tile view में आता है, muted+loop
+     iframe mount → "सभी video autoplay (muted)" feel, poster fade-in.
+   • Sound button: उसी specific video को sound के साथ चलाता है और
+     rail अपने-आप pause (focus) हो जाती है। दोबारा दबाओ → mute + resume.
+   • Reduced motion: auto-mount बंद, manual play overlay।
+   --------------------------------------------------------- */
 const YouTubeVideoCard = memo(function YouTubeVideoCard({
   video,
-  onPlayingChange,
+  tileId,
+  reducedMotion,
+  isSounding,
+  onToggleSound,
 }: {
   video: YoutubeVideo;
-  onPlayingChange?: (playing: boolean) => void;
+  tileId: string;
+  reducedMotion: boolean;
+  isSounding: boolean;
+  onToggleSound: (tileId: string) => void;
 }) {
-  const [playing, setPlaying] = useState(false);
+  const rootRef = useRef<HTMLElement | null>(null);
+  const unmountTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [inView, setInView] = useState(false);
+  const [manualPlay, setManualPlay] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [iframeLoading, setIframeLoading] = useState(false);
   const [thumbSrc, setThumbSrc] = useState(
     video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
   );
   const [thumbFailed, setThumbFailed] = useState(false);
-  const wasPlayingRef = useRef(false);
 
+  // Poster lifecycle on video change
   useEffect(() => {
     setThumbSrc(
       video.thumbnail || `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`
@@ -809,21 +993,41 @@ const YouTubeVideoCard = memo(function YouTubeVideoCard({
     setImageLoaded(false);
   }, [video.id, video.thumbnail]);
 
+  // Reset iframe loading whenever mute (src) changes
   useEffect(() => {
-    if (playing === wasPlayingRef.current) return;
+    setIframeLoading(true);
+  }, [isSounding, video.id]);
 
-    wasPlayingRef.current = playing;
-    onPlayingChange?.(playing);
-  }, [playing, onPlayingChange]);
-
+  // IntersectionObserver → lazy mount/unmount muted iframe (perf-safe wall)
   useEffect(() => {
+    if (reducedMotion) return;
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+          if (unmountTimer.current) {
+            clearTimeout(unmountTimer.current);
+            unmountTimer.current = null;
+          }
+          setInView(true);
+        } else if (!entry.isIntersecting) {
+          // hysteresis: थोड़ी देर बाद unmount ताकि edge पर flap न हो
+          unmountTimer.current = setTimeout(() => setInView(false), 450);
+        }
+      },
+      { threshold: [0, 0.3, 0.6], rootMargin: "220px 0px" }
+    );
+
+    io.observe(el);
     return () => {
-      if (wasPlayingRef.current) {
-        wasPlayingRef.current = false;
-        onPlayingChange?.(false);
-      }
+      io.disconnect();
+      if (unmountTimer.current) clearTimeout(unmountTimer.current);
     };
-  }, [onPlayingChange]);
+  }, [reducedMotion]);
+
+  const showIframe = reducedMotion ? manualPlay : inView;
 
   const fallbackThumb = `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`;
 
@@ -836,67 +1040,122 @@ const YouTubeVideoCard = memo(function YouTubeVideoCard({
         })
       : "NEW";
 
+  const iframeSrc = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=${
+    isSounding ? 0 : 1
+  }&loop=1&playlist=${video.id}&playsinline=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&fs=0`;
+
+  const handleSound = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (reducedMotion) setManualPlay(true);
+    onToggleSound(tileId);
+  };
+
   return (
-    <article className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group">
-      <div className="bg-white/90 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 border border-white/60 dark:border-slate-700/50">
+    <article
+      ref={rootRef}
+      className="relative w-[75vw] max-w-[280px] sm:w-72 md:w-80 flex-shrink-0 group"
+    >
+      <div
+        className="relative bg-white/90 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-500/30 transition-all duration-500 hover:-translate-y-2 border border-white/60 dark:border-slate-700/50"
+        style={
+          isSounding
+            ? { animation: "wocSoundRing 1.8s ease-out infinite" }
+            : undefined
+        }
+      >
         <div className="relative aspect-video bg-slate-100 dark:bg-slate-900">
-          {playing ? (
+          {/* Poster (always behind, gives instant paint + no pop-in) */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 bg-slate-200 dark:bg-slate-800 animate-pulse" />
+          )}
+          <img
+            src={thumbSrc}
+            alt={video.title}
+            loading="lazy"
+            decoding="async"
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              if (!thumbFailed) {
+                setThumbFailed(true);
+                setThumbSrc(fallbackThumb);
+              }
+            }}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            } ${showIframe ? "opacity-0" : ""}`}
+          />
+
+          {/* Live muted/with-sound iframe */}
+          {showIframe && (
             <>
               <iframe
-                src={`https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`}
+                key={`${video.id}-${isSounding ? "s" : "m"}`}
+                src={iframeSrc}
                 title={video.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
-
-              <button
-                type="button"
-                onClick={() => setPlaying(false)}
-                aria-label={`${video.title} बंद करें`}
-                className="absolute top-2 right-2 z-30 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/70 text-white backdrop-blur-sm transition-all hover:bg-black/85 active:scale-95"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </>
-          ) : (
-            <>
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-slate-200 dark:bg-slate-800 animate-pulse" />
-              )}
-
-              <img
-                src={thumbSrc}
-                alt={video.title}
                 loading="lazy"
-                decoding="async"
-                onLoad={() => setImageLoaded(true)}
-                onError={() => {
-                  if (!thumbFailed) {
-                    setThumbFailed(true);
-                    setThumbSrc(fallbackThumb);
-                  }
-                }}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                  imageLoaded ? "opacity-100" : "opacity-0"
-                }`}
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 z-10 w-full h-full"
+                onLoad={() => setIframeLoading(false)}
               />
-
-              <button
-                type="button"
-                onClick={() => setPlaying(true)}
-                aria-label={`${video.title} play करें`}
-                className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 dark:bg-black/30 group-hover:bg-black/20 transition-all duration-300"
-              >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-red-600/90 rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
-                  <PlayCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              {iframeLoading && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/30">
+                  <RefreshCw className="w-6 h-6 text-white/90 animate-spin" />
                 </div>
-              </button>
-
-              <div className="absolute bottom-2 right-2 z-20 pointer-events-none bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-md">
-                {publishedLabel}
-              </div>
+              )}
             </>
+          )}
+
+          {/* Reduced-motion manual play overlay */}
+          {reducedMotion && !manualPlay && (
+            <button
+              type="button"
+              onClick={() => setManualPlay(true)}
+              aria-label={`${video.title} play करें`}
+              className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-300"
+            >
+              <span className="w-12 h-12 sm:w-14 sm:h-14 bg-red-600/90 rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                <PlayCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              </span>
+            </button>
+          )}
+
+          {/* Per-video SOUND toggle (specific video with sound) */}
+          <button
+            type="button"
+            onClick={handleSound}
+            aria-label={
+              isSounding
+                ? `${video.title} mute करें`
+                : `${video.title} sound on करें`
+            }
+            aria-pressed={isSounding}
+            className={`absolute top-2 left-2 z-30 inline-flex h-9 w-9 items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 active:scale-95 ${
+              isSounding
+                ? "bg-red-600 text-white shadow-lg shadow-red-500/40"
+                : "bg-black/55 text-white/90 hover:bg-black/70"
+            }`}
+          >
+            {isSounding ? (
+              <Volume2 className="h-4.5 w-4.5" style={{ width: 18, height: 18 }} />
+            ) : (
+              <VolumeX className="h-4.5 w-4.5" style={{ width: 18, height: 18 }} />
+            )}
+          </button>
+
+          {/* LIVE / sounding badge */}
+          {isSounding && (
+            <div className="absolute top-2 right-2 z-30 flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-[9px] font-black text-white shadow-lg">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+              SOUND ON
+            </div>
+          )}
+
+          {!isSounding && (
+            <div className="absolute bottom-2 right-2 z-20 pointer-events-none bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-md">
+              {publishedLabel}
+            </div>
           )}
         </div>
 
@@ -1118,16 +1377,15 @@ export default function DashboardPage() {
   const [now, setNow] = useState<Date | null>(null);
   const [isOffline, setIsOffline] = useState(false);
 
-  // YouTube rail auto-play controls
+  // YT rail controls — DEFAULT AUTO-PLAY, pause सिर्फ़ explicit button से
   const [ytRailManualPaused, setYtRailManualPaused] = useState(false);
-  const [ytRailHovered, setYtRailHovered] = useState(false);
-  const [ytAnyPlaying, setYtAnyPlaying] = useState(false);
+  // जो tile sound पर है वही rail को focus-pause करता है
+  const [soundKey, setSoundKey] = useState<string | null>(null);
 
   const mountedRef = useRef(true);
   const ytRequestIdRef = useRef(0);
   const updatesRequestIdRef = useRef(0);
   const ytAbortRef = useRef<AbortController | null>(null);
-  const ytPlayingCountRef = useRef(0);
 
   const reducedMotion = useReducedMotion();
 
@@ -1374,35 +1632,32 @@ export default function DashboardPage() {
   }, [loadYoutube]);
 
   // ==============================
-  // YOUTUBE RAIL AUTO PLAY CONTROLS
+  // YT RAIL — AUTO-PLAY DEFAULT (no hover/focus pause)
   // ==============================
 
-  const handleVideoPlayingChange = useCallback((playing: boolean) => {
-    ytPlayingCountRef.current = Math.max(
-      0,
-      ytPlayingCountRef.current + (playing ? 1 : -1)
-    );
-    setYtAnyPlaying(ytPlayingCountRef.current > 0);
+  const toggleSound = useCallback((tileId: string) => {
+    setSoundKey((prev) => (prev === tileId ? null : tileId));
   }, []);
 
   const ytRailRunning =
     youtubeVideos.length > 0 &&
     !reducedMotion &&
     !ytRailManualPaused &&
-    !ytRailHovered &&
-    !ytAnyPlaying;
+    soundKey === null;
 
-  const ytRailStyle: CSSProperties = {
-    animationDirection: "reverse",
-    animationPlayState: ytRailRunning ? "running" : "paused",
-    willChange: "transform",
-  };
+  const ytRailStyle: CSSProperties = reducedMotion
+    ? {}
+    : {
+        // shorthand पहले, फिर play-state override (insertion order matters)
+        animation: `${MARQUEE_KEYFRAME} ${marqueeDuration(
+          youtubeVideos.length
+        )}s linear infinite`,
+        animationPlayState: ytRailRunning ? "running" : "paused",
+        willChange: "transform",
+      };
 
   const ytRailVideos = useMemo(
-    () =>
-      youtubeVideos.length > 0
-        ? [...youtubeVideos, ...youtubeVideos]
-        : [],
+    () => (youtubeVideos.length > 0 ? [...youtubeVideos, ...youtubeVideos] : []),
     [youtubeVideos]
   );
 
@@ -1410,19 +1665,11 @@ export default function DashboardPage() {
     if (ytLoading) return "YouTube API से videos load हो रहे हैं...";
     if (youtubeVideos.length === 0)
       return "Videos sync नहीं हुए — retry available";
-    if (ytAnyPlaying) return "Video play हो रहा है — rail pause";
-    if (reducedMotion) return "Reduced motion — manual scroll enabled";
-    if (ytRailManualPaused) return "Rail manual pause — left → right auto play";
-    if (ytRailHovered) return "Hover pause — छोड़ते ही left → right auto play";
-    return "Auto play — left → right";
-  }, [
-    ytLoading,
-    youtubeVideos.length,
-    ytAnyPlaying,
-    reducedMotion,
-    ytRailManualPaused,
-    ytRailHovered,
-  ]);
+    if (reducedMotion) return "Reduced motion — manual scroll + tap to play";
+    if (soundKey) return "🔊 Sound on — rail paused (specific video with sound)";
+    if (ytRailManualPaused) return "⏸ Rail paused — Play दबाएँ";
+    return "▶ Auto play — left → right · muted videos autoplay";
+  }, [ytLoading, youtubeVideos.length, reducedMotion, soundKey, ytRailManualPaused]);
 
   // ==============================
   // LOGOUT
@@ -1619,6 +1866,9 @@ export default function DashboardPage() {
 
   return (
     <div className="relative min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-sans transition-colors duration-700">
+      {/* Self-contained keyframes: YT rail + waving hand + live fx (no globals.css needed) */}
+      <style dangerouslySetInnerHTML={{ __html: DASH_KEYFRAMES }} />
+
       <AdPopup />
 
       <script
@@ -1626,14 +1876,6 @@ export default function DashboardPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(dashboardSchema) }}
       />
 
-      {/* ==============================
-          HEADER
-          - No left logo
-          - No left brand text
-          - Mobile logout visible
-          - Desktop logout visible
-          - Hide on scroll, layout navbar stable
-          ============================== */}
       <StudentHeader
         fullName={student.fullName}
         email={student.email}
@@ -1678,7 +1920,8 @@ export default function DashboardPage() {
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black mb-3 leading-[0.95] tracking-tight text-white drop-shadow-2xl">
-                  {greeting}, {firstName} 👋
+                  {greeting}, {firstName}
+                  <WavingHand />
                 </h1>
 
                 <p className="cinematic-hero-subtitle cinematic-rainbow-subtitle text-base sm:text-xl max-w-2xl drop-shadow-xl mb-5">
@@ -1697,7 +1940,7 @@ export default function DashboardPage() {
                         Alamnagar, Madhepura से World-Class Dashboard
                       </p>
                       <p className="text-white/75 text-xs sm:text-sm leading-relaxed">
-                        प्रतिभा सिर्फ महानगरों में नहीं होती। सही platform, सही guidance
+                        प्रतिभा सिर्फ़ महानगरों में नहीं होती। सही platform, सही guidance
                         और रोज़ की मेहनत से गाँव का छात्र भी global standard बन सकता है।
                       </p>
                     </div>
@@ -2043,7 +2286,8 @@ export default function DashboardPage() {
         </section>
 
         {/* ==============================
-            4. REAL YOUTUBE RAIL — LEFT → RIGHT AUTO PLAY
+            4. REAL YOUTUBE RAIL — LEFT → RIGHT AUTO-PLAY
+               + muted autoplay wall + per-video sound
             ============================== */}
         <section
           id="youtube-videos"
@@ -2119,20 +2363,10 @@ export default function DashboardPage() {
 
             <div
               className={`relative w-full py-2 ${
-                reducedMotion ? "overflow-x-auto no-scrollbar" : "overflow-hidden"
+                reducedMotion
+                  ? "overflow-x-auto no-scrollbar"
+                  : "overflow-hidden"
               }`}
-              onMouseEnter={() => setYtRailHovered(true)}
-              onMouseLeave={() => setYtRailHovered(false)}
-              onFocusCapture={() => setYtRailHovered(true)}
-              onBlurCapture={(e) => {
-                const next = e.relatedTarget as Node | null;
-                if (!e.currentTarget.contains(next)) {
-                  setYtRailHovered(false);
-                }
-              }}
-              onTouchStart={() => setYtRailHovered(true)}
-              onTouchEnd={() => setYtRailHovered(false)}
-              onTouchCancel={() => setYtRailHovered(false)}
               aria-roledescription="auto playing video rail"
             >
               {ytLoading ? (
@@ -2147,28 +2381,28 @@ export default function DashboardPage() {
                   <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-black/20 dark:from-slate-950/60 to-transparent z-10 pointer-events-none" />
 
                   <div
-                    className={`flex gap-3 sm:gap-4 w-max touch-pan-y pl-4 sm:pl-6 lg:pl-8 ${
-                      reducedMotion ? "" : "animate-marquee-seamless"
-                    }`}
+                    className="flex gap-3 sm:gap-4 w-max touch-pan-y pl-4 sm:pl-6 lg:pl-8"
                     style={reducedMotion ? undefined : ytRailStyle}
                   >
-                    {ytRailVideos.map((video, i) => (
-                      <YouTubeVideoCard
-                        key={`yt-${video.id}-${i}`}
-                        video={video}
-                        onPlayingChange={handleVideoPlayingChange}
-                      />
-                    ))}
+                    {ytRailVideos.map((video, i) => {
+                      const tileId = `yt-${video.id}-${i}`;
+                      return (
+                        <YouTubeVideoCard
+                          key={tileId}
+                          video={video}
+                          tileId={tileId}
+                          reducedMotion={reducedMotion}
+                          isSounding={soundKey === tileId}
+                          onToggleSound={toggleSound}
+                        />
+                      );
+                    })}
                   </div>
 
-                  {!ytRailRunning && !reducedMotion && (
+                  {soundKey && !reducedMotion && (
                     <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-1">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-bold text-white/90 backdrop-blur-sm">
-                        {ytAnyPlaying
-                          ? "▶ Video playing — rail paused"
-                          : ytRailHovered
-                          ? "⏸ Hover paused"
-                          : "⏸ Rail paused"}
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-red-600/85 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-sm shadow-lg">
+                        <Volume2 className="w-3 h-3" /> Sound on — rail paused
                       </span>
                     </div>
                   )}
