@@ -82,6 +82,15 @@ function marqueeDuration(uniqueCount: number) {
 }
 
 // ==============================
+// ROTATING TAGLINES FOR DASHBOARD HERO
+// ==============================
+const DASH_TAGLINES = [
+  "RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। निरंतरता बनाए रखें — सफलता वहीं मिलती है जहाँ मेहनत रुकती नहीं।",
+  "आज की छोटी प्रगति, कल की बड़ी जीत है। हर दिन एक नया कदम उठाएं।",
+  "Board Exam सिर्फ परीक्षा नहीं, आपके संघर्ष की कहानी है। इसे अपने नाम करें।",
+];
+
+// ==============================
 // INJECTED KEYFRAMES & GLOBAL STYLES
 // ==============================
 
@@ -101,6 +110,10 @@ const DASH_STYLES = `
 @keyframes waveFlowRight {
   0% { transform: translateX(-50%); }
   100% { transform: translateX(0); }
+}
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; transform: translateY(8px); }
+  10%, 90% { opacity: 1; transform: translateY(0); }
 }
 
 .matte-section-wrapper {
@@ -147,6 +160,10 @@ const DASH_STYLES = `
 .content-overlay {
   position: relative;
   z-index: 10;
+}
+
+.tagline-animate {
+  animation: fadeInOut 6s ease-in-out infinite;
 }
 
 /* Matte Text Utilities */
@@ -401,9 +418,9 @@ const ROW1_LOOP = [...ROW1_IMAGES, ...ROW1_IMAGES];
 const ROW2_LOOP = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
 const AVAILABLE_COURSES: CourseItem[] = [
-  { title: "गणित: Objective Masterclass", price: "₹499", badge: "Class 10", desc: "Shortcuts के साथ संपूर्ण गणित।", image: "/course1.jpg" },
-  { title: "विज्ञान: संपूर्ण Revision", price: "₹699", badge: "Class 10", desc: "Physics, Chemistry, Biology।", image: "/course2.jpg" },
-  { title: "Inter: संपूर्ण Topper Batch", price: "₹999", badge: "Class 12", desc: "Mock tests के साथ सभी विषय।", image: "/course3.jpg" },
+  { title: "गणित: Objective Masterclass", price: "₹499", badge: "Class 10", desc: "Shortcuts के साथ सम्पूर्ण गणित।", image: "/course1.jpg" },
+  { title: "विज्ञान: सम्पूर्ण Revision", price: "₹699", badge: "Class 10", desc: "Physics, Chemistry, Biology।", image: "/course2.jpg" },
+  { title: "Inter: सम्पूर्ण Topper Batch", price: "₹999", badge: "Class 12", desc: "Mock tests के साथ सभी विषय।", image: "/course3.jpg" },
   { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "All classes", desc: "अंग्रेजी में आसानी से महारत।", image: "/course4.jpg" },
   { title: "सामाजिक विज्ञान: पूर्ण Course", price: "₹599", badge: "Class 10", desc: "History, Geography और Civics।", image: "/course5.jpg" },
 ];
@@ -777,6 +794,9 @@ export default function DashboardPage() {
   const [now, setNow] = useState<Date | null>(null);
   const [isOffline, setIsOffline] = useState(false);
 
+  // NEW STATE FOR ROTATING TAGLINES
+  const [dashTaglineIndex, setDashTaglineIndex] = useState(0);
+
   // YT rail controls — DEFAULT AUTO-PLAY, pause सिर्फ explicit button से
   const [ytRailManualPaused, setYtRailManualPaused] = useState(false);
   // जो tile sound पर है वही rail को focus-pause करता है
@@ -826,6 +846,19 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!loading && student) setStreak(bumpStreak());
   }, [loading, student]);
+
+  // ==============================
+  // ROTATE TAGLINES EVERY 6 SECONDS
+  // ==============================
+  useEffect(() => {
+    if (reducedMotion) return; // Stop rotation if user prefers reduced motion
+    
+    const interval = setInterval(() => {
+      setDashTaglineIndex((prev) => (prev + 1) % DASH_TAGLINES.length);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [reducedMotion]);
 
   // ==============================
   // SCROLL HELPERS
@@ -981,7 +1014,7 @@ export default function DashboardPage() {
     if (youtubeVideos.length === 0) return "Videos sync नहीं हुए — retry available";
     if (reducedMotion) return "Reduced motion — manual scroll + tap to play";
     if (soundKey) return "🔊 Sound on — rail paused (specific video with sound)";
-    if (ytRailManualPaused) return "⏸ Rail paused — Play दबाएँ";
+    if (ytRailManualPaused) return "⏸ Rail paused — Play दबाएं";
     return "▶ Auto play — left → right · muted videos autoplay";
   }, [ytLoading, youtubeVideos.length, reducedMotion, soundKey, ytRailManualPaused]);
 
@@ -1110,7 +1143,7 @@ export default function DashboardPage() {
       <main className="relative w-full pb-8" aria-label="Student dashboard main content">
         
         {/* ==============================
-            1. CINEMATIC HERO / OVERVIEW — UPGRADED WITH DUAL WAVES
+            1. CINEMATIC HERO / OVERVIEW — UPGRADED WITH DUAL WAVES & ROTATING TAGLINES
             ============================== */}
         <section id="overview" className="animate-fade-in-up relative w-full overflow-hidden mb-6 sm:mb-10 group bg-slate-950">
           
@@ -1152,12 +1185,15 @@ export default function DashboardPage() {
                   <WavingHand />
                 </h1>
 
-                {/* Rotating Tagline Logic can be added here similarly if needed, 
-                    but for dashboard, a static strong subtitle works best for focus. */}
-                <p className="cinematic-hero-subtitle text-base sm:text-xl max-w-2xl drop-shadow-xl mb-5 text-gray-300 font-medium">
-                  RK Sir के साथ अपनी शिक्षा यात्रा जारी रखें। निरंतरता बनाए रखें —
-                  सफलता वहीं मिलती है जहाँ मेहनत रुकती नहीं।
-                </p>
+                {/* ROTATING TAGLINE IMPLEMENTATION */}
+                <div className="h-16 flex items-center justify-start overflow-hidden mb-5">
+                  <p 
+                    key={dashTaglineIndex} 
+                    className="cinematic-hero-subtitle text-base sm:text-xl max-w-2xl drop-shadow-xl text-gray-300 font-medium tagline-animate"
+                  >
+                    {DASH_TAGLINES[dashTaglineIndex]}
+                  </p>
+                </div>
 
                 <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-xl mb-6">
                   <div className="flex items-start gap-3">
