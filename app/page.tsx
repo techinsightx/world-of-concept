@@ -204,9 +204,9 @@ const ROW2_LOOP = [...ROW2_IMAGES, ...ROW2_IMAGES];
 interface CourseItem { title: string; price: string; badge: string; desc: string; image: string; }
 
 const AVAILABLE_COURSES: CourseItem[] = [
-  { title: "गणित: Objective Masterclass", price: "₹499", badge: "Class 10", desc: "Shortcuts के साथ संपूर्ण गणित।", image: "/course1.jpg" },
-  { title: "विज्ञान: संपूर्ण Revision", price: "₹699", badge: "Class 10", desc: "Physics, Chemistry, Biology।", image: "/course2.jpg" },
-  { title: "Inter: संपूर्ण Topper Batch", price: "₹999", badge: "Class 12", desc: "Mock tests के साथ सभी विषय।", image: "/course3.jpg" },
+  { title: "गणित: Objective Masterclass", price: "₹499", badge: "Class 10", desc: "Shortcuts के साथ सम्पूर्ण गणित।", image: "/course1.jpg" },
+  { title: "विज्ञान: सम्पूर्ण Revision", price: "₹699", badge: "Class 10", desc: "Physics, Chemistry, Biology।", image: "/course2.jpg" },
+  { title: "Inter: सम्पूर्ण Topper Batch", price: "₹999", badge: "Class 12", desc: "Mock tests के साथ सभी विषय।", image: "/course3.jpg" },
   { title: "अंग्रेजी: व्याकरण और लेखन", price: "₹399", badge: "All classes", desc: "अंग्रेजी में आसानी से महारत।", image: "/course4.jpg" },
   { title: "सामाजिक विज्ञान: पूर्ण Course", price: "₹599", badge: "Class 10", desc: "History, Geography और Civics।", image: "/course5.jpg" },
 ];
@@ -366,6 +366,7 @@ export default function Home() {
         <>
           {/* ==============================
               1. HERO SECTION — HOLLYWOOD GRADE DARK MATTE + DUAL WAVES
+              NOTE: Buttons removed as per request.
               ============================== */}
           <section className="matte-section-wrapper relative min-h-[90dvh] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden bg-slate-950">
             
@@ -410,14 +411,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                  <MagneticButton href="#why-choose-us" className="px-8 py-3 rounded-xl bg-white text-slate-900 font-extrabold hover:bg-gray-100 transition-all shadow-xl">
-                    जानिए कैसे? <ArrowRight className="ml-2 w-4 h-4 inline" />
-                  </MagneticButton>
-                  <MagneticButton href="/courses" className="px-8 py-3 rounded-xl bg-white/10 text-white border border-white/20 font-bold hover:bg-white/20 transition-all backdrop-blur-md">
-                    Courses देखें
-                  </MagneticButton>
-                </div>
+                {/* REMOVED BUTTONS START HERE -> NO CODE BELOW THIS LINE IN THIS DIV */}
               </div>
 
               <div className="flex-1 w-full max-w-md lg:max-w-lg animate-fade-in-up" style={{ animationDelay: "0.2s" }}>

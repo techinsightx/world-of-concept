@@ -302,7 +302,7 @@ export default function SiteFooter() {
                   <p className="text-slate-500 text-[10px] uppercase font-bold mb-0.5">Address</p>
                   <p className="text-white leading-relaxed">
                     Alamnagar, Madhepura,<br/>
-                    Bihar, India - 852113
+                    Bihar, India - 852210/19
                   </p>
                 </div>
               </li>
