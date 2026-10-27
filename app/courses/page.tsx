@@ -1,78 +1,97 @@
 /* eslint-disable */
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, PlayCircle } from "lucide-react";
+import DynamicBackground from "@/components/DynamicBackground";
+import MagneticButton from "@/components/MagneticButton";
+import { ArrowLeft, BookOpen, PlayCircle, ShieldCheck, Sparkles } from "lucide-react";
 
-// 🔥 Magnetic Button Component for World-Class Interaction
-const MagneticButton = ({ children, className, onClick, href, ...props }: any) => {
-  const ref = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
-  
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    (ref.current as HTMLElement).style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.03)`;
-  };
+// ==============================
+// INJECTED STYLES FOR MATTE WAVES & PREMIUM LOOK
+// ==============================
+const COURSES_STYLES = `
+@keyframes waveFlowLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes waveFlowRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
 
-  const handleMouseLeave = () => {
-    if (!ref.current) return;
-    (ref.current as HTMLElement).style.transform = `translate(0px, 0px) scale(1)`;
-  };
+.matte-section-wrapper {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
 
-  const baseClass = "transition-transform duration-200 ease-out relative overflow-hidden group";
-  
-  if (href) {
-    return (
-      <Link href={href} className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} {...props}>
-        {children}
-      </Link>
-    );
-  }
-  return (
-    <button className={`${className} ${baseClass}`} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} ref={ref as any} onClick={onClick} {...props}>
-      {children}
-    </button>
-  );
-};
+.wave-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen; /* Glows over dark bg */
+  opacity: 0.35; /* Subtle but visible */
+}
 
-// 🔥 Optimized Cinematic Background Component (Large Display Friendly)
-const CinematicBackground = ({ images, zoomType = "in" }: { images: string[], zoomType?: "in" | "out" }) => {
-  const [index, setIndex] = useState(0);
+.wave-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-size: 50% 100%;
+  background-repeat: repeat-x;
+}
 
-  useEffect(() => {
-    if (images.length <= 1) return;
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, [images.length]);
+.wave-left {
+  animation: waveFlowLeft 22s linear infinite;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15), transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.15), transparent 60%);
+}
 
-  return (
-    <div className="absolute inset-0 z-0 overflow-hidden">
-      {images.map((src, i) => (
-        <img 
-          key={src}
-          src={src} 
-          alt={`Cinematic BG ${i}`} 
-          loading={i === 0 ? "eager" : "lazy"}
-          decoding="async"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[3000ms] ease-in-out ${
-            i === index ? 'opacity-100' : 'opacity-0'
-          } ${zoomType === 'in' ? 'animate-ken-burns-in' : 'animate-ken-burns-out'}`} 
-        />
-      ))}
-    </div>
-  );
-};
+.wave-right {
+  animation: waveFlowRight 28s linear infinite;
+  background-image: 
+    radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.12), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.12), transparent 60%);
+}
 
-// 🔥 5 Default Courses (Always Visible)
-const defaultCourses = [
+.content-overlay {
+  position: relative;
+  z-index: 10;
+}
+
+/* Matte Typography Utilities */
+.text-matte-primary {
+  color: #f8fafc; /* slate-50 */
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.text-matte-secondary {
+  color: #cbd5e1; /* slate-300 */
+}
+`;
+
+// ==============================
+// TYPES & DATA
+// ==============================
+
+interface CourseData {
+  id: string;
+  title: string;
+  price: string;
+  badge: string;
+  description: string;
+  imageUrl: string;
+}
+
+// 🔥 5 Default Courses (Always Visible if Firestore fails or is empty)
+const defaultCourses: CourseData[] = [
   { 
     id: "default-1",
     title: "गणित: ऑब्जेक्टिव मास्टरक्लास", 
@@ -115,20 +134,11 @@ const defaultCourses = [
   },
 ];
 
-interface CourseData {
-  id: string;
-  title: string;
-  price: string;
-  badge: string;
-  description: string;
-  imageUrl: string;
-}
+const COURSES_BG_IMAGES = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg"];
 
 export default function CoursesPage() {
-  // Start with default courses, then prepend fetched courses
   const [courses, setCourses] = useState<CourseData[]>(defaultCourses);
   const [loading, setLoading] = useState(true);
-  const coursesBgImages = ["/gallery1.jpg", "/gallery3.jpg", "/gallery5.jpg", "/gallery7.jpg"];
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -136,6 +146,7 @@ export default function CoursesPage() {
         // Fetch courses added by Admin from Firestore
         const q = query(collection(db, "courses"), orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
+        
         const fetchedCourses = querySnapshot.docs.map(doc => ({
           id: doc.id,
           title: doc.data().title || "कोर्स",
@@ -146,9 +157,14 @@ export default function CoursesPage() {
         }));
         
         // Admin added courses will appear FIRST, followed by the 5 default courses
-        setCourses([...fetchedCourses, ...defaultCourses]);
+        if (fetchedCourses.length > 0) {
+           setCourses([...fetchedCourses, ...defaultCourses]);
+        } else {
+           setCourses(defaultCourses);
+        }
       } catch (error) {
         console.error("Error fetching courses:", error);
+        setCourses(defaultCourses);
       } finally {
         setLoading(false);
       }
@@ -158,194 +174,142 @@ export default function CoursesPage() {
   }, []);
 
   return (
-    <div className="min-h-[100dvh] bg-[#FFF9F0] dark:bg-slate-950 text-slate-900 dark:text-slate-50 relative font-sans w-full overflow-x-hidden transition-colors duration-700">
-      <style jsx global>{`
-        /* 🔥 RAINBOW SHIMMER ANIMATION */
-        @keyframes rainbow-shimmer {
-          0% { background-position: 0% 50%; }
-          100% { background-position: 200% 50%; }
-        }
-        .rainbow-shimmer-bg {
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
-          background-size: 200% auto;
-          animation: rainbow-shimmer 3s linear infinite;
-        }
-        .rainbow-shimmer-bg:hover {
-          box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
-        }
-        .rainbow-shimmer-bg::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-          transform: translateX(-100%);
-          transition: transform 0.7s;
-        }
-        .rainbow-shimmer-bg:hover::after {
-          transform: translateX(100%);
-        }
-        .rainbow-shimmer-text {
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: rainbow-shimmer 3s linear infinite;
-        }
+    <div className="relative min-h-[100dvh] w-full bg-slate-950 text-slate-100 font-sans transition-colors duration-700 overflow-hidden">
+      <style dangerouslySetInnerHTML={{ __html: COURSES_STYLES }} />
 
-        /* 🔥 LARGE DISPLAY OPTIMIZED KEN BURNS */
-        @keyframes ken-burns-zoom-in {
-          0% { transform: translate3d(0, 0, 0) scale(1.0); }
-          100% { transform: translate3d(-1%, -1%, 0) scale(1.08); }
-        }
-        @keyframes ken-burns-zoom-out {
-          0% { transform: translate3d(1%, 1%, 0) scale(1.08); }
-          100% { transform: translate3d(0, 0, 0) scale(1.0); }
-        }
-        .animate-ken-burns-in {
-          animation: ken-burns-zoom-in 60s ease-in-out infinite alternate;
-          will-change: transform;
-        }
-        .animate-ken-burns-out {
-          animation: ken-burns-zoom-out 60s ease-in-out infinite alternate;
-          will-change: transform;
-        }
-        @media (max-width: 768px) {
-          .animate-ken-burns-in { animation-duration: 40s; }
-          .animate-ken-burns-out { animation-duration: 40s; }
-        }
+      {/* ==============================
+          BACKGROUND ENGINE WITH DUAL WAVES
+          ============================== */}
+      <DynamicBackground images={COURSES_BG_IMAGES} zoomType="in" density={0.6} interactive={false} showGrid={false} />
+      
+      {/* Dark Overlay to ensure matte look */}
+      <div className="absolute inset-0 z-[2] bg-slate-950/85 backdrop-blur-sm" />
 
-        @keyframes gradient-pan {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-living-gradient {
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.15) 100%);
-          background-size: 200% 200%;
-          animation: gradient-pan 15s ease infinite;
-        }
-        @keyframes shimmer-text {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .animate-shimmer-text {
-          background: linear-gradient(90deg, #60a5fa 0%, #ffffff 50%, #818cf8 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer-text 3s linear infinite;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out forwards;
-        }
-      `}</style>
+      {/* --- INTERNAL DUAL WAVE ENGINE --- */}
+      <div className="wave-container z-[3]">
+        <div className="wave-layer wave-left" />
+        <div className="wave-layer wave-right" />
+      </div>
 
-      {/* 🔥 CLEAN HEADER (Branding Removed) */}
-      <header className="bg-[#FFF9F0]/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-orange-100 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-all duration-500 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16 sm:h-20">
-            <MagneticButton href="/dashboard" className="p-2 hover:bg-orange-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
-              <ArrowLeft className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:-translate-x-1 group-hover:text-slate-900 dark:group-hover:text-white transition-all" />
-            </MagneticButton>
+      {/* ==============================
+          HEADER / NAVIGATION
+          ============================== */}
+      <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-slate-950/50 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link href="/dashboard" className="group flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm font-bold tracking-wide">वापस जाएं</span>
+          </Link>
+          
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+             <Sparkles className="w-3 h-3 text-yellow-400" />
+             <span className="text-xs font-bold text-white/70">Premium Batches</span>
           </div>
         </div>
       </header>
 
-      {/* 🔥 MAIN CONTENT */}
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Cinematic Background */}
-        <CinematicBackground images={coursesBgImages} zoomType="in" />
-        <div className="absolute inset-0 z-0 animate-living-gradient pointer-events-none dark:bg-transparent" />
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-950/85 via-slate-950/90 to-slate-950/95 pointer-events-none dark:bg-transparent" />
+      {/* ==============================
+          MAIN CONTENT AREA
+          ============================== */}
+      <main className="content-overlay max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        
+        {/* Page Hero Section */}
+        <div className="mb-12 animate-fade-in-up">
+          <h1 className="text-3xl sm:text-5xl font-black mb-4 text-matte-primary tracking-tight leading-none">
+            सभी उपलब्ध कोर्सेज़
+          </h1>
+          <p className="text-matte-muted text-base sm:text-lg max-w-2xl leading-relaxed">
+            बिहार बोर्ड परीक्षाओं के लिए RK Sir द्वारा तैयार किए गए प्रीमियम कोर्स। अपनी तैयारी को अगले स्तर पर ले जाएं।
+          </p>
+        </div>
 
-        <div className="relative z-10">
-          {/* Page Title */}
-          <div className="mb-12 animate-fade-in-up">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white rainbow-shimmer-text tracking-tight mb-4">
-              सभी उपलब्ध कोर्सेस
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl">
-              बिहार बोर्ड परीक्षाओं के लिए RK Sir द्वारा तैयार किए गए premium courses। अपनी तैयारी को अगले स्तर पर ले जाएं।
-            </p>
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+            <p className="text-slate-400 text-sm font-medium animate-pulse">कोर्स लोड हो रहे हैं...</p>
           </div>
-
-          {/* Loading State */}
-          {loading ? (
-            <div className="flex items-center justify-center py-20 animate-fade-in-up">
-              <div className="w-12 h-12 border-4 border-orange-500 dark:border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : (
-            /* Courses Grid (Fetched + Default Courses) */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {courses.map((course, i) => (
-                <div 
-                  key={course.id} 
-                  className="bg-white dark:bg-slate-800/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 border border-orange-100 dark:border-slate-700/50 hover:border-orange-300 dark:hover:border-blue-500/50 transition-all duration-500 ease-out hover:-translate-y-2 flex flex-col animate-fade-in-up"
-                  style={{ animationDelay: `${i * 0.1}s` }}
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <Image src={course.imageUrl} alt={course.title} fill className="object-cover transition-transform duration-700 ease-out hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                    <div className="absolute top-3 left-3">
-                      <span className="bg-blue-600/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                        {course.badge}
-                      </span>
+        ) : (
+          /* Courses Grid */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {courses.map((course, i) => (
+              <article 
+                key={course.id} 
+                className="group relative bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:border-white/10 transition-all duration-500 ease-out hover:-translate-y-2 flex flex-col h-full"
+                style={{ animationDelay: `${i * 0.05}s` }}
+              >
+                {/* Image Container */}
+                <div className="relative h-48 sm:h-52 overflow-hidden">
+                  <Image 
+                    src={course.imageUrl} 
+                    alt={course.title} 
+                    fill 
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110" 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+                  
+                  {/* Badge */}
+                  <div className="absolute top-4 left-4">
+                    <span className="bg-blue-600/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg border border-blue-500/30">
+                      {course.badge}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Content Body */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col">
+                  <h3 className="text-lg sm:text-xl font-extrabold text-white mb-2 line-clamp-2 leading-snug drop-shadow-md">
+                    {course.title}
+                  </h3>
+                  
+                  <p className="text-slate-400 text-sm sm:text-base mb-4 line-clamp-2 leading-relaxed flex-grow">
+                    {course.description}
+                  </p>
+                  
+                  {/* Features List */}
+                  <div className="flex items-center gap-4 mb-5 text-xs sm:text-sm text-slate-500 font-medium">
+                    <div className="flex items-center gap-1.5">
+                      <PlayCircle className="w-4 h-4 text-blue-400" />
+                      <span>HD वीडियो</span>
                     </div>
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <h3 className="text-white font-bold text-lg drop-shadow-lg leading-tight line-clamp-2">{course.title}</h3>
+                    <div className="flex items-center gap-1.5">
+                      <BookOpen className="w-4 h-4 text-purple-400" />
+                      <span>स्मार्ट नोट्स</span>
                     </div>
                   </div>
                   
-                  <div className="p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-900/50">
+                  {/* Footer: Price & CTA */}
+                  <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
                     <div>
-                      <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">{course.description}</p>
-                      
-                      <div className="flex items-center gap-4 mb-4 text-xs text-slate-500 dark:text-slate-400">
-                        <div className="flex items-center gap-1">
-                          <PlayCircle className="w-4 h-4" />
-                          <span>HD वीडियो लेक्चर</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <BookOpen className="w-4 h-4" />
-                          <span>स्मार्ट नोट्स</span>
-                        </div>
-                      </div>
+                      <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-0.5">कीमत</p>
+                      <span className="text-2xl font-black text-white drop-shadow-lg">{course.price}</span>
                     </div>
                     
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-orange-100 dark:border-slate-700/50">
-                      <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{course.price}</span>
-                      <MagneticButton 
-                        href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
-                        className="rainbow-shimmer-bg text-white font-bold py-2.5 px-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 text-sm whitespace-nowrap"
-                      >
-                        <span className="relative z-10 flex items-center gap-1">
-                          नामांकन करें <ArrowLeft className="w-3 h-3 rotate-180 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                      </MagneticButton>
-                    </div>
+                    <MagneticButton 
+                      href={`/test-payment?course=${encodeURIComponent(course.title)}&price=${encodeURIComponent(course.price)}`}
+                      className="inline-flex items-center gap-2 bg-white text-slate-900 font-bold py-2.5 px-5 rounded-xl shadow-lg hover:bg-gray-100 hover:shadow-xl transition-all duration-300 text-sm whitespace-nowrap active:scale-95"
+                    >
+                      नामांकन करें 
+                      <ArrowLeft className="w-4 h-4 rotate-180 group-hover:translate-x-1 transition-transform" />
+                    </MagneticButton>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* Back to Dashboard */}
-          <div className="text-center pb-8 animate-fade-in-up">
-            <MagneticButton 
-              href="/dashboard" 
-              className="inline-flex items-center gap-2 bg-white dark:bg-slate-800/60 hover:bg-orange-50 dark:hover:bg-slate-700/60 text-slate-900 dark:text-white font-bold py-3 px-8 rounded-xl border border-orange-100 dark:border-slate-700/50 hover:border-orange-300 dark:hover:border-slate-600 transition-all duration-500"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              डैशबोर्ड पर वापस जाएं
-            </MagneticButton>
+              </article>
+            ))}
           </div>
-        </div>
+        )}
+
+        {/* Bottom CTA / Info */}
+        {!loading && courses.length > 0 && (
+          <div className="mt-16 text-center p-6 sm:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+            <ShieldCheck className="w-8 h-8 text-green-400 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-white mb-2">100% सुरक्षित पेमेंट</h3>
+            <p className="text-slate-400 text-sm max-w-lg mx-auto">
+              आपके डेटा एन्क्रिप्टेड हैं। यदि आपको किसी समस्या का सामना करना पड़े, तो हमारे Telegram ग्रुप @JoinWorldofConcept पर संपर्क करें।
+            </p>
+          </div>
+        )}
       </main>
     </div>
   );
