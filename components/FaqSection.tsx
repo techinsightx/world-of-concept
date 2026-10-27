@@ -21,7 +21,6 @@ interface FaqItem {
 }
 
 // FAQ section के लिए cinematic gallery images.
-// तू इन्हें अपने हिसाब सें बदल सकतै हऽ.
 const FAQ_BG_IMAGES = [
   "/gallery4.jpg",
   "/gallery8.jpg",
@@ -30,36 +29,36 @@ const FAQ_BG_IMAGES = [
 
 const faqItems: FaqItem[] = [
   {
-    question: "World of Concept क्या हऽ?",
+    question: "World of Concept क्या है?",
     answer:
-      "World of Concept Bihar Board और BSEB students के लिए बनाया गया एक dedicated online coaching platform हऽ। यहाँ RK Sir Class 9, 10, 11 और 12 के Matric व Inter students को HD video lectures, smart notes PDF, live classes, model paper practice, subject-wise solutions और exam strategy provide करते हैं।",
+      "World of Concept Bihar Board और BSEB students के लिए बनाया गया एक dedicated online coaching platform है। यहां RK Sir Class 9, 10, 11 और 12 के Matric व Inter students को HD video lectures, smart notes PDF, live classes, model paper practice, subject-wise solutions और exam strategy provide करते हैं।",
     tag: "Platform",
     trending: true,
   },
   {
-    question: "क्या यहाँ Bihar Board solutions PDF मिलते हैं?",
+    question: "क्या यहां Bihar Board solutions PDF मिलते हैं?",
     answer:
       "हाँ। World of Concept पर Bihar Board के important questions, solved papers, model paper practice और subject-wise solutions — Mathematics, Science, Social Science, English, Hindi, Contemporary World Politics आदि — दिए जाते हैं। Logged-in students dashboard से study material access कर सकते हैं।",
     tag: "Solutions",
     trending: true,
   },
   {
-    question: "Bihar Board Model Paper 2027 कहाँ मिलेगा?",
+    question: "Bihar Board Model Paper 2027 कहां मिलेगा?",
     answer:
-      "World of Concept पर Bihar Board / BSEB Model Paper 2027 की practice, previous year solved papers और exam pattern के आधार पर preparation दी जाती हऽ। Students dashboard और YouTube channel @JoinWorldofConcept से access कर सकते हैं।",
+      "World of Concept पर Bihar Board / BSEB Model Paper 2027 की practice, previous year solved papers और exam pattern के आधार पर preparation दी जाती है। Students dashboard और YouTube channel @JoinWorldofConcept से access कर सकते हैं।",
     tag: "Model Paper",
     trending: true,
   },
   {
-    question: "Class 11 और Class 12 दोनों की preparation होती हऽ?",
+    question: "Class 11 और Class 12 दोनों की preparation होती है?",
     answer:
-      "हाँ। World of Concept Class 9, 10, 11 और 12 Bihar Board students के लिए courses और guidance देता हऽ। Class 12 के लिए Science, Commerce और Arts stream-wise preparation eligible batches में दी जाती हऽ, साथ ही concept maps और short tricks भी।",
+      "हाँ। World of Concept Class 9, 10, 11 और 12 Bihar Board students के लिए courses और guidance देता है। Class 12 के लिए Science, Commerce और Arts stream-wise preparation eligible batches में दी जाती है, साथ ही concept maps और short tricks भी।",
     tag: "Class 11-12",
   },
   {
-    question: "क्या यह platform पूरे India में available हऽ?",
+    question: "क्या यह platform पूरे India में available है?",
     answer:
-      "हाँ। World of Concept Alamnagar, Madhepura, Bihar से operate होता हऽ, लेकिन इसका online coaching platform Bihar Board और BSEB students के लिए पूरे India — सभी states — में available हऽ।",
+      "हाँ। World of Concept Alamnagar, Madhepura, Bihar से operate होता है, लेकिन इसका online coaching platform Bihar Board और BSEB students के लिए पूरे India — सभी states — में available है।",
     tag: "Online",
   },
   {
@@ -69,21 +68,21 @@ const faqItems: FaqItem[] = [
     tag: "Live Class",
   },
   {
-    question: "Bihar Board Result / Admit Card / Date Sheet की जानकारी कहाँ मिलेगी?",
+    question: "Bihar Board Result / Admit Card / Date Sheet की जानकारी कहां मिलेगी?",
     answer:
       "World of Concept पर Bihar Board Result, Admit Card, Date Sheet और Syllabus से जुड़ी updates students dashboard और Telegram channel @JoinWorldofConcept पर समय-समय पर दी जाती हैं।",
     tag: "Exam Updates",
   },
   {
-    question: "क्या यह Hindi medium Bihar Board students के लिए suitable हऽ?",
+    question: "क्या यह Hindi medium Bihar Board students के लिए suitable है?",
     answer:
-      "बिल्कुल। World of Concept specially Bihar Board students के लिए बनाया गया हऽ। यहाँ Hindi medium understanding, simple explanations, board-focused notes, concept maps और exam-oriented practice पर focus किया जाता हऽ।",
+      "बिल्कुल। World of Concept specially Bihar Board students के लिए बनाया गया है। यहां Hindi medium understanding, simple explanations, board-focused notes, concept maps और exam-oriented practice पर focus किया जाता है।",
     tag: "Hindi Medium",
   },
   {
     question: "Contemporary World Politics, History, Geography का solution मिलेगा?",
     answer:
-      "हाँ। Social Science और Class 12 के subjects जैसे History, Geography, Civics, Political Science, Economics और Contemporary World Politics की preparation important questions, map work और solutions के साथ RK Sir द्वारा कराई जाती हऽ।",
+      "हाँ। Social Science और Class 12 के subjects जैसे History, Geography, Civics, Political Science, Economics और Contemporary World Politics की preparation important questions, map work और solutions के साथ RK Sir द्वारा कराई जाती है।",
     tag: "Social Science",
   },
   {
@@ -94,6 +93,63 @@ const faqItems: FaqItem[] = [
   },
 ];
 
+// ==============================
+// INJECTED STYLES FOR MATTE WAVES & PREMIUM LOOK
+// ==============================
+const FAQ_STYLES = `
+@keyframes waveFlowLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes waveFlowRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.faq-wave-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen; /* Glows over dark bg */
+  opacity: 0.3; /* Subtle but visible */
+  overflow: hidden;
+}
+
+.faq-wave-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-size: 50% 100%;
+  background-repeat: repeat-x;
+}
+
+.faq-wave-left {
+  animation: waveFlowLeft 20s linear infinite;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15), transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.15), transparent 60%);
+}
+
+.faq-wave-right {
+  animation: waveFlowRight 25s linear infinite;
+  background-image: 
+    radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.12), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.12), transparent 60%);
+}
+
+/* Matte Typography Utilities for FAQ */
+.text-matte-primary {
+  color: #f8fafc; /* slate-50 */
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.text-matte-secondary {
+  color: #cbd5e1; /* slate-300 */
+}
+`;
+
 export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -101,13 +157,12 @@ export default function FaqSection() {
     <section
       id="faq"
       aria-labelledby="faq-heading"
-      className="relative isolate min-h-[70vh] py-12 sm:py-20 overflow-hidden border-t border-orange-100/60 dark:border-slate-800/60 bg-transparent transition-colors duration-700"
+      className="relative isolate min-h-[70vh] py-12 sm:py-20 overflow-hidden border-t border-slate-800/50 bg-slate-950 transition-colors duration-700"
     >
+      <style dangerouslySetInnerHTML={{ __html: FAQ_STYLES }} />
+
       {/* =====================================================
-          DYNAMIC BACKGROUND
-          - Light mode: cinematic image slider
-          - Dark mode: rainbow matte changable background
-          - No blur layer here
+          DYNAMIC BACKGROUND ENGINE
           ===================================================== */}
       <DynamicBackground
         images={FAQ_BG_IMAGES}
@@ -117,54 +172,46 @@ export default function FaqSection() {
         showGrid
       />
 
-      {/* =====================================================
-          NON-BLUR CINEMATIC SCRIM
-          सिर्फ readability के लिए, blur नहीं।
-          ===================================================== */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-white/45 via-white/10 to-white/35 dark:from-black/35 dark:via-black/10 dark:to-black/45"
-      />
+      {/* Dark Overlay to ensure matte look */}
+      <div className="absolute inset-0 z-[2] bg-slate-950/80 backdrop-blur-sm" />
 
-      {/* Soft edge vignette, still no blur */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(120%_90%_at_50%_50%,transparent_50%,rgba(255,255,255,0.18)_100%)] dark:bg-[radial-gradient(120%_90%_at_50%_50%,transparent_48%,rgba(2,6,23,0.42)_100%)]"
-      />
+      {/* --- INTERNAL DUAL WAVE ENGINE --- */}
+      <div className="faq-wave-container">
+        <div className="faq-wave-layer faq-wave-left" />
+        <div className="faq-wave-layer faq-wave-right" />
+      </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-slate-900/80 border border-white/30 dark:border-white/10 shadow-lg mb-4">
-            <Flame className="w-4 h-4 text-orange-500 animate-pulse" />
-            <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white tracking-wide">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 dark:bg-slate-900/50 border border-white/10 shadow-lg mb-4 backdrop-blur-md">
+            <Flame className="w-4 h-4 text-orange-400 animate-pulse" />
+            <span className="text-xs sm:text-sm font-extrabold text-white tracking-wide">
               Trending FAQ
             </span>
-            <TrendingUp className="w-4 h-4 text-green-500" />
+            <TrendingUp className="w-4 h-4 text-green-400" />
           </div>
 
-          <h2 id="faq-heading" className="text-2xl sm:text-5xl font-black mb-3">
-            <span className="rainbow-shimmer-text">अक्सर पूछे जाने वाले</span>{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-600 dark:from-orange-400 dark:to-blue-400">
-              सवाल
-            </span>
+          {/* Title: Pure Matte White/Grey, No Rainbow Gradient */}
+          <h2 id="faq-heading" className="text-2xl sm:text-5xl font-black mb-3 text-matte-primary">
+            अक्सर पूछे जाने वाले सवाल
           </h2>
 
-          <p className="text-slate-700 dark:text-slate-200 text-sm sm:text-lg max-w-2xl mx-auto">
+          <p className="text-slate-400 dark:text-slate-500 text-sm sm:text-lg max-w-2xl mx-auto">
             Bihar Board और BSEB students के लिए RK Sir और World of Concept से जुड़े सबसे जरूरी जवाब एक जगह।
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 border border-orange-100 dark:border-slate-700/50 text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm">
-              <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 dark:bg-slate-900/50 border border-white/10 text-[10px] sm:text-xs font-bold text-slate-300 shadow-sm backdrop-blur-md">
+              <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
               Class 9 to 12
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 border border-orange-100 dark:border-slate-700/50 text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 dark:bg-slate-900/50 border border-white/10 text-[10px] sm:text-xs font-bold text-slate-300 shadow-sm backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
               Smart Notes
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-900/80 border border-orange-100 dark:border-slate-700/50 text-[10px] sm:text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm">
-              <HelpCircle className="w-3.5 h-3.5 text-purple-500" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 dark:bg-slate-900/50 border border-white/10 text-[10px] sm:text-xs font-bold text-slate-300 shadow-sm backdrop-blur-md">
+              <HelpCircle className="w-3.5 h-3.5 text-purple-400" />
               Live Support
             </span>
           </div>
@@ -180,11 +227,11 @@ export default function FaqSection() {
                 key={faq.question}
                 className={`group relative rounded-3xl p-[1px] transition-all duration-500 ${
                   isOpen
-                    ? "bg-gradient-to-r from-orange-500 via-blue-500 to-purple-500 shadow-2xl shadow-blue-500/20"
-                    : "bg-white/35 dark:bg-white/10 hover:bg-gradient-to-r hover:from-orange-500/50 hover:via-blue-500/50 hover:to-purple-500/50"
+                    ? "bg-white/20 shadow-2xl shadow-white/5" // Matte Border Glow
+                    : "bg-white/5 hover:bg-white/10"
                 }`}
               >
-                <div className="rounded-[calc(1.5rem-1px)] bg-white/92 dark:bg-slate-900/88 overflow-hidden shadow-lg">
+                <div className="rounded-[calc(1.5rem-1px)] bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xl overflow-hidden shadow-lg border border-white/5">
                   <button
                     id={`faq-trigger-${index}`}
                     type="button"
@@ -197,8 +244,8 @@ export default function FaqSection() {
                       <div
                         className={`mt-0.5 w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
                           isOpen
-                            ? "bg-gradient-to-br from-orange-500 to-blue-600 text-white shadow-lg"
-                            : "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:scale-110"
+                            ? "bg-white text-slate-900 shadow-lg" // Inverted Matte Icon
+                            : "bg-white/5 text-slate-400 group-hover:bg-white/10 group-hover:text-white"
                         }`}
                       >
                         <HelpCircle className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -207,27 +254,27 @@ export default function FaqSection() {
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           {faq.trending && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-bold">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-300 text-[10px] font-bold">
                               <Flame className="w-3 h-3" />
                               Trending
                             </span>
                           )}
                           {faq.tag && (
-                            <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-[10px] font-bold">
+                            <span className="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[10px] font-bold">
                               {faq.tag}
                             </span>
                           )}
                         </div>
 
-                        <h3 className="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white leading-snug">
+                        <h3 className="text-base sm:text-xl font-extrabold text-white leading-snug">
                           {faq.question}
                         </h3>
                       </div>
                     </div>
 
                     <ChevronDown
-                      className={`w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-slate-500 dark:text-slate-400 transition-transform duration-500 ${
-                        isOpen ? "rotate-180 text-orange-500" : ""
+                      className={`w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-slate-400 transition-transform duration-500 ${
+                        isOpen ? "rotate-180 text-white" : ""
                       }`}
                     />
                   </button>
@@ -242,8 +289,8 @@ export default function FaqSection() {
                   >
                     <div className="px-4 sm:px-6 pb-5 sm:pb-6">
                       <div className="pl-12 sm:pl-16">
-                        <div className="border-l-2 border-orange-500/30 pl-4">
-                          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                        <div className="border-l-2 border-white/20 pl-4">
+                          <p className="text-slate-300 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
                             {faq.answer}
                           </p>
                         </div>
@@ -260,7 +307,7 @@ export default function FaqSection() {
         <div className="mt-8 text-center">
           <MagneticButton
             href="https://t.me/JoinWorldofConcept"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl rainbow-shimmer-bg text-white font-extrabold shadow-lg"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-slate-900 font-extrabold shadow-lg hover:bg-gray-100 transition-all duration-300"
           >
             <Sparkles className="w-5 h-5" />
             और सवाल हैं? Telegram पर जुड़ें
