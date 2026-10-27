@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import MagneticButton from "@/components/MagneticButton";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Mail, Phone, MapPin, Globe } from "lucide-react";
 
 const SITE_URL = "https://worldofconcept.in";
 
@@ -12,6 +12,7 @@ const INSTAGRAM_URL = "https://instagram.com/join_world_of_concept";
 const FACEBOOK_URL = "https://facebook.com/worldofconcept";
 const TELEGRAM_URL = "https://t.me/JoinWorldofConcept";
 
+// Custom SVG Icons for Social Media (Kept from original for consistency)
 const YoutubeIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
     <path
@@ -66,12 +67,19 @@ const TelegramIcon = ({ className }: { className?: string }) => (
 );
 
 export default function SiteFooter() {
+  // Satellite View URL with specific coordinates for Alamnagar, Madhepura
+  const MAP_SRC = "https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&hl=en&z=16&output=embed&maptype=satellite";
+
   return (
-    <footer className="relative bg-[#FFF9F0] dark:bg-slate-950 text-slate-600 dark:text-slate-400 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-orange-100/50 dark:border-slate-800/50">
+    <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-slate-800/50">
+      
+      {/* =====================================================
+          BACKGROUND: SATALLITE VIEW MAP (CRYSTAL CLEAR)
+          ===================================================== */}
       <div className="absolute inset-0 z-0">
         <iframe
-          className="footer-map"
-          src="https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&output=embed"
+          className="w-full h-full object-cover opacity-40 grayscale-[0.2]" // Subtle desaturation for matte look
+          src={MAP_SRC}
           style={{
             border: 0,
             position: "absolute",
@@ -83,181 +91,243 @@ export default function SiteFooter() {
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           sandbox="allow-scripts allow-same-origin allow-popups"
-          title="World of Concept Location"
+          title="World of Concept Location - Satellite View"
           allowFullScreen
         />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent dark:from-slate-950/90 via-transparent dark:via-slate-950/80 to-transparent dark:to-slate-950/90" />
+        {/* Dark Gradient Overlay to ensure text readability over satellite map */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/95 via-slate-950/85 to-slate-950/95" />
+        
+        {/* Vignette Effect for Cinematic Feel */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(2,6,23,0.8)_100%)]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="mb-6 flex items-center justify-center">
-          <MagneticButton
+        
+        {/* Top Section: Logo & Location Badge */}
+        <div className="mb-10 flex flex-col items-center gap-4">
+           <div className="flex items-center gap-3">
+             <Image
+                src="/logo.png"
+                alt="World of Concept"
+                width={48}
+                height={48}
+                className="object-contain drop-shadow-lg"
+                sizes="48px"
+              />
+              <span className="font-black text-xl sm:text-2xl tracking-tight text-white">
+                World of Concept
+              </span>
+           </div>
+
+           <MagneticButton
             href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar"
-            className="group relative inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-full shadow-md hover:shadow-lg transition-all duration-300 border border-orange-100 dark:border-slate-700"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 backdrop-blur-md rounded-full shadow-lg transition-all duration-300 border border-white/10 hover:border-white/20"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500" />
+            <MapPin className="w-4 h-4 text-orange-500 group-hover:scale-110 transition-transform" />
+            <span className="text-xs sm:text-sm font-bold tracking-wide text-white">
+              आलमनगर, मधेपुरा, बिहार
             </span>
-
-            <span className="text-xs sm:text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">
-              आलमनगर, बिहार
-            </span>
-
-            <ExternalLink className="w-3 h-3 text-slate-500 dark:text-slate-400 group-hover:text-orange-500 transition-colors" />
+            <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-orange-400 transition-colors" />
           </MagneticButton>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
-          <div className="col-span-2 sm:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 text-slate-900 dark:text-white">
-              <Image
-                src="/logo.png"
-                alt="World of Concept"
-                width={32}
-                height={32}
-                className="object-contain"
-                sizes="32px"
-              />
-              <span className="font-extrabold text-sm sm:text-base tracking-tight">
-                World of Concept
-              </span>
-            </div>
-
-            <p className="text-[10px] sm:text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-              बिहार के छात्रों को विश्व स्तरीय शिक्षा प्रदान करना। Bihar Board और BSEB students के लिए dedicated online coaching, notes, solutions और live classes.
+        {/* Main Grid: Organized Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+          
+          {/* Column 1: About & Mission */}
+          <div className="space-y-4">
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider border-b border-slate-800 pb-2 mb-4">
+              हमारा मिशन
+            </h4>
+            <p className="text-xs sm:text-sm leading-relaxed text-slate-400">
+              बिहार के छात्रों को विश्व स्तरीय शिक्षा प्रदान करना। 
+              RK Sir द्वारा चलाया गया यह प्लेटफॉर्म Bihar Board और BSEB students के लिए dedicated online coaching, smart notes, solutions और live classes प्रदान करता है।
             </p>
-
-            <div className="flex gap-2 pt-1">
+            
+            {/* Social Icons */}
+            <div className="flex gap-3 pt-2">
               <MagneticButton
                 href={YOUTUBE_URL}
-                className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube Channel"
+                className="w-9 h-9 rounded-lg bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-red-600 hover:text-white transition-all duration-300 shadow-sm border border-slate-800 hover:border-red-500"
               >
                 <YoutubeIcon className="w-4 h-4" />
               </MagneticButton>
 
               <MagneticButton
                 href={INSTAGRAM_URL}
-                className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram Profile"
+                className="w-9 h-9 rounded-lg bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-pink-600 hover:text-white transition-all duration-300 shadow-sm border border-slate-800 hover:border-pink-500"
               >
                 <InstagramIcon className="w-4 h-4" />
               </MagneticButton>
 
               <MagneticButton
                 href={FACEBOOK_URL}
-                className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook Page"
+                className="w-9 h-9 rounded-lg bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm border border-slate-800 hover:border-blue-500"
               >
                 <FacebookIcon className="w-4 h-4" />
               </MagneticButton>
 
               <MagneticButton
                 href={TELEGRAM_URL}
-                className="w-8 h-8 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-sm border border-orange-100 dark:border-slate-700"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram Group"
+                className="w-9 h-9 rounded-lg bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-sm border border-slate-800 hover:border-sky-400"
               >
                 <TelegramIcon className="w-4 h-4" />
               </MagneticButton>
             </div>
           </div>
 
+          {/* Column 2: Quick Links */}
           <div>
-            <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">
-              Platform
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider border-b border-slate-800 pb-2 mb-4">
+              त्वरित लिंक
             </h4>
-            <ul className="space-y-2 text-[10px] sm:text-xs">
+            <ul className="space-y-3 text-xs sm:text-sm">
               <li>
                 <a
                   href="/courses"
-                  className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
                 >
-                  सभी Courses
+                  <span className="w-1 h-1 bg-slate-600 rounded-full group-hover:bg-orange-400 transition-colors"></span>
+                  सभी Courses देखें
                 </a>
               </li>
               <li>
                 <a
                   href="/#why-choose-us"
-                  className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
                 >
-                  Why Choose Us
+                  <span className="w-1 h-1 bg-slate-600 rounded-full group-hover:bg-orange-400 transition-colors"></span>
+                  क्यों चुनें?
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/dashboard"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
+                >
+                  <span className="w-1 h-1 bg-slate-600 rounded-full group-hover:bg-orange-400 transition-colors"></span>
+                  Student Dashboard
                 </a>
               </li>
               <li>
                 <a
                   href="#faq"
-                  className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
                 >
-                  FAQ
+                  <span className="w-1 h-1 bg-slate-600 rounded-full group-hover:bg-orange-400 transition-colors"></span>
+                  FAQ / सहायता
                 </a>
               </li>
             </ul>
           </div>
 
+          {/* Column 3: Legal & Policies */}
           <div>
-            <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">
-              Legal
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider border-b border-slate-800 pb-2 mb-4">
+              कानूनी जानकारी
             </h4>
-            <ul className="space-y-2 text-[10px] sm:text-xs">
+            <ul className="space-y-3 text-xs sm:text-sm">
               <li>
                 <a
                   href="/privacy"
-                  className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
                 >
+                  <Globe className="w-3 h-3 text-slate-600 group-hover:text-orange-400 transition-colors" />
                   Privacy Policy
                 </a>
               </li>
               <li>
                 <a
                   href="/terms"
-                  className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
                 >
+                  <Globe className="w-3 h-3 text-slate-600 group-hover:text-orange-400 transition-colors" />
                   Terms of Service
                 </a>
               </li>
               <li>
                 <a
                   href="/refund"
-                  className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition-colors flex items-center gap-2 group"
                 >
+                  <Globe className="w-3 h-3 text-slate-600 group-hover:text-orange-400 transition-colors" />
                   Refund Policy
                 </a>
               </li>
             </ul>
           </div>
 
+          {/* Column 4: Contact Support */}
           <div>
-            <h4 className="text-slate-900 dark:text-white font-bold mb-3 text-[10px] sm:text-xs uppercase tracking-wider">
-              Support
+            <h4 className="text-white font-bold text-sm uppercase tracking-wider border-b border-slate-800 pb-2 mb-4">
+              संपर्क करें
             </h4>
-            <ul className="space-y-2 text-[10px] sm:text-xs">
-              <li className="flex items-center gap-1.5">
-                <span>📧</span> support@worldofconcept.in
+            <ul className="space-y-4 text-xs sm:text-sm">
+              <li className="flex items-start gap-3">
+                <Mail className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-slate-500 text-[10px] uppercase font-bold mb-0.5">Email</p>
+                  <a href="mailto:support@worldofconcept.in" className="text-white hover:text-orange-400 transition-colors break-all">
+                    support@worldofconcept.in
+                  </a>
+                </div>
               </li>
-              <li className="flex items-center gap-1.5">
-                <span>📞</span> +91 7979096954
+              <li className="flex items-start gap-3">
+                <Phone className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-slate-500 text-[10px] uppercase font-bold mb-0.5">Phone</p>
+                  <a href="tel:+917979096954" className="text-white hover:text-orange-400 transition-colors">
+                    +91 7979096954
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-slate-500 text-[10px] uppercase font-bold mb-0.5">Address</p>
+                  <p className="text-white leading-relaxed">
+                    Alamnagar, Madhepura,<br/>
+                    Bihar, India - 852113
+                  </p>
+                </div>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 border-t border-orange-100/50 dark:border-slate-800/50">
-          <p>
-            © {new Date().getFullYear()} World of Concept. सर्वाधिकार सुरक्षित।
+        {/* Bottom Bar: Copyright & Credits */}
+        <div className="pt-8 border-t border-slate-800/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] sm:text-xs text-slate-500">
+          <p className="text-center sm:text-left">
+            © {new Date().getFullYear()} <span className="text-white font-semibold">World of Concept</span>. सर्वाधिकार सुरक्षित।
           </p>
 
           <MagneticButton
             href="https://www.google.com/search?q=Mukesh+Kumar+Malakar"
-            className="flex items-center gap-1.5 hover:text-orange-500 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 hover:text-orange-400 transition-colors group"
             title="Designed and Developed by Mukesh Kumar Malakar"
           >
-            <span>निर्मित</span>
-
-            <svg className="w-3 h-3 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+            <span>Designed & Developed with</span>
+            <svg className="w-3 h-3 text-red-500 animate-pulse group-hover:scale-125 transition-transform" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
-
-            <span>
-              द्वारा <span className="font-bold">Mukesh Kumar Malakar</span>
-            </span>
+            <span className="font-bold text-white">Mukesh Kumar Malakar</span>
           </MagneticButton>
         </div>
       </div>
