@@ -10,7 +10,80 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { User, Mail, Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
+import { 
+  User, 
+  Mail, 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  CheckCircle, 
+  AlertCircle, 
+  ArrowRight, 
+  Sparkles 
+} from "lucide-react";
+
+// ==============================
+// INJECTED STYLES FOR MATTE WAVES & PREMIUM LOOK
+// ==============================
+const AUTH_STYLES = `
+@keyframes waveFlowLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes waveFlowRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.auth-wave-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen; /* Glows over dark bg */
+  opacity: 0.35; /* Subtle but visible inside card */
+  overflow: hidden;
+  border-radius: inherit; /* Follows parent's rounded corners */
+}
+
+.auth-wave-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-size: 50% 100%;
+  background-repeat: repeat-x;
+}
+
+.auth-wave-left {
+  animation: waveFlowLeft 18s linear infinite;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.2), transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.2), transparent 60%);
+}
+
+.auth-wave-right {
+  animation: waveFlowRight 22s linear infinite;
+  background-image: 
+    radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.15), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.15), transparent 60%);
+}
+
+/* Matte Typography Utilities for Auth */
+.text-matte-primary {
+  color: #f8fafc; /* slate-50 */
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.text-matte-secondary {
+  color: #cbd5e1; /* slate-300 */
+}
+
+/* Input Focus Ring Customization */
+.input-focus-ring:focus-within > input {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+`;
 
 export default function AuthForm() {
   const [email, setEmail] = useState("");
@@ -24,6 +97,7 @@ export default function AuthForm() {
 
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
+  // Magnetic Button Effect Logic
   const handleMouseMove = (e: MouseEvent<HTMLButtonElement>) => {
     if (!submitBtnRef.current) return;
     const rect = submitBtnRef.current.getBoundingClientRect();
@@ -106,79 +180,43 @@ export default function AuthForm() {
 
   return (
     <div className="relative w-full h-full flex items-center justify-center p-3 sm:p-4">
-      <style jsx global>{`
-        @keyframes tricolor-shimmer {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        .tricolor-text {
-          background: linear-gradient(90deg, #FF9933 0%, #FFFFFF 30%, #FFFFFF 70%, #138808 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: tricolor-shimmer 4s linear infinite;
-        }
-        @keyframes fade-in-up { 
-          from { opacity: 0; transform: translateY(15px); } 
-          to { opacity: 1; transform: translateY(0); } 
-        }
-        .animate-fade-in-up { 
-          animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) scale(1); }
-          50% { transform: translateY(-15px) scale(1.05); }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        @keyframes rainbow-shimmer {
-          0% { background-position: 0% 50%; }
-          100% { background-position: 200% 50%; }
-        }
-        .rainbow-shimmer-btn {
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
-          background-size: 200% auto;
-          animation: rainbow-shimmer 3s linear infinite;
-        }
-        .rainbow-shimmer-btn:hover {
-          box-shadow: 0 0 25px rgba(139, 92, 246, 0.4), 0 0 50px rgba(236, 72, 153, 0.2);
-        }
-        .rainbow-tab-active {
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f43f5e, #3b82f6);
-          background-size: 200% auto;
-          animation: rainbow-shimmer 3s linear infinite;
-        }
-      `}</style>
+      <style dangerouslySetInnerHTML={{ __html: AUTH_STYLES }} />
 
-      {/* 🔥 CRYSTAL CLEAR GLASSMORPHISM CARD */}
+      {/* 🔥 CRYSTAL CLEAR GLASSMORPHISM CARD WITH MATTE WAVES */}
       <div className="relative z-10 w-full max-w-[92vw] sm:max-w-sm mx-auto animate-fade-in-up">
-        <div className="relative bg-white/40 dark:bg-slate-950/40 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/5 dark:shadow-black/30 border border-white/60 dark:border-white/10 p-5 sm:p-6 overflow-hidden transition-all duration-500">
+        <div className="relative bg-white/10 dark:bg-slate-950/40 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/20 dark:shadow-black/50 border border-white/20 dark:border-white/10 p-5 sm:p-6 overflow-hidden transition-all duration-500 group hover:border-white/30 dark:hover:border-white/20">
           
-          {/* Subtle decorative glows for silky depth */}
-          <div className="absolute -top-16 -right-16 w-32 h-32 bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none animate-float" />
-          <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-purple-500/20 dark:bg-purple-500/10 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '3s' }} />
-          
+          {/* --- INTERNAL DUAL WAVE ENGINE --- */}
+          <div className="auth-wave-container">
+            <div className="auth-wave-layer auth-wave-left" />
+            <div className="auth-wave-layer auth-wave-right" />
+          </div>
+
+          {/* Content Wrapper needs higher z-index than waves */}
           <div className="relative z-10">
-            {/* 🔥 COMPACT & RESPONSIVE LOGO */}
+            
+            {/* 🎓 COMPACT & RESPONSIVE LOGO */}
             <div className="text-center mb-5">
               <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 drop-shadow-xl">
                 <Image src="/logo.png" alt="World of Concept" fill className="object-contain" priority />
               </div>
-              <h2 className="text-xl sm:text-2xl font-black tracking-tight mb-1">
-                <span className="tricolor-text">World of Concept</span>
+              
+              {/* Title: Pure Matte White/Grey, No Rainbow Gradient */}
+              <h2 className="text-xl sm:text-2xl font-black tracking-tight mb-1 text-matte-primary">
+                World of Concept
               </h2>
-              <p className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-yellow-500" />
+              
+              <p className="text-slate-400 dark:text-slate-500 text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-500/80" />
                 {isLogin ? "अपने डैशबोर्ड में लॉगिन करें" : "टॉप करने की यात्रा शुरू करें"}
               </p>
             </div>
 
-            {/* Smooth Premium Rainbow Tab Switcher */}
-            <div className="relative flex bg-black/5 dark:bg-white/5 backdrop-blur-md p-1 rounded-xl mb-5 border border-black/5 dark:border-white/10">
+            {/* Smooth Premium Tab Switcher (Matte Style) */}
+            <div className="relative flex bg-black/20 dark:bg-white/5 backdrop-blur-md p-1 rounded-xl mb-5 border border-black/10 dark:border-white/10">
+              {/* Active Indicator: Solid White/Grey instead of Rainbow */}
               <div 
-                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg shadow-md transition-all duration-300 ease-out rainbow-tab-active ${
+                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg shadow-md transition-all duration-300 ease-out bg-white/90 dark:bg-slate-800 ${
                   isLogin ? "left-1" : "left-[calc(50%+2px)]"
                 }`} 
               />
@@ -186,7 +224,7 @@ export default function AuthForm() {
                 type="button"
                 onClick={() => { if (!isLogin) switchMode(); }}
                 className={`relative z-10 flex-1 py-2 text-xs sm:text-sm font-bold transition-colors duration-300 rounded-lg ${
-                  isLogin ? "text-white" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  isLogin ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                 }`}
               >
                 साइन इन
@@ -195,7 +233,7 @@ export default function AuthForm() {
                 type="button"
                 onClick={() => { if (isLogin) switchMode(); }}
                 className={`relative z-10 flex-1 py-2 text-xs sm:text-sm font-bold transition-colors duration-300 rounded-lg ${
-                  !isLogin ? "text-white" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  !isLogin ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                 }`}
               >
                 साइन अप
@@ -206,17 +244,17 @@ export default function AuthForm() {
             <form onSubmit={handleEmailAuth} className="space-y-3.5" noValidate>
               {!isLogin && (
                 <div className="space-y-1 animate-fade-in-up">
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">
-                    पूरा नाम <span className="text-red-500">*</span>
+                  <label className="block text-xs font-semibold text-slate-300 ml-1">
+                    पूरा नाम <span className="text-red-400">*</span>
                   </label>
-                  <div className="relative group">
-                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-500 transition-colors duration-300" />
+                  <div className="relative group input-focus-ring">
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors duration-300" />
                     <input
                       type="text"
                       placeholder="शुभम कुमार"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full pl-10 pr-3 py-2.5 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm border border-white/50 dark:border-slate-700/50 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 focus:bg-white/80 dark:focus:bg-slate-900/80 transition-all duration-300"
+                      className="w-full pl-10 pr-3 py-2.5 bg-white/5 dark:bg-slate-900/50 backdrop-blur-sm border border-white/10 dark:border-slate-700/50 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all duration-300"
                       required
                     />
                   </div>
@@ -224,41 +262,41 @@ export default function AuthForm() {
               )}
 
               <div className="space-y-1 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">
-                  ईमेल पता <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-slate-300 ml-1">
+                  ईमेल पता <span className="text-red-400">*</span>
                 </label>
-                <div className="relative group">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-500 transition-colors duration-300" />
+                <div className="relative group input-focus-ring">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors duration-300" />
                   <input
                     type="email"
                     placeholder="students@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-3 py-2.5 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm border border-white/50 dark:border-slate-700/50 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 focus:bg-white/80 dark:focus:bg-slate-900/80 transition-all duration-300"
+                    className="w-full pl-10 pr-3 py-2.5 bg-white/5 dark:bg-slate-900/50 backdrop-blur-sm border border-white/10 dark:border-slate-700/50 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all duration-300"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-1 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">
-                  पासवर्ड <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-slate-300 ml-1">
+                  पासवर्ड <span className="text-red-400">*</span>
                 </label>
-                <div className="relative group">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-orange-500 transition-colors duration-300" />
+                <div className="relative group input-focus-ring">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-white transition-colors duration-300" />
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="कम से कम 6 अक्षर"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2.5 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm border border-white/50 dark:border-slate-700/50 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500 focus:bg-white/80 dark:focus:bg-slate-900/80 transition-all duration-300"
+                    className="w-full pl-10 pr-10 py-2.5 bg-white/5 dark:bg-slate-900/50 backdrop-blur-sm border border-white/10 dark:border-slate-700/50 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all duration-300"
                     required
                     minLength={6}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors duration-300 p-1"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors duration-300 p-1"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -270,7 +308,7 @@ export default function AuthForm() {
                       type="button"
                       onClick={handleForgotPassword}
                       disabled={loading}
-                      className="text-[11px] text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:underline font-semibold transition-colors disabled:opacity-50"
+                      className="text-[11px] text-slate-400 hover:text-white underline-offset-2 hover:underline font-semibold transition-colors disabled:opacity-50"
                     >
                       पासवर्ड भूल गए?
                     </button>
@@ -280,7 +318,7 @@ export default function AuthForm() {
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-500/10 dark:bg-red-500/10 border border-red-500/20 dark:border-red-500/30 text-red-600 dark:text-red-300 px-3 py-2.5 rounded-xl text-xs flex items-start gap-2 animate-fade-in-up backdrop-blur-sm">
+                <div className="bg-red-500/10 border border-red-500/20 text-red-300 px-3 py-2.5 rounded-xl text-xs flex items-start gap-2 animate-fade-in-up backdrop-blur-sm">
                   <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>{error}</span>
                 </div>
@@ -288,25 +326,25 @@ export default function AuthForm() {
 
               {/* Success Message */}
               {successMsg && (
-                <div className="bg-green-500/10 dark:bg-green-500/10 border border-green-500/20 dark:border-green-500/30 text-green-600 dark:text-green-300 px-3 py-2.5 rounded-xl text-xs flex items-start gap-2 animate-fade-in-up backdrop-blur-sm">
+                <div className="bg-green-500/10 border border-green-500/20 text-green-300 px-3 py-2.5 rounded-xl text-xs flex items-start gap-2 animate-fade-in-up backdrop-blur-sm">
                   <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>{successMsg}</span>
                 </div>
               )}
 
-              {/* 🔥 MAGNETIC RAINBOW SUBMIT BUTTON */}
+              {/* 🔥 MAGNETIC SUBMIT BUTTON (MATTE STYLE) */}
               <button
                 ref={submitBtnRef}
                 type="submit"
                 disabled={loading}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
-                className="w-full mt-5 rainbow-shimmer-btn text-white font-bold py-3 rounded-xl shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm active:scale-95 transition-all duration-300"
+                className="w-full mt-5 bg-white text-slate-900 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-gray-100 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm active:scale-95 transition-all duration-300"
                 style={{ transform: 'translate(0px, 0px) scale(1)' }}
               >
                 {loading ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
                     प्रोसेसिंग...
                   </>
                 ) : (
@@ -319,11 +357,11 @@ export default function AuthForm() {
             </form>
 
             {/* Footer Links */}
-            <p className="text-center text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 mt-5 leading-relaxed">
+            <p className="text-center text-[10px] sm:text-xs text-slate-500 dark:text-slate-600 mt-5 leading-relaxed">
               जारी रखकर, आप हमारी{" "}
-              <a href="/terms" className="text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:underline font-semibold transition-colors">शर्तों</a>
+              <a href="/terms" className="text-slate-400 hover:text-white underline-offset-2 hover:underline font-semibold transition-colors">शर्तों</a>
               {" और "}
-              <a href="/privacy" className="text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 hover:underline font-semibold transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
+              <a href="/privacy" className="text-slate-400 hover:text-white underline-offset-2 hover:underline font-semibold transition-colors">गोपनीयता नीति</a> से सहमत होते हैं।
             </p>
           </div>
         </div>
