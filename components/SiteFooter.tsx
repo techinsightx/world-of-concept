@@ -67,18 +67,18 @@ const TelegramIcon = ({ className }: { className?: string }) => (
 );
 
 export default function SiteFooter() {
-  // Satellite View URL with specific coordinates for Alamnagar, Madhepura
-  const MAP_SRC = "https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&hl=en&z=16&output=embed&maptype=satellite";
+  // Satellite View URL with higher zoom (z=17) for crystal clear details of Alamnagar/Madhepura
+  const MAP_SRC = "https://www.google.com/maps?q=Alamnagar,+Madhepura,+Bihar,+India&hl=en&z=17&output=embed&maptype=satellite";
 
   return (
     <footer className="relative bg-slate-950 text-slate-400 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 w-full overflow-hidden border-t border-slate-800/50">
       
       {/* =====================================================
-          BACKGROUND: SATALLITE VIEW MAP (CRYSTAL CLEAR)
+          BACKGROUND: SATALLITE VIEW MAP (CRYSTAL CLEAR & VISIBLE)
           ===================================================== */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 pointer-events-none select-none">
         <iframe
-          className="w-full h-full object-cover opacity-40 grayscale-[0.2]" // Subtle desaturation for matte look
+          className="w-full h-full object-cover" 
           src={MAP_SRC}
           style={{
             border: 0,
@@ -87,6 +87,9 @@ export default function SiteFooter() {
             left: 0,
             width: "100%",
             height: "100%",
+            // Enhance visibility: Brighten slightly and increase contrast to pop against dark theme
+            filter: "brightness(1.15) contrast(1.15) saturate(1.1)",
+            opacity: 0.85, // High opacity so map is clearly seen
           }}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
@@ -95,18 +98,18 @@ export default function SiteFooter() {
           allowFullScreen
         />
 
-        {/* Dark Gradient Overlay to ensure text readability over satellite map */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/95 via-slate-950/85 to-slate-950/95" />
+        {/* Gradient Overlay: Top and Bottom darker for text readability, Middle lighter to show map */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/60 to-slate-950/90" />
         
-        {/* Vignette Effect for Cinematic Feel */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(2,6,23,0.8)_100%)]" />
+        {/* Radial Vignette: Darkens edges only, keeps center bright */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.7)_100%)]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
         
         {/* Top Section: Logo & Location Badge */}
         <div className="mb-10 flex flex-col items-center gap-4">
-           <div className="flex items-center gap-3">
+           <div className="flex items-center gap-3 bg-slate-900/40 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/5">
              <Image
                 src="/logo.png"
                 alt="World of Concept"
@@ -124,7 +127,7 @@ export default function SiteFooter() {
             href="https://www.google.com/maps/search/Alamnagar+Madhepura+Bihar"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 backdrop-blur-md rounded-full shadow-lg transition-all duration-300 border border-white/10 hover:border-white/20"
+            className="group relative inline-flex items-center gap-2 px-4 py-2 bg-slate-900/60 hover:bg-slate-900/80 backdrop-blur-md rounded-full shadow-lg transition-all duration-300 border border-white/10 hover:border-orange-500/30"
           >
             <MapPin className="w-4 h-4 text-orange-500 group-hover:scale-110 transition-transform" />
             <span className="text-xs sm:text-sm font-bold tracking-wide text-white">
@@ -142,7 +145,7 @@ export default function SiteFooter() {
             <h4 className="text-white font-bold text-sm uppercase tracking-wider border-b border-slate-800 pb-2 mb-4">
               हमारा मिशन
             </h4>
-            <p className="text-xs sm:text-sm leading-relaxed text-slate-400">
+            <p className="text-xs sm:text-sm leading-relaxed text-slate-300">
               बिहार के छात्रों को विश्व स्तरीय शिक्षा प्रदान करना। 
               RK Sir द्वारा चलाया गया यह प्लेटफॉर्म Bihar Board और BSEB students के लिए dedicated online coaching, smart notes, solutions और live classes प्रदान करता है।
             </p>
