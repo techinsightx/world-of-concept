@@ -69,7 +69,7 @@ const LAST_UPDATED_ISO =
   (typeof process !== "undefined" &&
     process.env &&
     process.env.NEXT_PUBLIC_BUILD_TIME) ||
-  "2026-10-25T00:00:00.000Z";
+  "2026-10-29T00:00:00.000Z"; // Updated to current date
 
 const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@JoinWorldofConcept";
 const TELEGRAM_URL = "https://t.me/JoinWorldofConcept";
@@ -176,6 +176,43 @@ const DASH_STYLES = `
 }
 .text-matte-muted {
   color: #94a3b8; /* slate-400 */
+}
+
+/* EDGE TO EDGE RAIL STYLING */
+.edge-rail-container {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%); /* Breaks out of max-w container if nested */
+  position: relative;
+  overflow: hidden;
+  padding: 0; /* No horizontal padding for true edge-to-edge */
+}
+.edge-rail-track {
+  display: flex;
+  gap: 1rem; /* Space between cards */
+  width: max-content;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.edge-rail-track.ltr {
+  animation-name: marqueeLTR;
+  animation-duration: 40s;
+}
+.edge-rail-track.rtl {
+  animation-name: marqueeRTL;
+  animation-duration: 40s;
+}
+@keyframes marqueeLTR {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes marqueeRTL {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+/* Pause on hover for better UX */
+.edge-rail-container:hover .edge-rail-track {
+  animation-play-state: paused;
 }
 `;
 
