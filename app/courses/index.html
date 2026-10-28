@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiharHaat: Neo-Cultural Odyssey</title>
+    <style>
+        /* --- CORE CINEMATIC STYLES --- */
+        :root {
+            --neon-magenta: #ff007f;
+            --neon-cyan: #00f3ff;
+            --gold-traditional: #ffb300;
+            --dark-bg: #05050A;
+            --glass-bg: rgba(20, 20, 30, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        body {
+            background: var(--dark-bg);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Cinematic Animated Background (Placeholder for 3D later) */
+        .cinematic-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 0, 127, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 243, 255, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(255, 179, 0, 0.05) 0%, transparent 70%);
+            animation: bgPulse 8s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes bgPulse {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        /* Grid Overlay for Futuristic Vibe */
+        .grid-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            perspective: 500px;
+            transform: rotateX(60deg) translateY(50px) scale(1.5);
+            opacity: 0.5;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--gold-traditional), var(--neon-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        /* --- FUTURISTIC AUDIO HUD (Bottom Right) --- */
+        .audio-hud {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 350px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 243, 255, 0.05);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .audio-hud:hover {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 10px 40px rgba(255, 0, 127, 0.2), inset 0 0 20px rgba(255, 0, 127, 0.05);
+        }
+
+        .track-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .album-art {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--neon-magenta), var(--gold-traditional));
+            border-radius: 12px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .track-details { text-align: left; flex: 1; }
+        .track-title { font-size: 1rem; font-weight: bold; color: white; }
+        .track-artist { font-size: 0.8rem; color: var(--neon-cyan); }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+            border-radius: 2px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .ctrl-btn:hover { color: var(--neon-cyan); transform: scale(1.1); }
+        
+        .play-btn {
+            background: linear-gradient(135deg, var(--neon-magenta), var(--neon-cyan));
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+        }
+        .play-btn:hover { transform: scale(1.1); color: white; }
+
+        /* Volume Control */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vol-icon { color: var(--gold-traditional); font-size: 1rem; }
+
+        .vol-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--gold-traditional);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--gold-traditional);
+        }
+
+        /* Enter Haat Button */
+        .enter-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: white;
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .enter-btn:hover::before { left: 100%; }
+        .enter-btn:hover { box-shadow: 0 0 30px var(--neon-cyan); transform: translateY(-2px); }
+
+    </style>
+</head>
+<body>
+
+    <div class="cinematic-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="main-container">
+        <h1 class="title">BIHARHAAT</h1>
+        <p class="subtitle">Neo-Cultural Odyssey</p>
+        <button class="enter-btn" onclick="enterHaat()">Enter The Haat</button>
+    </div>
+
+    <!-- FUTURISTIC AUDIO HUD -->
+    <div class="audio-hud">
+        <div class="track-info">
+            <div class="album-art">🎵</div>
+            <div class="track-details">
+                <div class="track-title" id="songTitle">Kajri (Evergreen Mix)</div>
+                <div class="track-artist" id="songArtist">Traditional Bihari Folk</div>
+            </div>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="controls">
+            <button class="ctrl-btn" id="prevBtn">⏮</button>
+            <button class="ctrl-btn play-btn" id="playBtn">▶</button>
+            <button class="ctrl-btn" id="nextBtn">⏭</button>
+        </div>
+
+        <div class="volume-control">
+            <span class="vol-icon">🔊</span>
+            <input type="range" class="vol-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.6">
+        </div>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="audioPlayer" loop>
+        <!-- Yahan tum apni Evergreen Bihari Songs ki MP3 links daalna -->
+        <source src="song1.mp3" type="audio/mpeg"> 
+    </audio>
+
+    <script>
+        // --- AUDIO ENGINE LOGIC ---
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const songTitle = document.getElementById('songTitle');
+        const songArtist = document.getElementById('songArtist');
+
+        // Evergreen Bihari Playlist (Placeholders - Replace with your actual MP3 links/paths)
+        const playlist = [
+            { title: "Kajri (Monsoon Magic)", artist: "Traditional Folk", src: "song1.mp3" },
+            { title: "Bidesiya (Cinematic)", artist: "Bhikhari Thakur Fusion", src: "song2.mp3" },
+            { title: "Sohar (Neon Lullaby)", artist: "Maithili Classical", src: "song3.mp3" },
+            { title: "Jat-Jatin (Cyber Beat)", artist: "Modern Bhojpuri", src: "song4.mp3" }
+        ];
+
+        let currentTrack = 0;
+        let isPlaying = false;
+
+        // Load Track
+        function loadTrack(index) {
+            const track = playlist[index];
+            audio.src = track.src;
+            songTitle.textContent = track.title;
+            songArtist.textContent = track.artist;
+            progressBar.style.width = '0%';
+        }
+
+        // Play/Pause
+        playBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                audio.play();
+                playBtn.textContent = '⏸';
+            } else {
+                audio.pause();
+                playBtn.textContent = '▶';
+            }
+        });
+
+        // Next/Prev
+        nextBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            loadTrack(currentTrack);
+            if (isPlaying) audio.play();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            loadTrack(currentTrack);
+            if (isPlaying) audio.play();
+        });
+
+        // Progress Bar Update
+        audio.addEventListener('timeupdate', () => {
+            const { duration, currentTime } = audio;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        });
+
+        // Click on Progress Bar to Seek
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        });
+
+        // Volume Control
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        // Initial Load
+        loadTrack(currentTrack);
+        audio.volume = 0.6; // Default 60% volume as per cinematic directive
+
+        // Enter Haat Function (Placeholder for Phase 2)
+        function enterHaat() {
+            document.querySelector('.main-container').style.opacity = '0';
+            document.querySelector('.main-container').style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                alert("🚀 Booting up 3D BiharHaat Environment...\n\n(Bhai, yeh Phase 1 ka UI hai. Phase 2 mein hum Three.js ka 3D world load karenge!)");
+            }, 800);
+        }
+    </script>
+</body>
+</html>
