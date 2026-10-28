@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { LogOut } from "lucide-react";
+import { LogOut, UserCircle2 } from "lucide-react";
 import MagneticButton from "@/components/MagneticButton";
 
 interface StudentHeaderProps {
@@ -191,28 +191,39 @@ export default function StudentHeader({
       }}
     >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-center px-3 sm:h-16 sm:px-6 lg:px-8">
-        {/*
-          NOTIFICATION BELL REMOVE.
-          LOGOUT CENTER ME.
-          LEFT CORNER BRAND/TEXT COMPLETELY REMOVE.
-        */}
+        
+        {/* ==============================
+            FLOATING MATTE GLASS BAR
+            ============================== */}
         <div
-          className="relative z-10"
+          className="relative z-10 flex items-center gap-3 rounded-full border border-white/10 bg-slate-900/60 backdrop-blur-xl shadow-lg shadow-black/20 px-2 py-1 transition-all duration-300 hover:border-white/20 hover:bg-slate-800/70"
           style={{ pointerEvents: hidden ? "none" : "auto" }}
         >
+          
+          {/* User Avatar Placeholder (Static Icon for now) */}
+          <div className="flex items-center gap-2 pl-2 pr-1">
+             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-inner ring-1 ring-white/10">
+               {firstName.charAt(0).toUpperCase()}
+             </div>
+             <span className="hidden sm:block text-xs font-medium text-slate-300 whitespace-nowrap">
+               {firstName}
+             </span>
+          </div>
+
+          {/* Divider */}
+          <div className="h-6 w-[1px] bg-white/10 mx-1" />
+
+          {/* Logout Button */}
           <MagneticButton
             onClick={onLogout}
             aria-label={`Logout from ${firstName}`}
-            className="group/logout relative inline-flex h-12 min-w-[142px] items-center justify-center gap-2 rounded-full border border-red-500/25 bg-white/85 px-5 text-sm font-extrabold text-red-600 shadow-lg shadow-red-500/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-red-500/45 hover:bg-red-50 hover:shadow-xl hover:shadow-red-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0] active:scale-95 dark:border-red-400/25 dark:bg-slate-950/80 dark:text-red-300 dark:shadow-red-500/10 dark:hover:border-red-400/45 dark:hover:bg-red-500/10 dark:hover:shadow-red-500/20 dark:focus-visible:ring-offset-slate-950 sm:min-w-[160px]"
+            className="group/logout relative inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-transparent bg-transparent px-3 text-xs font-bold text-slate-400 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 active:scale-95"
           >
-            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/0 via-red-500/0 to-purple-500/0 opacity-0 transition-opacity duration-300 group-hover/logout:from-orange-500/10 group-hover/logout:via-red-500/10 group-hover/logout:to-purple-500/10 group-hover/logout:opacity-100" />
-
             <LogOut
-              className="relative z-10 h-5 w-5 shrink-0"
+              className="h-4 w-4 shrink-0 transition-transform group-hover/logout:-rotate-12"
               aria-hidden="true"
             />
-
-            <span className="relative z-10">Logout</span>
+            <span className="hidden xs:inline">Logout</span>
           </MagneticButton>
         </div>
       </div>
