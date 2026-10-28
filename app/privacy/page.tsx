@@ -1,23 +1,16 @@
 /* eslint-disable */
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
 import { 
   ArrowLeft, ShieldCheck, User, CreditCard, BarChart, 
-  CheckCircle2, Lock, Eye, Trash2, MessageSquare, 
-  Database, Globe, FileText
+  CheckCircle2, Lock, Eye, Trash2, MessageSquare, Mail
 } from "lucide-react";
 import DynamicBackground from "@/components/DynamicBackground";
 import SiteFooter from "@/components/SiteFooter";
 
 // Static BG Images for this page (using existing gallery assets)
 const PRIVACY_BG_IMAGES = ["/gallery4.jpg", "/gallery7.jpg", "/gallery10.jpg"];
-
-export const metadata: Metadata = {
-  title: "Privacy Policy | World of Concept",
-  description: "Learn how World of Concept protects your privacy and handles your personal information securely.",
-};
 
 export default function PrivacyPolicyPage() {
   return (
@@ -200,7 +193,7 @@ export default function PrivacyPolicyPage() {
                 href="mailto:support@worldofconcept.in" 
                 className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-bold transition-colors"
               >
-                <MailIcon className="w-4 h-4" />
+                <Mail className="w-4 h-4" />
                 support@worldofconcept.in
               </a>
             </div>
@@ -211,15 +204,5 @@ export default function PrivacyPolicyPage() {
 
       <SiteFooter />
     </div>
-  );
-}
-
-// Small helper component for mail icon if needed, otherwise lucide Mail works too
-function MailIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <rect width="20" height="16" x="2" y="4" rx="2"/>
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-    </svg>
   );
 }

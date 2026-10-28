@@ -1,7 +1,6 @@
 /* eslint-disable */
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
 import { 
   ArrowLeft, RefreshCcw, CheckCircle2, XCircle, 
@@ -12,11 +11,6 @@ import SiteFooter from "@/components/SiteFooter";
 
 // Static BG Images for this page (using existing gallery assets)
 const REFUND_BG_IMAGES = ["/gallery5.jpg", "/gallery8.jpg", "/gallery1.jpg"];
-
-export const metadata: Metadata = {
-  title: "Refund Policy | World of Concept",
-  description: "Understand our transparent refund policy for course purchases at World of Concept.",
-};
 
 export default function RefundPolicyPage() {
   return (

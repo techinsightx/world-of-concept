@@ -4,10 +4,9 @@
 import Link from "next/link";
 import { 
   ArrowLeft, Mail, Phone, MessageCircle, MapPin, Clock, HelpCircle, 
-  Send, ShieldCheck, Zap, Globe 
+  Send, ShieldCheck, Zap
 } from "lucide-react";
 import DynamicBackground from "@/components/DynamicBackground";
-import MagneticButton from "@/components/MagneticButton";
 import SiteFooter from "@/components/SiteFooter";
 
 // Static BG Images for this page (using existing gallery assets)

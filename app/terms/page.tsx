@@ -1,7 +1,6 @@
 /* eslint-disable */
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
 import { 
   ArrowLeft, Scale, CheckCircle2, BookOpen, 
@@ -11,18 +10,21 @@ import {
 import DynamicBackground from "@/components/DynamicBackground";
 import SiteFooter from "@/components/SiteFooter";
 
-// Static BG Images for this page (using existing gallery assets)
+// Static BG Images for this page
 const TERMS_BG_IMAGES = ["/gallery6.jpg", "/gallery9.jpg", "/gallery2.jpg"];
-
-export const metadata: Metadata = {
-  title: "Terms of Service | World of Concept",
-  description: "Read the terms and conditions for using World of Concept educational platform.",
-};
 
 export default function TermsPage() {
   return (
     <div className="relative min-h-[100dvh] w-full bg-slate-950 text-slate-100 font-sans overflow-x-hidden transition-colors duration-700">
       
+      {/* ==============================
+          SET TITLE FOR CLIENT COMPONENTS
+          ============================== */}
+      {/* Next.js allows setting document title in client components via head or simply relying on layout if needed, 
+          but for standalone pages without server metadata, we can't export 'metadata'. 
+          So we rely on the browser tab showing what's rendered or use a hook if strict SEO is needed. 
+          For now, removing the export fixes the build error. */}
+
       {/* ==============================
           BACKGROUND ENGINE WITH DUAL WAVES
           ============================== */}
